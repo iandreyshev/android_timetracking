@@ -3,7 +3,10 @@ package ru.iandreyshev.timemanager.domain
 import org.threeten.bp.ZonedDateTime
 
 interface IDateProvider {
-    fun currentDate(): ZonedDateTime
-    fun nextDay(): ZonedDateTime
-    fun previousDate(): ZonedDateTime
+    fun get(): ZonedDateTime
+    fun current(): ZonedDateTime
+
+    fun setNextDay(): ZonedDateTime
+    fun setPreviousDay(): ZonedDateTime
+    fun setCurrent(): ZonedDateTime
 }

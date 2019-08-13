@@ -4,11 +4,25 @@ import org.threeten.bp.ZonedDateTime
 
 class DateProvider : IDateProvider {
 
-    private val mCurrentDate
-        get() = ZonedDateTime.now()
+    private var mDate = ZonedDateTime.now()
 
-    override fun currentDate(): ZonedDateTime = mCurrentDate
-    override fun nextDay(): ZonedDateTime = mCurrentDate.plusDays(1)
-    override fun previousDate(): ZonedDateTime = mCurrentDate.minusDays(1)
+    override fun get(): ZonedDateTime = mDate
+
+    override fun current(): ZonedDateTime = ZonedDateTime.now()
+
+    override fun setNextDay(): ZonedDateTime {
+        mDate = mDate.plusDays(1)
+        return mDate
+    }
+
+    override fun setPreviousDay(): ZonedDateTime {
+        mDate = mDate.minusDays(1)
+        return mDate
+    }
+
+    override fun setCurrent(): ZonedDateTime {
+        mDate = ZonedDateTime.now()
+        return mDate
+    }
 
 }

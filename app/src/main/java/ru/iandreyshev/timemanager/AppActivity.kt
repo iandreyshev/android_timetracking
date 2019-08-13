@@ -2,8 +2,7 @@ package ru.iandreyshev.timemanager
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import ru.iandreyshev.timemanager.ui.menu.MenuFragment
-import ru.iandreyshev.timemanager.ui.timer.TimerFragment
+import ru.iandreyshev.timemanager.ui.timeline.TimelineFragment
 
 class AppActivity : AppCompatActivity() {
 
@@ -13,7 +12,7 @@ class AppActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .add(R.id.container, TimerFragment.newInstance(), "menu_tag")
+                .add(R.id.container, TimelineFragment.newInstance(), "menu_tag")
                 .addToBackStack("menu_tag")
                 .commit()
         }
