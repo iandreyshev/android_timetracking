@@ -1,26 +1,66 @@
 package ru.iandreyshev.timemanager.ui.editor
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.threeten.bp.ZonedDateTime
-import ru.iandreyshev.timemanager.domain.Event
-import ru.iandreyshev.timemanager.domain.EventId
-import ru.iandreyshev.timemanager.domain.IEventsRepo
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import org.threeten.bp.format.DateTimeFormatter
+import ru.iandreyshev.timemanager.domain.*
+import java.util.*
 
 class EditorViewModel(
-    private val date: ZonedDateTime,
-    private val eventToEdit: Event?,
-    private val eventsRepo: IEventsRepo
+        private val cardId: CardId,
+        private val eventToEdit: Event?,
+        private val eventsRepo: IEventsRepo,
+        private val dateProvider: IDateProvider
 ) : ViewModel() {
 
-    fun onSave(editorEvent: EditorEvent) {
-        eventsRepo.update(
-            Event(
-                id = eventToEdit?.id ?: EventId.undefined(),
-                title = editorEvent.title,
-                time = date.withHour(editorEvent.hour)
-                    .withMinute(editorEvent.minute)
+    val timeViewState: LiveData<String>
+        get() = mTimeViewState
+    val saveButtonViewState: LiveData<Boolean>
+        get() = mSaveButtonViewState
+
+    private val mTimeViewState = MutableLiveData<String>()
+    private val mSaveButtonViewState = MutableLiveData(false)
+    private var mTitle = ""
+    private var mPickedTime = dateProvider.current()
+    private val mTimeFormatter = DateTimeFormatter.ofPattern("mm : ss")
+
+    init {
+        updateTimeViewState()
+    }
+
+    fun onSave() {
+        viewModelScope.launch {
+            eventsRepo.update(
+                    Event(
+                            id = eventToEdit?.id ?: EventId.undefined(),
+                            title = mTitle,
+                            epochTime = 0,
+                            zoneId = ""
+                    )
             )
-        )
+        }
+    }
+
+    fun onDatePicked(date: Date?) {
+        date ?: return
+    }
+
+    fun onTimePicked(time: Date?) {
+        time ?: return
+        mPickedTime = dateProvider.asZonedDateTime(time, time)
+        updateTimeViewState()
+    }
+
+    fun onTitleChanged(title: CharSequence?) {
+        mSaveButtonViewState.value = title?.isNotBlank() ?: false
+        mTitle = title.toString()
+    }
+
+    private fun updateTimeViewState() {
+        mTimeViewState.value = mPickedTime.format(mTimeFormatter)
     }
 
 }

@@ -1,6 +1,9 @@
 package ru.iandreyshev.timemanager.domain
 
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
 import org.threeten.bp.ZonedDateTime
+import java.util.*
 
 class DateProvider : IDateProvider {
 
@@ -24,5 +27,12 @@ class DateProvider : IDateProvider {
         mDate = ZonedDateTime.now()
         return mDate
     }
+
+    override fun asEpochTime(zonedDateTime: ZonedDateTime): Date {
+        return Date()
+    }
+
+    override fun asZonedDateTime(date: Date, time: Date): ZonedDateTime =
+        ZonedDateTime.ofInstant(Instant.ofEpochMilli(time.time), ZoneId.systemDefault())
 
 }

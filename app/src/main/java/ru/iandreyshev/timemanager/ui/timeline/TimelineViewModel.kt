@@ -3,36 +3,95 @@ package ru.iandreyshev.timemanager.ui.timeline
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
+import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.TimeWalkerApp
+import ru.iandreyshev.timemanager.domain.Card
+import ru.iandreyshev.timemanager.domain.CardId
 import ru.iandreyshev.timemanager.domain.IDateProvider
 import ru.iandreyshev.timemanager.domain.IEventsRepo
-import ru.iandreyshev.timemanager.ui.extensions.asUserReadableDate
+import ru.iandreyshev.timemanager.ui.extensions.getTitleViewState
 import ru.iandreyshev.timemanager.ui.extensions.asViewState
+import java.lang.IllegalStateException
 
 class TimelineViewModel(
-    private val dateProvider: IDateProvider,
-    private val eventsRepo: IEventsRepo
+        private val dateProvider: IDateProvider,
+        private val eventsRepo: IEventsRepo
 ) : ViewModel() {
 
     val eventsAdapter: RecyclerView.Adapter<*>
         get() = mEventsAdapter
-    val dateViewState: LiveData<String>
-        get() = mDateViewState
+    val timelineViewState: LiveData<TimelineViewState>
+        get() = mTimelineViewState
+    val hasEventsList: LiveData<Boolean>
+        get() = mHasEventsList
+    val arrowsViewState: LiveData<Pair<Boolean, Boolean>>
+        get() = mArrowsViewState
+    val cardTitleViewState: LiveData<String>
+        get() = mCardTitleViewState
 
-    private val mEventsAdapter = TimelineAdapter {  }
-    private val mDateViewState = MutableLiveData<String>()
-        .apply { value = dateProvider.get().asUserReadableDate(from = dateProvider.current()) }
+    private val mEventsAdapter = TimelineAdapter(::onEventClick)
+    private val mTimelineViewState = MutableLiveData(TimelineViewState.PRELOADER)
+    private val mArrowsViewState = MutableLiveData(false to false)
+    private val mHasEventsList = MutableLiveData(false)
+    private var mCurrentCard: Card = newCardStub()
+    private val mCardTitleViewState = MutableLiveData<String>()
+
+    init {
+        eventsRepo.onEventUpdated { updateCurrentEvents() }
+    }
+
+    fun loadData() {
+        viewModelScope.launch {
+            if (eventsRepo.hasCards()) {
+                mTimelineViewState.value = TimelineViewState.PRELOADER
+                mCurrentCard = eventsRepo.getActualCard(currentDate = dateProvider.current())
+                        ?: throw IllegalStateException("Actual card is null")
+                mCardTitleViewState.value = mCurrentCard.getTitleViewState()
+
+                updateArrows()
+                updateCurrentEvents()
+                mTimelineViewState.value = TimelineViewState.TIMELINE
+            } else {
+                mTimelineViewState.value = TimelineViewState.EMPTY
+            }
+        }
+    }
+
+    fun onCreateFirstCard() {
+        viewModelScope.launch {
+            val currentDate = dateProvider.current()
+            val newCard = Card(CardId(0L), currentDate)
+            mCurrentCard = eventsRepo.createCard(newCard)
+
+            if (eventsRepo.hasCards()) {
+                mTimelineViewState.value = TimelineViewState.TIMELINE
+            }
+
+            updateCurrentEvents()
+            updateArrows()
+            updateCurrentEvents()
+        }
+    }
 
     fun onPreviousDate() {
-        val newDate = dateProvider.setPreviousDay()
-        mDateViewState.value = newDate.asUserReadableDate(from = dateProvider.current())
-        mEventsAdapter.events = eventsRepo.list(newDate).asViewState()
+        viewModelScope.launch {
+            val previous = eventsRepo.getPreviousCard(mCurrentCard) ?: return@launch
+            mCardTitleViewState.value = previous.getTitleViewState()
+            mEventsAdapter.events = eventsRepo.getEvents(previous).asViewState()
+            mCurrentCard = previous
+        }
     }
 
     fun onNextDate() {
-        mDateViewState.value = dateProvider.setNextDay()
-            .asUserReadableDate(from = dateProvider.current())
+        viewModelScope.launch {
+            val next = eventsRepo.getNextCard(mCurrentCard) ?: return@launch
+            mCardTitleViewState.value = next.getTitleViewState()
+            mEventsAdapter.events = eventsRepo.getEvents(next).asViewState()
+            mCurrentCard = next
+        }
     }
 
     fun onOpenDatePicker(): Boolean {
@@ -40,12 +99,31 @@ class TimelineViewModel(
     }
 
     fun onResetToCurrent() {
-        mDateViewState.value = dateProvider.setCurrent()
-            .asUserReadableDate(from = dateProvider.current())
+        mCurrentCard = eventsRepo.getActualCard(currentDate = dateProvider.current())
+                ?: throw IllegalStateException("Actual card is null")
     }
 
     fun onCreateEvent() {
-        TimeWalkerApp.navigator.openEditor(dateProvider.current(), null)
+        TimeWalkerApp.navigator.openEditor(mCurrentCard, null)
     }
+
+    private fun onEventClick(position: Int) {
+        val eventToEdit = mEventsAdapter.events[position].id
+        TimeWalkerApp.navigator.openEditor(mCurrentCard, eventToEdit)
+    }
+
+    private suspend fun updateArrows() {
+        val hasPrevious = eventsRepo.getPreviousCard(mCurrentCard) != null
+        val hasNext = eventsRepo.getNextCard(mCurrentCard) != null
+        mArrowsViewState.value = hasPrevious to hasNext
+    }
+
+    private suspend fun updateCurrentEvents() {
+        val events = eventsRepo.getEvents(mCurrentCard)
+        mEventsAdapter.events = events.asViewState()
+        mHasEventsList.value = events.isNotEmpty()
+    }
+
+    private fun newCardStub() = Card(CardId(0L), ZonedDateTime.now())
 
 }

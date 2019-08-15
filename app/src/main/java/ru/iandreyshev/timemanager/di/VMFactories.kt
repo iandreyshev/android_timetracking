@@ -3,31 +3,35 @@ package ru.iandreyshev.timemanager.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import org.threeten.bp.ZonedDateTime
+import ru.iandreyshev.timemanager.AppActivity
 import ru.iandreyshev.timemanager.TimeWalkerApp
+import ru.iandreyshev.timemanager.domain.CardId
 import ru.iandreyshev.timemanager.domain.Event
 import ru.iandreyshev.timemanager.ui.editor.EditorActivity
 import ru.iandreyshev.timemanager.ui.editor.EditorViewModel
-import ru.iandreyshev.timemanager.ui.timeline.TimelineFragment
 import ru.iandreyshev.timemanager.ui.timeline.TimelineViewModel
 
-fun TimelineFragment.getViewModel() =
-    ViewModelProviders.of(this, object : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return TimelineViewModel(
-                dateProvider = TimeWalkerApp.dateProvider,
-                eventsRepo = TimeWalkerApp.eventsRepo
-            ) as T
-        }
-    })[TimelineViewModel::class.java]
+fun AppActivity.getViewModel() =
+        ViewModelProviders.of(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                val vm = TimelineViewModel(
+                        dateProvider = TimeWalkerApp.dateProvider,
+                        eventsRepo = TimeWalkerApp.eventsRepo
+                )
+                vm.loadData()
 
-fun EditorActivity.getViewModel(date: ZonedDateTime, eventToEdit: Event?) =
-    ViewModelProviders.of(this, object : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return EditorViewModel(
-                date = date,
-                eventToEdit = eventToEdit,
-                eventsRepo = TimeWalkerApp.eventsRepo
-            ) as T
-        }
-    })[EditorViewModel::class.java]
+                return vm as T
+            }
+        })[TimelineViewModel::class.java]
+
+fun EditorActivity.getViewModel(cardId: CardId, eventToEdit: Event?) =
+        ViewModelProviders.of(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return EditorViewModel(
+                        cardId = cardId,
+                        eventToEdit = eventToEdit,
+                        eventsRepo = TimeWalkerApp.eventsRepo,
+                        dateProvider = TimeWalkerApp.dateProvider
+                ) as T
+            }
+        })[EditorViewModel::class.java]
