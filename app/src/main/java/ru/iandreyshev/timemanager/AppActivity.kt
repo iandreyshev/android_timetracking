@@ -34,7 +34,7 @@ class AppActivity : BaseActivity() {
 
     private fun subscribeToViewModel() {
         mViewModel.cardTitleViewState.observe(dateTitle::setText)
-        mViewModel.hasEventsList.observe { timelineFirstEventView.isVisible = !it }
+        mViewModel.hasEventsList.observe { timelineFirstEventView.isVisible = it }
         mViewModel.timelineViewState.observe {
             when (it) {
                 TimelineViewState.EMPTY -> {
@@ -63,6 +63,7 @@ class AppActivity : BaseActivity() {
             nextButton.isClickable = it.second
             nextButtonIcon.isInvisible = !it.second
         }
+        mViewModel.onCreateFirstCard()
     }
 
 }

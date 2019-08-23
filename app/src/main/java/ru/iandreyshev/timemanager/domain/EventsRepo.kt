@@ -8,23 +8,30 @@ class EventsRepo : IEventsRepo {
     private val mMemory = sortedMapOf<Card, MutableList<Event>>()
     private var mOnDataUpdated = suspend {}
 
-    override suspend fun update(event: Event) {
-        TODO("not implemented") //To change body of created suspend functions use File | Settings | File Templates.
-    }
-
     override suspend fun createCard(card: Card): Card {
         mMemory[card] = mutableListOf()
+        mOnDataUpdated()
         return card
     }
 
-    override suspend fun createEvent(card: Card, event: Event): Event {
-        if (!mMemory.containsKey(card)) {
-            mMemory[card] = mutableListOf()
-        }
-
-        mMemory[card]?.add(event)
-
+    override suspend fun createEvent(cardId: CardId, event: Event): Event? {
+        val key = mMemory.keys.find { it.id == cardId } ?: return null
+        mMemory[key]?.add(event)
+        mOnDataUpdated()
         return event
+    }
+
+    override suspend fun update(event: Event) {
+        val key =
+            mMemory.filterValues { it.firstOrNull { listEvent -> listEvent.id == event.id } != null }
+                .keys
+                .firstOrNull() ?: return
+        val listWithEvent = mMemory[key]
+        val eventIndex = listWithEvent?.indexOfFirst { it.id == event.id }
+            ?: return
+
+        listWithEvent[eventIndex] = event
+        mOnDataUpdated()
     }
 
     override suspend fun getEvents(card: Card): List<Event> {

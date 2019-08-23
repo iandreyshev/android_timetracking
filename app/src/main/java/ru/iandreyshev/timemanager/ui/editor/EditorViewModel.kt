@@ -10,22 +10,20 @@ import ru.iandreyshev.timemanager.domain.*
 import java.util.*
 
 class EditorViewModel(
-        private val cardId: CardId,
-        private val eventToEdit: Event?,
-        private val eventsRepo: IEventsRepo,
-        private val dateProvider: IDateProvider
+    private val cardId: CardId,
+    private val eventToEdit: Event?,
+    private val eventsRepo: IEventsRepo,
+    private val dateProvider: IDateProvider
 ) : ViewModel() {
 
-    val timeViewState: LiveData<String>
-        get() = mTimeViewState
-    val saveButtonViewState: LiveData<Boolean>
-        get() = mSaveButtonViewState
+    val timeViewState: LiveData<String> by lazy { mTimeViewState }
+    val saveButtonViewState: LiveData<Boolean> by lazy { mSaveButtonViewState }
 
     private val mTimeViewState = MutableLiveData<String>()
     private val mSaveButtonViewState = MutableLiveData(false)
     private var mTitle = ""
     private var mPickedTime = dateProvider.current()
-    private val mTimeFormatter = DateTimeFormatter.ofPattern("mm : ss")
+    private val mTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
     init {
         updateTimeViewState()
@@ -33,14 +31,25 @@ class EditorViewModel(
 
     fun onSave() {
         viewModelScope.launch {
-            eventsRepo.update(
-                    Event(
-                            id = eventToEdit?.id ?: EventId.undefined(),
-                            title = mTitle,
-                            epochTime = 0,
-                            zoneId = ""
+            if (eventToEdit == null) {
+                eventsRepo.createEvent(
+                    cardId, Event(
+                        id = EventId.undefined(),
+                        title = mTitle,
+                        epochTime = 0,
+                        zoneId = ""
                     )
-            )
+                )
+            } else {
+                eventsRepo.update(
+                    Event(
+                        id = eventToEdit.id,
+                        title = mTitle,
+                        epochTime = 0,
+                        zoneId = ""
+                    )
+                )
+            }
         }
     }
 

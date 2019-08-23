@@ -4,7 +4,7 @@ import org.threeten.bp.ZonedDateTime
 
 interface IEventsRepo {
     suspend fun createCard(card: Card): Card
-    suspend fun createEvent(card: Card, event: Event): Event
+    suspend fun createEvent(cardId: CardId, event: Event): Event?
 
     suspend fun update(event: Event)
 

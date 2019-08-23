@@ -21,23 +21,19 @@ class TimelineViewModel(
         private val eventsRepo: IEventsRepo
 ) : ViewModel() {
 
-    val eventsAdapter: RecyclerView.Adapter<*>
-        get() = mEventsAdapter
-    val timelineViewState: LiveData<TimelineViewState>
-        get() = mTimelineViewState
-    val hasEventsList: LiveData<Boolean>
-        get() = mHasEventsList
-    val arrowsViewState: LiveData<Pair<Boolean, Boolean>>
-        get() = mArrowsViewState
-    val cardTitleViewState: LiveData<String>
-        get() = mCardTitleViewState
+    val eventsAdapter: RecyclerView.Adapter<*> by lazy { mEventsAdapter }
+    val timelineViewState: LiveData<TimelineViewState> by lazy { mTimelineViewState }
+    val hasEventsList: LiveData<Boolean> by lazy { mHasEvents }
+    val arrowsViewState: LiveData<Pair<Boolean, Boolean>> by lazy { mArrowsViewState }
+    val cardTitleViewState: LiveData<String> by lazy { mCardTitleViewState }
 
     private val mEventsAdapter = TimelineAdapter(::onEventClick)
     private val mTimelineViewState = MutableLiveData(TimelineViewState.PRELOADER)
+    private val mHasEvents = MutableLiveData(false)
     private val mArrowsViewState = MutableLiveData(false to false)
-    private val mHasEventsList = MutableLiveData(false)
-    private var mCurrentCard: Card = newCardStub()
     private val mCardTitleViewState = MutableLiveData<String>()
+
+    private var mCurrentCard: Card = newCardStub()
 
     init {
         eventsRepo.onEventUpdated { updateCurrentEvents() }
@@ -121,7 +117,7 @@ class TimelineViewModel(
     private suspend fun updateCurrentEvents() {
         val events = eventsRepo.getEvents(mCurrentCard)
         mEventsAdapter.events = events.asViewState()
-        mHasEventsList.value = events.isNotEmpty()
+        mHasEvents.value = events.isNotEmpty()
     }
 
     private fun newCardStub() = Card(CardId(0L), ZonedDateTime.now())
