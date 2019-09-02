@@ -11,8 +11,8 @@ class TimelineAdapter(
 
     var events: List<EventViewState> = listOf()
         set(value) {
-            notifyDataSetChanged()
             field = value
+            notifyDataSetChanged()
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {

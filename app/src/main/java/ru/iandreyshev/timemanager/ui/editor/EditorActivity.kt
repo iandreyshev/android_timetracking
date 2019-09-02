@@ -10,13 +10,15 @@ import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.di.getViewModel
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import ru.iandreyshev.timemanager.domain.CardId
+import ru.iandreyshev.timemanager.domain.EventId
 import ru.iandreyshev.timemanager.ui.BaseActivity
 
 class EditorActivity : BaseActivity() {
 
     private val mViewModel: EditorViewModel by lazy {
-        val cardId = CardId(intent.extras?.getLong(CARD_ID_KEY) ?: 0)
-        getViewModel(cardId, null)
+        val cardId = CardId(intent.extras?.getLong(ARG_CARD_ID) ?: 0)
+        val eventId = intent.extras?.getLong(ARG_EVENT_ID)?.run { EventId(this) }
+        getViewModel(cardId, eventId)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +32,8 @@ class EditorActivity : BaseActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_clear)
 
         mViewModel.timeViewState.observe(timeTitle::setText)
+        mViewModel.updateTitleEvent.consume(titleView::setText)
+        mViewModel.exitEvent.consume { finish() }
 
         titleView.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) = Unit
@@ -73,7 +77,8 @@ class EditorActivity : BaseActivity() {
     }
 
     companion object {
-        const val CARD_ID_KEY = "card_id"
+        const val ARG_CARD_ID = "arg:card_id"
+        const val ARG_EVENT_ID = "arg:event"
     }
 
 }

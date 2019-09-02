@@ -19,6 +19,7 @@ class AppActivity : BaseActivity() {
         setContentView(R.layout.fragment_timeline)
 
         initButtons()
+        initEventsList()
         subscribeToViewModel()
     }
 
@@ -28,22 +29,28 @@ class AppActivity : BaseActivity() {
         titleClickableArea.setOnClickListener { mViewModel.onResetToCurrent() }
         titleClickableArea.setOnLongClickListener { mViewModel.onOpenDatePicker() }
         createFirstCardButton.setOnClickListener { mViewModel.onCreateFirstCard() }
+        nextCardButton.setOnClickListener { mViewModel.onCreateCard() }
         createEventButton.setOnClickListener { mViewModel.onCreateEvent() }
         createFirstEventButton.setOnClickListener { mViewModel.onCreateEvent() }
     }
 
+    private fun initEventsList() {
+        recyclerView.adapter = mViewModel.eventsAdapter
+    }
+
     private fun subscribeToViewModel() {
         mViewModel.cardTitleViewState.observe(dateTitle::setText)
-        mViewModel.hasEventsList.observe { timelineFirstEventView.isVisible = it }
-        mViewModel.timelineViewState.observe {
-            when (it) {
+        mViewModel.hasEventsList.observe { timelineFirstEventView.isGone = it }
+        mViewModel.nextCardButtonViewState.observe { nextCardButton.isVisible = it }
+        mViewModel.timelineViewState.observe { viewState ->
+            when (viewState) {
                 TimelineViewState.EMPTY -> {
                     appBarLayout.isVisible = false
                     timelineFirstCardView.isVisible = true
                     timelineLoadingView.isVisible = false
                     createEventButton.isVisible = false
                 }
-                TimelineViewState.PRELOADER -> {
+                TimelineViewState.LOADING -> {
                     appBarLayout.isVisible = false
                     timelineFirstCardView.isVisible = false
                     timelineLoadingView.isVisible = true
@@ -63,7 +70,6 @@ class AppActivity : BaseActivity() {
             nextButton.isClickable = it.second
             nextButtonIcon.isInvisible = !it.second
         }
-        mViewModel.onCreateFirstCard()
     }
 
 }

@@ -2,9 +2,7 @@ package ru.iandreyshev.timemanager.navigation
 
 import android.content.Context
 import org.jetbrains.anko.startActivity
-import org.threeten.bp.ZonedDateTime
-import ru.iandreyshev.timemanager.domain.Card
-import ru.iandreyshev.timemanager.domain.Event
+import ru.iandreyshev.timemanager.domain.CardId
 import ru.iandreyshev.timemanager.domain.EventId
 import ru.iandreyshev.timemanager.ui.editor.EditorActivity
 
@@ -12,8 +10,11 @@ class Navigator(
     private val applicationContext: Context
 ) {
 
-    fun openEditor(card: Card, eventToEdit: EventId?) {
-        applicationContext.startActivity<EditorActivity>()
+    fun openEditor(cardId: CardId, eventId: EventId) {
+        applicationContext.startActivity<EditorActivity>(
+            EditorActivity.ARG_CARD_ID to cardId.id,
+            EditorActivity.ARG_EVENT_ID to eventId.id
+        )
     }
 
 }

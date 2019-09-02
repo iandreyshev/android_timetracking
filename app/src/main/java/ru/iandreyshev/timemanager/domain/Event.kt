@@ -1,8 +1,9 @@
 package ru.iandreyshev.timemanager.domain
 
+import org.threeten.bp.ZonedDateTime
+
 class Event(
     val id: EventId,
     val title: String,
-    val epochTime: Long,
-    val zoneId: String
+    val endTime: ZonedDateTime
 )

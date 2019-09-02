@@ -1,27 +1,33 @@
-package ru.iandreyshev.timemanager.domain
+package ru.iandreyshev.timemanager.repository
 
-import kotlinx.coroutines.delay
 import org.threeten.bp.ZonedDateTime
+import ru.iandreyshev.timemanager.domain.*
+import timber.log.Timber
 
 class EventsRepo : IEventsRepo {
 
     private val mMemory = sortedMapOf<Card, MutableList<Event>>()
     private var mOnDataUpdated = suspend {}
+    private var mEventIds = 1L
 
     override suspend fun createCard(card: Card): Card {
+        Timber.d("Create card")
         mMemory[card] = mutableListOf()
         mOnDataUpdated()
         return card
     }
 
     override suspend fun createEvent(cardId: CardId, event: Event): Event? {
+        Timber.d("Create event")
         val key = mMemory.keys.find { it.id == cardId } ?: return null
-        mMemory[key]?.add(event)
+        val eventToSave = Event(EventId(mEventIds++), event.title, event.endTime)
+        mMemory[key]?.add(eventToSave)
         mOnDataUpdated()
-        return event
+        return eventToSave
     }
 
     override suspend fun update(event: Event) {
+        Timber.d("Update")
         val key =
             mMemory.filterValues { it.firstOrNull { listEvent -> listEvent.id == event.id } != null }
                 .keys
@@ -34,8 +40,17 @@ class EventsRepo : IEventsRepo {
         mOnDataUpdated()
     }
 
+    override suspend fun getEvent(id: EventId): Event? {
+        val key = mMemory.keys.firstOrNull { key ->
+            mMemory[key]?.find { event ->
+                event.id == id
+            } != null
+        } ?: return null
+
+        return mMemory[key]?.firstOrNull { it.id == id }
+    }
+
     override suspend fun getEvents(card: Card): List<Event> {
-        delay(1500)
         return mMemory[card].orEmpty()
     }
 

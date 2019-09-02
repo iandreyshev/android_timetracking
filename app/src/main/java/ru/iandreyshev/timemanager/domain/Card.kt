@@ -11,4 +11,8 @@ data class Card(val id: CardId, val date: ZonedDateTime) : Comparable<Card> {
             else -> 0
         }
 
+    companion object {
+        fun stub() = Card(CardId(0), ZonedDateTime.now())
+    }
+
 }

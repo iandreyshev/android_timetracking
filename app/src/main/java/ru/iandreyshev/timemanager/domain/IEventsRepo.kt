@@ -8,6 +8,7 @@ interface IEventsRepo {
 
     suspend fun update(event: Event)
 
+    suspend fun getEvent(id: EventId): Event?
     suspend fun getEvents(card: Card): List<Event>
     fun getActualCard(currentDate: ZonedDateTime): Card?
     fun getNextCard(current: Card): Card?
