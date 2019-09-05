@@ -1,77 +1,99 @@
 package ru.iandreyshev.timemanager.repository
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.domain.*
-import timber.log.Timber
 
-class EventsRepo : IEventsRepo {
-
-    private val mMemory = sortedMapOf<Card, MutableList<Event>>()
-    private var mOnDataUpdated = suspend {}
-    private var mEventIds = 1L
+class EventsRepo(
+    private val cardDao: ICardDao,
+    private val eventDao: IEventDao
+) : IEventsRepo {
 
     override suspend fun createCard(card: Card): Card {
-        Timber.d("Create card")
-        mMemory[card] = mutableListOf()
-        mOnDataUpdated()
-        return card
+        return withContext(Dispatchers.Default) {
+            val order = (cardDao.lastOrder() ?: 0) + 1
+            val entity = CardEntity(
+                title = "Card #$order",
+                order = order
+            )
+            val id = cardDao.insert(entity)
+
+            card.copy(id = CardId(id))
+        }
     }
 
     override suspend fun createEvent(cardId: CardId, event: Event): Event? {
-        Timber.d("Create event")
-        val key = mMemory.keys.find { it.id == cardId } ?: return null
-        val eventToSave = Event(EventId(mEventIds++), event.title, event.endTime)
-        mMemory[key]?.add(eventToSave)
-        mOnDataUpdated()
-        return eventToSave
+        return withContext(Dispatchers.Default) {
+            cardDao.get(cardId.value) ?: return@withContext null
+
+            val entity = EventEntity.create(cardId, event)
+            val id = eventDao.insert(entity)
+
+            event.copy(id = EventId(id))
+        }
     }
 
-    override suspend fun update(event: Event) {
-        Timber.d("Update")
-        val key =
-            mMemory.filterValues { it.firstOrNull { listEvent -> listEvent.id == event.id } != null }
-                .keys
-                .firstOrNull() ?: return
-        val listWithEvent = mMemory[key]
-        val eventIndex = listWithEvent?.indexOfFirst { it.id == event.id }
-            ?: return
-
-        listWithEvent[eventIndex] = event
-        mOnDataUpdated()
+    override suspend fun update(cardId: CardId, event: Event) {
+        withContext(Dispatchers.Default) {
+            val cardEntity = cardDao.get(cardId.value) ?: return@withContext
+            eventDao.update(EventEntity.create(cardEntity.id, event))
+        }
     }
 
     override suspend fun getEvent(id: EventId): Event? {
-        val key = mMemory.keys.firstOrNull { key ->
-            mMemory[key]?.find { event ->
-                event.id == id
-            } != null
-        } ?: return null
+        return withContext(Dispatchers.Default) {
+            val entity = eventDao.get(id.value) ?: return@withContext null
 
-        return mMemory[key]?.firstOrNull { it.id == id }
+            Event(
+                id = EventId(entity.id),
+                description = entity.description,
+                endTime = entity.endTime
+            )
+        }
     }
 
     override suspend fun getEvents(card: Card): List<Event> {
-        return mMemory[card].orEmpty()
+        return withContext(Dispatchers.Default) {
+            eventDao.getAll(card.id.value)
+                .map { entity ->
+                    Event(
+                        id = EventId(entity.id),
+                        description = entity.description,
+                        endTime = entity.endTime
+                    )
+                }
+        }
     }
 
-    override fun getNextCard(current: Card): Card? {
+    override suspend fun getNextCard(current: Card): Card? {
+        return withContext(Dispatchers.Default) {
+            val entity = cardDao.get(current.id.value) ?: return@withContext null
+            val next = cardDao.nextOrNull(entity.order) ?: return@withContext null
+
+            Card(
+                id = CardId(next.id),
+                title = entity.title,
+                date = ZonedDateTime.now()
+            )
+        }
+    }
+
+    override suspend fun getPreviousCard(current: Card): Card? {
+        return withContext(Dispatchers.Default) {
+            val entity = cardDao.get(current.id.value) ?: return@withContext null
+            val next = cardDao.previousOrNull(entity.order) ?: return@withContext null
+
+            Card(
+                id = CardId(next.id),
+                title = entity.title,
+                date = ZonedDateTime.now()
+            )
+        }
+    }
+
+    override suspend fun getActualCard(currentDate: ZonedDateTime): Card? {
         return null
-    }
-
-    override fun getPreviousCard(current: Card): Card? {
-        return null
-    }
-
-    override fun hasCards(): Boolean {
-        return mMemory.isNotEmpty()
-    }
-
-    override fun getActualCard(currentDate: ZonedDateTime): Card? {
-        return null
-    }
-
-    override fun onEventUpdated(action: suspend () -> Unit) {
-        mOnDataUpdated = action
     }
 
 }

@@ -12,8 +12,8 @@ class Navigator(
 
     fun openEditor(cardId: CardId, eventId: EventId) {
         applicationContext.startActivity<EditorActivity>(
-            EditorActivity.ARG_CARD_ID to cardId.id,
-            EditorActivity.ARG_EVENT_ID to eventId.id
+            EditorActivity.ARG_CARD_ID to cardId.value,
+            EditorActivity.ARG_EVENT_ID to eventId.value
         )
     }
 

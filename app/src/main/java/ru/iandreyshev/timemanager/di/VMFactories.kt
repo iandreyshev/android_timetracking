@@ -29,7 +29,7 @@ fun EditorActivity.getViewModel(cardId: CardId, eventId: EventId?) =
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return EditorViewModel(
                 cardId = cardId,
-                eventId = eventId ?: EventId.undefined(),
+                eventId = eventId ?: EventId.default(),
                 eventsRepo = TimeWalkerApp.eventsRepo,
                 dateProvider = TimeWalkerApp.dateProvider
             ) as T

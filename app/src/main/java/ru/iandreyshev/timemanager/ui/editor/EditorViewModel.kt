@@ -13,7 +13,7 @@ import java.util.*
 
 class EditorViewModel(
     private val cardId: CardId,
-    private val eventId: EventId,
+    private val eventId: EventId?,
     private val eventsRepo: IEventsRepo,
     private val dateProvider: IDateProvider
 ) : ViewModel() {
@@ -39,10 +39,10 @@ class EditorViewModel(
 
     fun onLoadData() {
         viewModelScope.launch {
-            if (eventId != EventId.undefined()) {
+            if (eventId != null) {
                 mLoadDataViewState.value = true
                 val eventToEdit = eventsRepo.getEvent(eventId) ?: return@launch
-                updateTitleEvent.execute(eventToEdit.title)
+                updateTitleEvent.execute(eventToEdit.description)
                 mPickedTime = eventToEdit.endTime
                 updateTimeViewState()
             }
@@ -52,20 +52,21 @@ class EditorViewModel(
 
     fun onSave() {
         viewModelScope.launch {
-            if (eventId == EventId.undefined()) {
+            if (eventId == null) {
                 eventsRepo.createEvent(
                     cardId,
                     Event(
-                        id = EventId.undefined(),
-                        title = mTitle,
+                        id = EventId.default(),
+                        description = mTitle,
                         endTime = mPickedTime
                     )
                 )
             } else {
                 eventsRepo.update(
+                    cardId,
                     Event(
                         id = eventId,
-                        title = mTitle,
+                        description = mTitle,
                         endTime = mPickedTime
                     )
                 )

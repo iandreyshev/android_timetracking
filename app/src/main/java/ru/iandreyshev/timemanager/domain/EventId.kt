@@ -1,9 +1,9 @@
 package ru.iandreyshev.timemanager.domain
 
-inline class EventId(val id: Long) {
+inline class EventId(val value: Long) {
 
     companion object {
-        fun undefined() = EventId(-1)
+        fun default() = EventId(-1)
     }
 
 }

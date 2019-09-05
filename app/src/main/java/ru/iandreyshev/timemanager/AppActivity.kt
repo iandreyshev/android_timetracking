@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_timeline.*
 import ru.iandreyshev.timemanager.di.getViewModel
 import ru.iandreyshev.timemanager.ui.BaseActivity
+import ru.iandreyshev.timemanager.ui.timeline.ArrowViewState
 import ru.iandreyshev.timemanager.ui.timeline.TimelineViewModel
 import ru.iandreyshev.timemanager.ui.timeline.TimelineViewState
 
@@ -40,7 +41,10 @@ class AppActivity : BaseActivity() {
 
     private fun subscribeToViewModel() {
         mViewModel.cardTitleViewState.observe(dateTitle::setText)
-        mViewModel.hasEventsList.observe { timelineFirstEventView.isGone = it }
+        mViewModel.hasEventsList.observe {
+            timelineFirstEventView.isGone = it
+            createEventButton.isVisible = it
+        }
         mViewModel.nextCardButtonViewState.observe { nextCardButton.isVisible = it }
         mViewModel.timelineViewState.observe { viewState ->
             when (viewState) {
@@ -48,27 +52,29 @@ class AppActivity : BaseActivity() {
                     appBarLayout.isVisible = false
                     timelineFirstCardView.isVisible = true
                     timelineLoadingView.isVisible = false
-                    createEventButton.isVisible = false
                 }
                 TimelineViewState.LOADING -> {
                     appBarLayout.isVisible = false
                     timelineFirstCardView.isVisible = false
                     timelineLoadingView.isVisible = true
-                    createEventButton.isVisible = false
                 }
-                TimelineViewState.TIMELINE -> {
+                TimelineViewState.HAS_CARD -> {
                     appBarLayout.isVisible = true
                     timelineFirstCardView.isVisible = false
                     timelineLoadingView.isVisible = false
-                    createEventButton.isVisible = true
                 }
             }
         }
         mViewModel.arrowsViewState.observe {
-            previousButton.isClickable = it.first
-            previousButtonIcon.isInvisible = !it.first
-            nextButton.isClickable = it.second
-            nextButtonIcon.isInvisible = !it.second
+            previousButton.isClickable = it.first == ArrowViewState.ARROW
+            previousButtonIcon.isInvisible = it.first != ArrowViewState.ARROW
+
+            nextButton.isClickable = it.second == ArrowViewState.ARROW
+            nextButtonIcon.isInvisible = it.second == ArrowViewState.NEXT_CARD
+                    || it.second == ArrowViewState.HIDDEN
+
+            nextCardButton.isClickable = it.second == ArrowViewState.NEXT_CARD
+            nextCardButton.isInvisible = it.second != ArrowViewState.NEXT_CARD
         }
     }
 

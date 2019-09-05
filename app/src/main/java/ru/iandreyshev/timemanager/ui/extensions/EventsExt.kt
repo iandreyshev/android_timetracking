@@ -6,6 +6,6 @@ import ru.iandreyshev.timemanager.ui.timeline.EventViewState
 
 fun List<Event>.asViewState(): List<EventViewState> {
     return map { item ->
-        EventViewState(item.id, item.title, item.endTime.format(DateTimeFormatter.ISO_DATE))
+        EventViewState(item.id, item.description, item.endTime.format(DateTimeFormatter.ISO_DATE))
     }
 }

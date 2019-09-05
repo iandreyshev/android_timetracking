@@ -2,13 +2,11 @@ package ru.iandreyshev.timemanager.ui.extensions
 
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.ZonedDateTime
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.format.FormatStyle
 import ru.iandreyshev.timemanager.domain.Card
 import java.util.*
 
 fun Card.getTitleViewState(): String {
-    return date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+    return title
 }
 
 fun Date.hour() =

@@ -2,7 +2,11 @@ package ru.iandreyshev.timemanager.domain
 
 import org.threeten.bp.ZonedDateTime
 
-data class Card(val id: CardId, val date: ZonedDateTime) : Comparable<Card> {
+data class Card(
+    val id: CardId,
+    val title: String,
+    val date: ZonedDateTime
+) : Comparable<Card> {
 
     override fun compareTo(other: Card): Int =
         when {
@@ -10,9 +14,5 @@ data class Card(val id: CardId, val date: ZonedDateTime) : Comparable<Card> {
             date.isAfter(other.date) -> 1
             else -> 0
         }
-
-    companion object {
-        fun stub() = Card(CardId(0), ZonedDateTime.now())
-    }
 
 }
