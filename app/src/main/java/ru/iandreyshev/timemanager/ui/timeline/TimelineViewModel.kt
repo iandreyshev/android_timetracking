@@ -5,17 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.Dispatchers
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.iandreyshev.timemanager.TimeWalkerApp
-import ru.iandreyshev.timemanager.domain.*
+import ru.iandreyshev.timemanager.domain.Card
+import ru.iandreyshev.timemanager.domain.EventId
+import ru.iandreyshev.timemanager.domain.IDateProvider
+import ru.iandreyshev.timemanager.domain.IRepository
+import ru.iandreyshev.timemanager.ui.editor.EditorAction
 import ru.iandreyshev.timemanager.ui.extensions.asViewState
 import ru.iandreyshev.timemanager.ui.extensions.getTitleViewState
 
 class TimelineViewModel(
     private val dateProvider: IDateProvider,
-    private val eventsRepo: IEventsRepo
+    private val repository: IRepository,
+    editorObservable: Observable<EditorAction>
 ) : ViewModel() {
 
     val eventsAdapter: RecyclerView.Adapter<*> by lazy { mEventsAdapter }
@@ -33,37 +39,53 @@ class TimelineViewModel(
     private val mCardTitleViewState = MutableLiveData<String>()
 
     private var mCurrentCard: Card? = null
+    private var mHasPrevious = false
+    private var mHasNext = false
+
+    private var mDisposables = CompositeDisposable()
+
+    init {
+        mDisposables += editorObservable.subscribe {
+            viewModelScope.launch {
+                updateNavBarView()
+                updateEventsView()
+                updateTimelineView()
+            }
+        }
+    }
+
+    override fun onCleared() {
+        mDisposables.dispose()
+    }
 
     fun loadData() {
         viewModelScope.launch {
-            if (mCurrentCard != null) {
-                mTimelineViewState.value = TimelineViewState.LOADING
-                mCurrentCard = eventsRepo.getActualCard(dateProvider.current())
-                mCardTitleViewState.value = mCurrentCard?.getTitleViewState()
+            mTimelineViewState.value = TimelineViewState.LOADING
 
-                updateArrows()
-                updateCurrentEvents()
+            mCurrentCard = repository.getLastCard()
+            updateTimelineView()
 
-                mTimelineViewState.value = TimelineViewState.HAS_CARD
-            } else {
-                mTimelineViewState.value = TimelineViewState.EMPTY
-            }
+            mHasPrevious = mCurrentCard?.let { repository.getPreviousCard(it) != null } ?: false
+            mHasNext = mCurrentCard?.let { repository.getNextCard(it) != null } ?: false
+            updateNavBarView()
+
+            mEventsAdapter.events = mCurrentCard?.let {
+                repository.getEvents(it).asViewState()
+            } ?: listOf()
+            updateEventsView()
         }
     }
 
     fun onCreateFirstCard() {
         viewModelScope.launch {
             val currentDate = dateProvider.current()
-            val newCard = Card(CardId(0L), currentDate.second.toString(), currentDate)
+            val card = Card(title = currentDate.second.toString(), date = currentDate)
 
-            mCurrentCard = eventsRepo.createCard(newCard)
+            mCurrentCard = repository.createCard(card)
 
-            if (mCurrentCard != null) {
-                mTimelineViewState.value = TimelineViewState.HAS_CARD
-            }
-
-            updateArrows()
-            updateCurrentEvents()
+            updateNavBarView()
+            updateEventsView()
+            updateTimelineView()
 
             onCreateEvent()
         }
@@ -72,36 +94,45 @@ class TimelineViewModel(
     fun onCreateCard() {
         viewModelScope.launch {
             val currentDate = dateProvider.current()
-            val newCard = Card(CardId(0L), currentDate.second.toString(), currentDate)
+            val card = Card(title = currentDate.second.toString(), date = currentDate)
 
-            mCurrentCard = eventsRepo.createCard(newCard)
+            mCurrentCard = repository.createCard(card)
 
-            if (mCurrentCard != null) {
-                mTimelineViewState.value = TimelineViewState.HAS_CARD
+            updateNavBarView()
+            updateEventsView()
+            updateTimelineView()
+        }
+    }
+
+    fun onPreviousCard() {
+        viewModelScope.launch {
+            repository.getPreviousCard(mCurrentCard ?: return@launch)?.let { card ->
+                mHasPrevious = repository.getPreviousCard(card) != null
+                mHasNext = repository.getNextCard(card) != null
+                updateNavBarView()
+
+                mEventsAdapter.events = repository.getEvents(card).asViewState()
+                updateEventsView()
+
+                mCurrentCard = card
+                updateTimelineView()
             }
-
-            updateArrows()
-            updateCurrentEvents()
         }
     }
 
-    fun onPreviousDate() {
+    fun onNextCard() {
         viewModelScope.launch {
-            val current = mCurrentCard ?: return@launch
-            mCurrentCard = eventsRepo.getPreviousCard(current) ?: return@launch
-            mCardTitleViewState.value = mCurrentCard?.getTitleViewState()
-            updateArrows()
-            updateCurrentEvents()
-        }
-    }
+            repository.getNextCard(mCurrentCard ?: return@launch)?.let { card ->
+                mHasPrevious = repository.getPreviousCard(card) != null
+                mHasNext = repository.getNextCard(card) != null
+                updateNavBarView()
 
-    fun onNextDate() {
-        viewModelScope.launch {
-            val current = mCurrentCard ?: return@launch
-            mCurrentCard = eventsRepo.getNextCard(current) ?: return@launch
-            mCardTitleViewState.value = mCurrentCard?.getTitleViewState()
-            updateArrows()
-            updateCurrentEvents()
+                mEventsAdapter.events = repository.getEvents(card).asViewState()
+                updateEventsView()
+
+                mCurrentCard = card
+                updateTimelineView()
+            }
         }
     }
 
@@ -109,10 +140,15 @@ class TimelineViewModel(
         return true
     }
 
-    fun onResetToCurrent() {
+    fun onResetToLast() {
         viewModelScope.launch {
-            mCurrentCard = eventsRepo.getActualCard(currentDate = dateProvider.current())
-                ?: throw IllegalStateException("Actual card is null")
+            mCurrentCard = repository.getLastCard()
+            mHasPrevious = mCurrentCard?.let { repository.getPreviousCard(it) != null } ?: false
+            mHasNext = mCurrentCard?.let { repository.getNextCard(it) != null } ?: false
+
+            updateNavBarView()
+            updateEventsView()
+            updateTimelineView()
         }
     }
 
@@ -127,28 +163,27 @@ class TimelineViewModel(
         TimeWalkerApp.navigator.openEditor(cardId, eventId)
     }
 
-    private suspend fun updateArrows() {
-        val previous = eventsRepo.getPreviousCard(mCurrentCard ?: return)
-        val leftArrow = when {
-            previous != null -> ArrowViewState.ARROW
-            else -> ArrowViewState.HIDDEN
-        }
+    private fun updateNavBarView() {
+        val leftArrow =
+            if (mHasPrevious) ArrowViewState.ARROW
+            else ArrowViewState.HIDDEN
 
-        val next = eventsRepo.getNextCard(mCurrentCard ?: return)
-        val right = when {
-            next != null -> ArrowViewState.ARROW
-            else -> ArrowViewState.NEXT_CARD
-        }
+        val right =
+            if (mHasNext) ArrowViewState.ARROW
+            else ArrowViewState.NEXT_CARD
 
         mArrowsViewState.value = leftArrow to right
+        mCardTitleViewState.value = mCurrentCard?.getTitleViewState()
     }
 
-    private suspend fun updateCurrentEvents() {
-        withContext(Dispatchers.Main) {
-            val events = eventsRepo.getEvents(mCurrentCard ?: return@withContext)
-            mEventsAdapter.events = events.asViewState()
-            mHasEvents.value = events.isNotEmpty()
-        }
+    private fun updateEventsView() {
+        mHasEvents.value = mEventsAdapter.events.isNotEmpty()
+    }
+
+    private fun updateTimelineView() {
+        mTimelineViewState.value =
+            if (mCurrentCard == null) TimelineViewState.EMPTY
+            else TimelineViewState.HAS_CARD
     }
 
 }

@@ -5,10 +5,10 @@ import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.domain.*
 
-class EventsRepo(
+class Repository(
     private val cardDao: ICardDao,
     private val eventDao: IEventDao
-) : IEventsRepo {
+) : IRepository {
 
     override suspend fun createCard(card: Card): Card {
         return withContext(Dispatchers.Default) {
@@ -69,7 +69,7 @@ class EventsRepo(
     override suspend fun getNextCard(current: Card): Card? {
         return withContext(Dispatchers.Default) {
             val entity = cardDao.get(current.id.value) ?: return@withContext null
-            val next = cardDao.nextOrNull(entity.order) ?: return@withContext null
+            val next = cardDao.getNext(entity.order) ?: return@withContext null
 
             Card(
                 id = CardId(next.id),
@@ -82,7 +82,7 @@ class EventsRepo(
     override suspend fun getPreviousCard(current: Card): Card? {
         return withContext(Dispatchers.Default) {
             val entity = cardDao.get(current.id.value) ?: return@withContext null
-            val next = cardDao.previousOrNull(entity.order) ?: return@withContext null
+            val next = cardDao.getPrevious(entity.order) ?: return@withContext null
 
             Card(
                 id = CardId(next.id),
@@ -92,8 +92,16 @@ class EventsRepo(
         }
     }
 
-    override suspend fun getActualCard(currentDate: ZonedDateTime): Card? {
-        return null
+    override suspend fun getLastCard(): Card? {
+        return withContext(Dispatchers.Default) {
+            val entity = cardDao.getActual() ?: return@withContext null
+
+            Card(
+                id = CardId(entity.id),
+                title = entity.title,
+                date = ZonedDateTime.now()
+            )
+        }
     }
 
 }

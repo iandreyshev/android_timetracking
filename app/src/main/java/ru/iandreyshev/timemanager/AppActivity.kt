@@ -25,9 +25,9 @@ class AppActivity : BaseActivity() {
     }
 
     private fun initButtons() {
-        nextButton.setOnClickListener { mViewModel.onNextDate() }
-        previousButton.setOnClickListener { mViewModel.onPreviousDate() }
-        titleClickableArea.setOnClickListener { mViewModel.onResetToCurrent() }
+        nextButton.setOnClickListener { mViewModel.onNextCard() }
+        previousButton.setOnClickListener { mViewModel.onPreviousCard() }
+        titleClickableArea.setOnClickListener { mViewModel.onResetToLast() }
         titleClickableArea.setOnLongClickListener { mViewModel.onOpenDatePicker() }
         createFirstCardButton.setOnClickListener { mViewModel.onCreateFirstCard() }
         nextCardButton.setOnClickListener { mViewModel.onCreateCard() }

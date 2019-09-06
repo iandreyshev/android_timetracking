@@ -1,7 +1,8 @@
 package ru.iandreyshev.timemanager.navigation
 
 import android.content.Context
-import org.jetbrains.anko.startActivity
+import android.content.Intent
+import org.jetbrains.anko.newTask
 import ru.iandreyshev.timemanager.domain.CardId
 import ru.iandreyshev.timemanager.domain.EventId
 import ru.iandreyshev.timemanager.ui.editor.EditorActivity
@@ -11,10 +12,13 @@ class Navigator(
 ) {
 
     fun openEditor(cardId: CardId, eventId: EventId) {
-        applicationContext.startActivity<EditorActivity>(
-            EditorActivity.ARG_CARD_ID to cardId.value,
-            EditorActivity.ARG_EVENT_ID to eventId.value
-        )
+        val intent = Intent(applicationContext, EditorActivity::class.java)
+            .newTask()
+            .apply {
+                putExtra(EditorActivity.ARG_CARD_ID, cardId.value)
+                putExtra(EditorActivity.ARG_EVENT_ID, eventId.value)
+            }
+        applicationContext.startActivity(intent)
     }
 
 }

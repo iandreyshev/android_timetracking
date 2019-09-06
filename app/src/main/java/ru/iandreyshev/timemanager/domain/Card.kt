@@ -3,7 +3,7 @@ package ru.iandreyshev.timemanager.domain
 import org.threeten.bp.ZonedDateTime
 
 data class Card(
-    val id: CardId,
+    val id: CardId = CardId.default(),
     val title: String,
     val date: ZonedDateTime
 ) : Comparable<Card> {

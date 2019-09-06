@@ -16,7 +16,8 @@ fun AppActivity.getViewModel() =
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             val vm = TimelineViewModel(
                 dateProvider = TimeWalkerApp.dateProvider,
-                eventsRepo = TimeWalkerApp.eventsRepo
+                repository = TimeWalkerApp.repository,
+                editorObservable = TimeWalkerApp.editorObservable
             )
             vm.loadData()
 
@@ -30,8 +31,9 @@ fun EditorActivity.getViewModel(cardId: CardId, eventId: EventId?) =
             return EditorViewModel(
                 cardId = cardId,
                 eventId = eventId ?: EventId.default(),
-                eventsRepo = TimeWalkerApp.eventsRepo,
-                dateProvider = TimeWalkerApp.dateProvider
+                repository = TimeWalkerApp.repository,
+                dateProvider = TimeWalkerApp.dateProvider,
+                observer = TimeWalkerApp.editorObserver
             ) as T
         }
     })[EditorViewModel::class.java].apply {

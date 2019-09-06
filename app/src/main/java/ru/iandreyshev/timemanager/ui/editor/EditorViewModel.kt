@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.reactivex.Observer
 import kotlinx.coroutines.launch
 import org.threeten.bp.format.DateTimeFormatter
 import ru.iandreyshev.timemanager.domain.*
@@ -14,8 +15,9 @@ import java.util.*
 class EditorViewModel(
     private val cardId: CardId,
     private val eventId: EventId?,
-    private val eventsRepo: IEventsRepo,
-    private val dateProvider: IDateProvider
+    private val repository: IRepository,
+    private val dateProvider: IDateProvider,
+    private val observer: Observer<EditorAction>
 ) : ViewModel() {
 
     val timeViewState: LiveData<String> by lazy { mTimeViewState }
@@ -41,7 +43,7 @@ class EditorViewModel(
         viewModelScope.launch {
             if (eventId != null) {
                 mLoadDataViewState.value = true
-                val eventToEdit = eventsRepo.getEvent(eventId) ?: return@launch
+                val eventToEdit = repository.getEvent(eventId) ?: return@launch
                 updateTitleEvent.execute(eventToEdit.description)
                 mPickedTime = eventToEdit.endTime
                 updateTimeViewState()
@@ -53,7 +55,7 @@ class EditorViewModel(
     fun onSave() {
         viewModelScope.launch {
             if (eventId == null) {
-                eventsRepo.createEvent(
+                repository.createEvent(
                     cardId,
                     Event(
                         id = EventId.default(),
@@ -62,7 +64,7 @@ class EditorViewModel(
                     )
                 )
             } else {
-                eventsRepo.update(
+                repository.update(
                     cardId,
                     Event(
                         id = eventId,
@@ -72,6 +74,7 @@ class EditorViewModel(
                 )
             }
             exitEvent.execute()
+            observer.onNext(EditorAction.EditCompleted)
         }
     }
 
