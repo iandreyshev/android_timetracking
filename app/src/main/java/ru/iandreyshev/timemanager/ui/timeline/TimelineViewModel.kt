@@ -81,7 +81,7 @@ class TimelineViewModel(
             val currentDate = dateProvider.current()
             val card = Card(title = currentDate.second.toString(), date = currentDate)
 
-            mCurrentCard = repository.createCard(card)
+            mCurrentCard = repository.saveCard(card)
 
             updateNavBarView()
             updateEventsView()
@@ -94,13 +94,17 @@ class TimelineViewModel(
     fun onCreateCard() {
         viewModelScope.launch {
             val currentDate = dateProvider.current()
-            val card = Card(title = currentDate.second.toString(), date = currentDate)
+            val cardToSave = Card(title = currentDate.second.toString(), date = currentDate)
 
-            mCurrentCard = repository.createCard(card)
-
-            updateNavBarView()
-            updateEventsView()
+            mCurrentCard = repository.saveCard(cardToSave)
             updateTimelineView()
+
+            mHasPrevious = mCurrentCard?.let { repository.getPreviousCard(it) != null } ?: false
+            mHasNext = mCurrentCard?.let { repository.getNextCard(it) != null } ?: false
+            updateNavBarView()
+
+            mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it) }.asViewState()
+            updateEventsView()
         }
     }
 
@@ -143,12 +147,14 @@ class TimelineViewModel(
     fun onResetToLast() {
         viewModelScope.launch {
             mCurrentCard = repository.getLastCard()
+            updateTimelineView()
+
             mHasPrevious = mCurrentCard?.let { repository.getPreviousCard(it) != null } ?: false
             mHasNext = mCurrentCard?.let { repository.getNextCard(it) != null } ?: false
-
             updateNavBarView()
+
+            mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it) }.asViewState()
             updateEventsView()
-            updateTimelineView()
         }
     }
 
@@ -164,16 +170,9 @@ class TimelineViewModel(
     }
 
     private fun updateNavBarView() {
-        val leftArrow =
-            if (mHasPrevious) ArrowViewState.ARROW
-            else ArrowViewState.HIDDEN
-
-        val right =
-            if (mHasNext) ArrowViewState.ARROW
-            else ArrowViewState.NEXT_CARD
-
+        val leftArrow = if (mHasPrevious) ArrowViewState.ARROW else ArrowViewState.HIDDEN
+        val right = if (mHasNext) ArrowViewState.ARROW else ArrowViewState.NEXT_CARD
         mArrowsViewState.value = leftArrow to right
-        mCardTitleViewState.value = mCurrentCard?.getTitleViewState()
     }
 
     private fun updateEventsView() {
@@ -181,6 +180,7 @@ class TimelineViewModel(
     }
 
     private fun updateTimelineView() {
+        mCardTitleViewState.value = mCurrentCard?.getTitleViewState()
         mTimelineViewState.value =
             if (mCurrentCard == null) TimelineViewState.EMPTY
             else TimelineViewState.HAS_CARD

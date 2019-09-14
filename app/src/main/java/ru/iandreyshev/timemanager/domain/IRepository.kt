@@ -1,8 +1,8 @@
 package ru.iandreyshev.timemanager.domain
 
 interface IRepository {
-    suspend fun createCard(card: Card): Card
-    suspend fun createEvent(cardId: CardId, event: Event): Event?
+    suspend fun saveCard(card: Card): Card
+    suspend fun saveEvent(cardId: CardId, event: Event): Event?
 
     suspend fun update(cardId: CardId, event: Event)
 

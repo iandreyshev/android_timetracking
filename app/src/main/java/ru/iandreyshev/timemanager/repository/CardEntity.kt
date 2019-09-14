@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "cards")
-class CardEntity(
+data class CardEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0,
     var title: String,

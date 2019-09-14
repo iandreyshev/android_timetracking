@@ -55,7 +55,7 @@ class EditorViewModel(
     fun onSave() {
         viewModelScope.launch {
             if (eventId == null) {
-                repository.createEvent(
+                repository.saveEvent(
                     cardId,
                     Event(
                         id = EventId.default(),

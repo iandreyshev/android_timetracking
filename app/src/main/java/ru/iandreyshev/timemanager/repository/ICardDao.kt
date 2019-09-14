@@ -13,8 +13,8 @@ interface ICardDao {
     @Query("SELECT * FROM cards WHERE :id == id")
     fun get(id: Long): CardEntity?
 
-    @Query("SELECT * FROM cards ORDER BY `order` LIMIT 1")
-    fun getActual(): CardEntity?
+    @Query("SELECT * FROM cards WHERE `order` = (SELECT MAX (`order`) FROM cards) LIMIT 1")
+    fun getLast(): CardEntity?
 
     @Query("SELECT * FROM cards WHERE :order < `order` LIMIT 1")
     fun getNext(order: Long): CardEntity?

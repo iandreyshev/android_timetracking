@@ -10,7 +10,7 @@ class Repository(
     private val eventDao: IEventDao
 ) : IRepository {
 
-    override suspend fun createCard(card: Card): Card {
+    override suspend fun saveCard(card: Card): Card {
         return withContext(Dispatchers.Default) {
             val order = (cardDao.lastOrder() ?: 0) + 1
             val entity = CardEntity(
@@ -19,11 +19,15 @@ class Repository(
             )
             val id = cardDao.insert(entity)
 
-            card.copy(id = CardId(id))
+            Card(
+                id =  CardId(id),
+                title = entity.title,
+                date = ZonedDateTime.now()
+            )
         }
     }
 
-    override suspend fun createEvent(cardId: CardId, event: Event): Event? {
+    override suspend fun saveEvent(cardId: CardId, event: Event): Event? {
         return withContext(Dispatchers.Default) {
             cardDao.get(cardId.value) ?: return@withContext null
 
@@ -82,10 +86,10 @@ class Repository(
     override suspend fun getPreviousCard(current: Card): Card? {
         return withContext(Dispatchers.Default) {
             val entity = cardDao.get(current.id.value) ?: return@withContext null
-            val next = cardDao.getPrevious(entity.order) ?: return@withContext null
+            val previous = cardDao.getPrevious(entity.order) ?: return@withContext null
 
             Card(
-                id = CardId(next.id),
+                id = CardId(previous.id),
                 title = entity.title,
                 date = ZonedDateTime.now()
             )
@@ -94,7 +98,7 @@ class Repository(
 
     override suspend fun getLastCard(): Card? {
         return withContext(Dispatchers.Default) {
-            val entity = cardDao.getActual() ?: return@withContext null
+            val entity = cardDao.getLast() ?: return@withContext null
 
             Card(
                 id = CardId(entity.id),
