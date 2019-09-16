@@ -1,5 +1,7 @@
 package ru.iandreyshev.timemanager.ui.editor
 
+import ru.iandreyshev.timemanager.domain.CardId
+
 sealed class EditorAction {
-    object EditCompleted : EditorAction()
+    class EditCompleted(val cardId: CardId) : EditorAction()
 }

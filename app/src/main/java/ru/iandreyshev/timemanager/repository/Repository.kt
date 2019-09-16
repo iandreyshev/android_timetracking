@@ -77,7 +77,7 @@ class Repository(
 
             Card(
                 id = CardId(next.id),
-                title = entity.title,
+                title = next.title,
                 date = ZonedDateTime.now()
             )
         }
@@ -90,7 +90,7 @@ class Repository(
 
             Card(
                 id = CardId(previous.id),
-                title = entity.title,
+                title = previous.title,
                 date = ZonedDateTime.now()
             )
         }

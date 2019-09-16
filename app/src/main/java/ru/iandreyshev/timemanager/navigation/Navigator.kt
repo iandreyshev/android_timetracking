@@ -11,12 +11,15 @@ class Navigator(
     private val applicationContext: Context
 ) {
 
+    fun openEditor(cardId: CardId) =
+        openEditor(cardId, EventId.default())
+
     fun openEditor(cardId: CardId, eventId: EventId) {
         val intent = Intent(applicationContext, EditorActivity::class.java)
             .newTask()
             .apply {
                 putExtra(EditorActivity.ARG_CARD_ID, cardId.value)
-                putExtra(EditorActivity.ARG_EVENT_ID, eventId.value)
+                putExtra(EditorActivity.ARG_EVENT_ID, eventId?.value)
             }
         applicationContext.startActivity(intent)
     }

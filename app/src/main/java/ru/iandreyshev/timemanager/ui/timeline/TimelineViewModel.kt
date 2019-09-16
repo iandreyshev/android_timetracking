@@ -11,7 +11,6 @@ import io.reactivex.rxkotlin.plusAssign
 import kotlinx.coroutines.launch
 import ru.iandreyshev.timemanager.TimeWalkerApp
 import ru.iandreyshev.timemanager.domain.Card
-import ru.iandreyshev.timemanager.domain.EventId
 import ru.iandreyshev.timemanager.domain.IDateProvider
 import ru.iandreyshev.timemanager.domain.IRepository
 import ru.iandreyshev.timemanager.ui.editor.EditorAction
@@ -45,13 +44,7 @@ class TimelineViewModel(
     private var mDisposables = CompositeDisposable()
 
     init {
-        mDisposables += editorObservable.subscribe {
-            viewModelScope.launch {
-                updateNavBarView()
-                updateEventsView()
-                updateTimelineView()
-            }
-        }
+        mDisposables += editorObservable.subscribe(::onEditorAction)
     }
 
     override fun onCleared() {
@@ -69,9 +62,7 @@ class TimelineViewModel(
             mHasNext = mCurrentCard?.let { repository.getNextCard(it) != null } ?: false
             updateNavBarView()
 
-            mEventsAdapter.events = mCurrentCard?.let {
-                repository.getEvents(it).asViewState()
-            } ?: listOf()
+            mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it) }.asViewState()
             updateEventsView()
         }
     }
@@ -160,7 +151,22 @@ class TimelineViewModel(
 
     fun onCreateEvent() {
         val cardId = mCurrentCard?.id ?: return
-        TimeWalkerApp.navigator.openEditor(cardId, EventId.default())
+        TimeWalkerApp.navigator.openEditor(cardId)
+    }
+
+    private fun onEditorAction(action: EditorAction) {
+        when (action) {
+            is EditorAction.EditCompleted -> {
+                if (action.cardId != mCurrentCard?.id) {
+                    return
+                }
+
+                viewModelScope.launch {
+                    mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it) }.asViewState()
+                    updateEventsView()
+                }
+            }
+        }
     }
 
     private fun onEventClick(position: Int) {

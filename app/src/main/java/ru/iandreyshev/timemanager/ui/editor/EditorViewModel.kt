@@ -14,7 +14,7 @@ import java.util.*
 
 class EditorViewModel(
     private val cardId: CardId,
-    private val eventId: EventId?,
+    private val eventId: EventId,
     private val repository: IRepository,
     private val dateProvider: IDateProvider,
     private val observer: Observer<EditorAction>
@@ -28,6 +28,7 @@ class EditorViewModel(
 
     private var mTitle = ""
     private var mPickedTime = dateProvider.current()
+    private val mUpdateMode = eventId != EventId.default()
 
     private val mLoadDataViewState = MutableLiveData(true)
     private val mTimeViewState = MutableLiveData<String>()
@@ -41,7 +42,7 @@ class EditorViewModel(
 
     fun onLoadData() {
         viewModelScope.launch {
-            if (eventId != null) {
+            if (mUpdateMode) {
                 mLoadDataViewState.value = true
                 val eventToEdit = repository.getEvent(eventId) ?: return@launch
                 updateTitleEvent.execute(eventToEdit.description)
@@ -54,7 +55,7 @@ class EditorViewModel(
 
     fun onSave() {
         viewModelScope.launch {
-            if (eventId == null) {
+            if (!mUpdateMode) {
                 repository.saveEvent(
                     cardId,
                     Event(
@@ -74,7 +75,7 @@ class EditorViewModel(
                 )
             }
             exitEvent.execute()
-            observer.onNext(EditorAction.EditCompleted)
+            observer.onNext(EditorAction.EditCompleted(cardId))
         }
     }
 
