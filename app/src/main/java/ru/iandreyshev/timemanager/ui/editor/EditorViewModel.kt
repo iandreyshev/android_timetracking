@@ -15,6 +15,7 @@ import java.util.*
 class EditorViewModel(
     private val cardId: CardId,
     private val eventId: EventId,
+    val hasStartTime: Boolean,
     private val repository: IRepository,
     private val dateProvider: IDateProvider,
     private val observer: Observer<EditorAction>

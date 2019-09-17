@@ -6,6 +6,7 @@ import androidx.room.TypeConverters
 import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.domain.CardId
 import ru.iandreyshev.timemanager.domain.Event
+import ru.iandreyshev.timemanager.domain.EventId
 
 @Entity(tableName = "events")
 @TypeConverters(TimeTypeConverter::class)

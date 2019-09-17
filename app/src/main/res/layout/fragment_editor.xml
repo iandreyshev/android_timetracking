@@ -52,7 +52,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:id="@+id/endTimeGroup"
+                android:id="@+id/startTimeGroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -64,7 +64,7 @@
                 app:layout_constraintTop_toBottomOf="@id/titleView">
 
                 <TextView
-                    android:id="@+id/timeTitle"
+                    android:id="@+id/startTimeTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -73,7 +73,36 @@
                     tools:text="16:40" />
 
                 <ImageView
-                    android:id="@+id/timeIcon"
+                    android:id="@+id/startTimeIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:srcCompat="@drawable/ic_time" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/endTimeGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center|end"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/startTimeGroup">
+
+                <TextView
+                    android:id="@+id/endTimeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:maxLines="1"
+                    android:textSize="16sp"
+                    tools:text="16:40" />
+
+                <ImageView
+                    android:id="@+id/endTimeIcon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     app:srcCompat="@drawable/ic_time" />

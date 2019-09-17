@@ -15,7 +15,7 @@ class EventViewHolder(
 
     fun bind(viewState: EventViewState) {
         itemView.title.text = viewState.title
-        itemView.time.text = viewState.time
+        itemView.time.text = viewState.endTime
     }
 
 }

@@ -5,7 +5,7 @@ import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.domain.*
 
-class Repository(
+class   Repository(
     private val cardDao: ICardDao,
     private val eventDao: IEventDao
 ) : IRepository {
@@ -32,6 +32,7 @@ class Repository(
             cardDao.get(cardId.value) ?: return@withContext null
 
             val entity = EventEntity.create(cardId, event)
+            entity.id = 0
             val id = eventDao.insert(entity)
 
             event.copy(id = EventId(id))
@@ -41,7 +42,9 @@ class Repository(
     override suspend fun update(cardId: CardId, event: Event) {
         withContext(Dispatchers.Default) {
             val cardEntity = cardDao.get(cardId.value) ?: return@withContext
-            eventDao.update(EventEntity.create(cardEntity.id, event))
+            val updateEntity = EventEntity.create(cardEntity.id, event)
+
+            eventDao.update(updateEntity)
         }
     }
 

@@ -135,12 +135,20 @@
 
     </FrameLayout>
 
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_width="match_parent"
+        app:fabAlignmentMode="end"
+        style="@style/Widget.MaterialComponents.BottomAppBar"
+        android:layout_gravity="bottom"
+        app:navigationIcon="@drawable/ic_create_event"
+        android:layout_height="wrap_content" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/createEventButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="24dp"
+        app:layout_anchor="@id/bottomAppBar"
         app:srcCompat="@drawable/ic_create_event" />
 
     <FrameLayout
