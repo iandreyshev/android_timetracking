@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.reactivex.Observer
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 import org.threeten.bp.format.DateTimeFormatter
 import ru.iandreyshev.timemanager.domain.*
@@ -15,41 +17,50 @@ import java.util.*
 class EditorViewModel(
     private val cardId: CardId,
     private val eventId: EventId,
-    val hasStartTime: Boolean,
     private val repository: IRepository,
     private val dateProvider: IDateProvider,
     private val observer: Observer<EditorAction>
 ) : ViewModel() {
 
-    val timeViewState: LiveData<String> by lazy { mTimeViewState }
+    val startTimeViewState: LiveData<StartTimeViewState> by lazy { mStartTimeViewState }
+    val endTimeViewState: LiveData<String> by lazy { mEndTimeViewState }
     val saveButtonViewState: LiveData<Boolean> by lazy { mSaveButtonViewState }
 
     val updateTitleEvent = MutableLiveData<LiveDataEvent<String>>()
     val exitEvent = MutableLiveData<LiveDataEvent<Unit>>()
 
     private var mTitle = ""
-    private var mPickedTime = dateProvider.current()
+    private var mPickedStartTime = dateProvider.current()
+    private var mPickedEndTime = dateProvider.current()
     private val mUpdateMode = eventId != EventId.default()
+    private var mHasStartTime = false
 
     private val mLoadDataViewState = MutableLiveData(true)
-    private val mTimeViewState = MutableLiveData<String>()
+    private val mStartTimeViewState = MutableLiveData<StartTimeViewState>(StartTimeViewState.Hidden)
+    private val mEndTimeViewState = MutableLiveData("")
     private val mSaveButtonViewState = MutableLiveData(false)
 
     private val mTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
+    private var mBackgroundJob: Job = Job()
 
     init {
         updateTimeViewState()
     }
 
     fun onLoadData() {
-        viewModelScope.launch {
+        mBackgroundJob.cancel()
+        mBackgroundJob = viewModelScope.launch {
             if (mUpdateMode) {
                 mLoadDataViewState.value = true
                 val eventToEdit = repository.getEvent(eventId) ?: return@launch
                 updateTitleEvent.execute(eventToEdit.description)
-                mPickedTime = eventToEdit.endTime
+                mPickedEndTime = eventToEdit.endTime
                 updateTimeViewState()
             }
+
+            mHasStartTime = repository.getEventsCount(cardId) <= 1
+
             mLoadDataViewState.value = false
         }
     }
@@ -62,7 +73,7 @@ class EditorViewModel(
                     Event(
                         id = EventId.default(),
                         description = mTitle,
-                        endTime = mPickedTime
+                        endTime = mPickedEndTime
                     )
                 )
             } else {
@@ -71,7 +82,7 @@ class EditorViewModel(
                     Event(
                         id = eventId,
                         description = mTitle,
-                        endTime = mPickedTime
+                        endTime = mPickedEndTime
                     )
                 )
             }
@@ -80,13 +91,15 @@ class EditorViewModel(
         }
     }
 
-    fun onDatePicked(date: Date?) {
-        date ?: return
+    fun onStartTimePicked(time: Date?) {
+        time ?: return
+        mPickedStartTime = dateProvider.asZonedDateTime(time, time)
+        updateTimeViewState()
     }
 
-    fun onTimePicked(time: Date?) {
+    fun onEndTimePicked(time: Date?) {
         time ?: return
-        mPickedTime = dateProvider.asZonedDateTime(time, time)
+        mPickedEndTime = dateProvider.asZonedDateTime(time, time)
         updateTimeViewState()
     }
 
@@ -96,7 +109,13 @@ class EditorViewModel(
     }
 
     private fun updateTimeViewState() {
-        mTimeViewState.value = mPickedTime.format(mTimeFormatter)
+        mStartTimeViewState.value = if (mHasStartTime) {
+            val formattedTime = mPickedStartTime.format(mTimeFormatter)
+            StartTimeViewState.ShowTime(formattedTime)
+        } else {
+            StartTimeViewState.Hidden
+        }
+        mEndTimeViewState.value = mPickedEndTime.format(mTimeFormatter)
     }
 
 }

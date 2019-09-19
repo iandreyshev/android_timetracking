@@ -5,15 +5,19 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import androidx.core.view.isGone
+import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import kotlinx.android.synthetic.main.fragment_editor.*
 import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.di.getViewModel
-import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import ru.iandreyshev.timemanager.domain.CardId
 import ru.iandreyshev.timemanager.domain.EventId
 import ru.iandreyshev.timemanager.ui.BaseActivity
+import ru.iandreyshev.timemanager.utils.exhaustive
 
 class EditorActivity : BaseActivity() {
+
+    private var mTimePickerDialog: SingleDateAndTimePickerDialog? = null
 
     private val mViewModel: EditorViewModel by lazy {
         val cardId = CardId(intent.extras?.getLong(ARG_CARD_ID) ?: 0)
@@ -25,13 +29,15 @@ class EditorActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_editor)
 
+        startTimeGroup.setOnClickListener { pickStartTime() }
         endTimeGroup.setOnClickListener { pickEndTime() }
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_clear)
 
-        mViewModel.timeViewState.observe(timeTitle::setText)
+        mViewModel.startTimeViewState.observe(::updateStartTime)
+        mViewModel.endTimeViewState.observe(endTime::setText)
         mViewModel.updateTitleEvent.consume(titleView::setText)
         mViewModel.exitEvent.consume { finish() }
 
@@ -63,17 +69,45 @@ class EditorActivity : BaseActivity() {
         finish()
     }
 
+    private fun pickStartTime() {
+        mTimePickerDialog?.dismiss()
+        mTimePickerDialog = SingleDateAndTimePickerDialog.Builder(this)
+            .bottomSheet()
+            .displayMinutes(true)
+            .displayHours(true)
+            .displayDays(false)
+            .displayMonth(false)
+            .displayYears(false)
+            .minutesStep(1)
+            .listener(mViewModel::onStartTimePicked)
+            .build()
+        mTimePickerDialog?.display()
+    }
+
     private fun pickEndTime() {
-        SingleDateAndTimePickerDialog.Builder(this)
-                .bottomSheet()
-                .displayMinutes(true)
-                .displayHours(true)
-                .displayDays(false)
-                .displayMonth(false)
-                .displayYears(false)
-                .minutesStep(1)
-                .listener(mViewModel::onTimePicked)
-                .display()
+        mTimePickerDialog?.dismiss()
+        mTimePickerDialog = SingleDateAndTimePickerDialog.Builder(this)
+            .bottomSheet()
+            .displayMinutes(true)
+            .displayHours(true)
+            .displayDays(false)
+            .displayMonth(false)
+            .displayYears(false)
+            .minutesStep(1)
+            .listener(mViewModel::onEndTimePicked)
+            .build()
+        mTimePickerDialog?.display()
+    }
+
+    private fun updateStartTime(viewState: StartTimeViewState) {
+        when (viewState) {
+            StartTimeViewState.Hidden ->
+                startTimeGroup.isGone = true
+            is StartTimeViewState.ShowTime -> {
+                startTimeGroup.isGone = false
+                startTime.text = viewState.value
+            }
+        }.exhaustive
     }
 
     companion object {

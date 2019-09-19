@@ -25,7 +25,10 @@ fun AppActivity.getViewModel() =
         }
     })[TimelineViewModel::class.java]
 
-fun EditorActivity.getViewModel(cardId: CardId, eventId: EventId?) =
+fun EditorActivity.getViewModel(
+    cardId: CardId,
+    eventId: EventId?
+) =
     ViewModelProviders.of(this, object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return EditorViewModel(
