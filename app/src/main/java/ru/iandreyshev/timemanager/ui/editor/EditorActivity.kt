@@ -103,6 +103,10 @@ class EditorActivity : BaseActivity() {
         when (viewState) {
             StartTimeViewState.Hidden ->
                 startTimeGroup.isGone = true
+            StartTimeViewState.Undefined -> {
+                startTimeGroup.isGone = false
+                startTime.text = getString(R.string.editor_start_time_undefined)
+            }
             is StartTimeViewState.ShowTime -> {
                 startTimeGroup.isGone = false
                 startTime.text = viewState.value

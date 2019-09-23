@@ -8,11 +8,12 @@ private val END_DATE_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
 
 fun List<Event>?.asViewState(): List<EventViewState> {
     this ?: return listOf()
-    return map { item ->
+    return map { event ->
         EventViewState(
-            id = item.id,
-            title = item.description,
-            endTime = item.endTime.format(END_DATE_FORMATTER)
+            id = event.id,
+            title = event.description,
+            endTime = event.endTime.format(END_DATE_FORMATTER),
+            spendTime = event.getSpendMinutes().toString()
         )
     }
 }

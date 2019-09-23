@@ -62,7 +62,7 @@ class TimelineViewModel(
             mHasNext = mCurrentCard?.let { repository.getNextCard(it) != null } ?: false
             updateNavBarView()
 
-            mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it) }.asViewState()
+            mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it.id) }.asViewState()
             updateEventsView()
         }
     }
@@ -94,7 +94,7 @@ class TimelineViewModel(
             mHasNext = mCurrentCard?.let { repository.getNextCard(it) != null } ?: false
             updateNavBarView()
 
-            mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it) }.asViewState()
+            mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it.id) }.asViewState()
             updateEventsView()
         }
     }
@@ -106,7 +106,7 @@ class TimelineViewModel(
                 mHasNext = repository.getNextCard(card) != null
                 updateNavBarView()
 
-                mEventsAdapter.events = repository.getEvents(card).asViewState()
+                mEventsAdapter.events = repository.getEvents(card.id).asViewState()
                 updateEventsView()
 
                 mCurrentCard = card
@@ -122,7 +122,7 @@ class TimelineViewModel(
                 mHasNext = repository.getNextCard(card) != null
                 updateNavBarView()
 
-                mEventsAdapter.events = repository.getEvents(card).asViewState()
+                mEventsAdapter.events = repository.getEvents(card.id).asViewState()
                 updateEventsView()
 
                 mCurrentCard = card
@@ -144,7 +144,7 @@ class TimelineViewModel(
             mHasNext = mCurrentCard?.let { repository.getNextCard(it) != null } ?: false
             updateNavBarView()
 
-            mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it) }.asViewState()
+            mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it.id) }.asViewState()
             updateEventsView()
         }
     }
@@ -162,7 +162,7 @@ class TimelineViewModel(
                 }
 
                 viewModelScope.launch {
-                    mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it) }.asViewState()
+                    mEventsAdapter.events = mCurrentCard?.let { repository.getEvents(it.id) }.asViewState()
                     updateEventsView()
                 }
             }

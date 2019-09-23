@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.reactivex.Observer
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
+import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import ru.iandreyshev.timemanager.domain.*
 import ru.iandreyshev.timemanager.ui.utils.LiveDataEvent
@@ -30,7 +30,7 @@ class EditorViewModel(
     val exitEvent = MutableLiveData<LiveDataEvent<Unit>>()
 
     private var mTitle = ""
-    private var mPickedStartTime = dateProvider.current()
+    private var mPickedStartTime: ZonedDateTime? = null
     private var mPickedEndTime = dateProvider.current()
     private val mUpdateMode = eventId != EventId.default()
     private var mHasStartTime = false
@@ -66,6 +66,10 @@ class EditorViewModel(
     }
 
     fun onSave() {
+        if (mPickedStartTime == null) {
+            return
+        }
+
         viewModelScope.launch {
             if (!mUpdateMode) {
                 repository.saveEvent(
@@ -73,6 +77,7 @@ class EditorViewModel(
                     Event(
                         id = EventId.default(),
                         description = mTitle,
+                        startTime = mPickedStartTime ?: dateProvider.current(),
                         endTime = mPickedEndTime
                     )
                 )
@@ -82,6 +87,7 @@ class EditorViewModel(
                     Event(
                         id = eventId,
                         description = mTitle,
+                        startTime = mPickedStartTime ?: dateProvider.current(),
                         endTime = mPickedEndTime
                     )
                 )
@@ -109,11 +115,14 @@ class EditorViewModel(
     }
 
     private fun updateTimeViewState() {
-        mStartTimeViewState.value = if (mHasStartTime) {
-            val formattedTime = mPickedStartTime.format(mTimeFormatter)
-            StartTimeViewState.ShowTime(formattedTime)
-        } else {
-            StartTimeViewState.Hidden
+        val pickedStartTime = mPickedStartTime
+        mStartTimeViewState.value = when {
+            !mHasStartTime -> StartTimeViewState.Hidden
+            pickedStartTime == null -> StartTimeViewState.Undefined
+            else -> {
+                val formattedTime = pickedStartTime.format(mTimeFormatter)
+                StartTimeViewState.ShowTime(formattedTime)
+            }
         }
         mEndTimeViewState.value = mPickedEndTime.format(mTimeFormatter)
     }

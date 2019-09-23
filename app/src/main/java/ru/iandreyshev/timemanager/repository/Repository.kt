@@ -5,7 +5,7 @@ import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.domain.*
 
-class   Repository(
+class Repository(
     private val cardDao: ICardDao,
     private val eventDao: IEventDao
 ) : IRepository {
@@ -31,11 +31,18 @@ class   Repository(
         return withContext(Dispatchers.Default) {
             cardDao.get(cardId.value) ?: return@withContext null
 
-            val entity = EventEntity.create(cardId, event)
+            var eventToSave = event
+            val previousEvent = getEvents(cardId).lastOrNull()
+
+            if (previousEvent != null) {
+                eventToSave = eventToSave.copy(startTime = previousEvent.endTime)
+            }
+
+            val entity = EventEntity.create(cardId, eventToSave)
             entity.id = 0
             val id = eventDao.insert(entity)
 
-            event.copy(id = EventId(id))
+            eventToSave.copy(id = EventId(id))
         }
     }
 
@@ -55,21 +62,29 @@ class   Repository(
             Event(
                 id = EventId(entity.id),
                 description = entity.description,
+                startTime = entity.startTime,
                 endTime = entity.endTime
             )
         }
     }
 
-    override suspend fun getEvents(card: Card): List<Event> {
+    override suspend fun getEvents(cardId: CardId): List<Event> {
         return withContext(Dispatchers.Default) {
-            eventDao.getAll(card.id.value)
+            eventDao.getAll(cardId.value)
                 .map { entity ->
                     Event(
                         id = EventId(entity.id),
                         description = entity.description,
+                        startTime = entity.startTime,
                         endTime = entity.endTime
                     )
                 }
+        }
+    }
+
+    override suspend fun getEventsCount(cardId: CardId): Int {
+        return withContext(Dispatchers.Default) {
+            eventDao.getAll(cardId.value).count()
         }
     }
 

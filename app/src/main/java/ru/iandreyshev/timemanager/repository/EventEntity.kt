@@ -6,7 +6,6 @@ import androidx.room.TypeConverters
 import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.domain.CardId
 import ru.iandreyshev.timemanager.domain.Event
-import ru.iandreyshev.timemanager.domain.EventId
 
 @Entity(tableName = "events")
 @TypeConverters(TimeTypeConverter::class)
@@ -15,6 +14,7 @@ class EventEntity(
     var id: Long,
     var cardId: Long,
     var description: String,
+    var startTime: ZonedDateTime,
     var endTime: ZonedDateTime
 ) {
 
@@ -26,6 +26,7 @@ class EventEntity(
             id = event.id.value,
             cardId = cardId.value,
             description = event.description,
+            startTime = event.startTime,
             endTime = event.endTime
         )
     }
