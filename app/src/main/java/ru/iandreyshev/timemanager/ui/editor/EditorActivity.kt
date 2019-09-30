@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.core.view.isGone
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_editor.*
 import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.di.getViewModel
@@ -29,22 +30,32 @@ class EditorActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_editor)
 
+        startDateGroup.setOnClickListener { pickStartDate() }
         startTimeGroup.setOnClickListener { pickStartTime() }
+        endDateGroup.setOnClickListener { pickEndDate() }
         endTimeGroup.setOnClickListener { pickEndTime() }
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_clear)
 
+        mViewModel.startDateViewState.observe(::updateStartDate)
         mViewModel.startTimeViewState.observe(::updateStartTime)
+
+        mViewModel.endDateViewState.observe(::updateEndDate)
         mViewModel.endTimeViewState.observe(endTime::setText)
+
         mViewModel.updateTitleEvent.consume(titleView::setText)
         mViewModel.exitEvent.consume { finish() }
+        mViewModel.showErrorEvent.consume { error ->
+            Snackbar.make(content, error, Snackbar.LENGTH_LONG).show()
+        }
 
         titleView.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) = Unit
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = mViewModel.onTitleChanged(p0)
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) =
+                mViewModel.onTitleChanged(p0)
         })
 
         if (savedInstanceState == null) {
@@ -60,7 +71,7 @@ class EditorActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
-            R.id.submit -> mViewModel.onSave()
+            R.id.submit -> mViewModel.onSaveClicked()
         }
         return true
     }
@@ -69,34 +80,59 @@ class EditorActivity : BaseActivity() {
         finish()
     }
 
-    private fun pickStartTime() {
-        mTimePickerDialog?.dismiss()
-        mTimePickerDialog = SingleDateAndTimePickerDialog.Builder(this)
-            .bottomSheet()
-            .displayMinutes(true)
+    private fun pickStartDate() = displayDateTimeDialog {
+        displayMinutes(false)
+            .displayHours(false)
+            .displayDays(false)
+            .displayMonth(true)
+            .displayYears(true)
+            .displayDaysOfMonth(true)
+            .listener(mViewModel::onStartDatePicked)
+    }
+
+    private fun pickStartTime() = displayDateTimeDialog {
+        displayMinutes(true)
             .displayHours(true)
             .displayDays(false)
             .displayMonth(false)
             .displayYears(false)
             .minutesStep(1)
             .listener(mViewModel::onStartTimePicked)
-            .build()
-        mTimePickerDialog?.display()
     }
 
-    private fun pickEndTime() {
-        mTimePickerDialog?.dismiss()
-        mTimePickerDialog = SingleDateAndTimePickerDialog.Builder(this)
-            .bottomSheet()
-            .displayMinutes(true)
+    private fun pickEndDate() = displayDateTimeDialog {
+        displayMinutes(false)
+            .displayHours(false)
+            .displayDays(false)
+            .displayMonth(true)
+            .displayYears(true)
+            .displayDaysOfMonth(true)
+            .listener(mViewModel::onEndDatePicked)
+    }
+
+    private fun pickEndTime() = displayDateTimeDialog {
+        displayMinutes(true)
             .displayHours(true)
             .displayDays(false)
             .displayMonth(false)
             .displayYears(false)
             .minutesStep(1)
             .listener(mViewModel::onEndTimePicked)
-            .build()
-        mTimePickerDialog?.display()
+    }
+
+    private fun updateStartDate(viewState: StartDateViewState) {
+        when (viewState) {
+            StartDateViewState.Hidden ->
+                startDateGroup.isGone = true
+            StartDateViewState.Today -> {
+                startDateGroup.isGone = false
+                startDate.text = getString(R.string.editor_start_date_today)
+            }
+            is StartDateViewState.ShowDate -> {
+                startDateGroup.isGone = false
+                startDate.text = viewState.value
+            }
+        }
     }
 
     private fun updateStartTime(viewState: StartTimeViewState) {
@@ -112,6 +148,30 @@ class EditorActivity : BaseActivity() {
                 startTime.text = viewState.value
             }
         }.exhaustive
+    }
+
+    private fun updateEndDate(viewState: EndDateViewState) {
+        when (viewState) {
+            EndDateViewState.Hidden ->
+                endDateGroup.isGone = true
+            EndDateViewState.Today -> {
+                endDateGroup.isGone = false
+                endDate.text = getString(R.string.editor_start_date_today)
+            }
+            is EndDateViewState.ShowDate -> {
+                endDateGroup.isGone = false
+                endDate.text = viewState.value
+            }
+        }.exhaustive
+    }
+
+    private fun displayDateTimeDialog(buildAction: SingleDateAndTimePickerDialog.Builder.() -> Unit) {
+        mTimePickerDialog?.dismiss()
+        mTimePickerDialog = SingleDateAndTimePickerDialog.Builder(this)
+            .bottomSheet()
+            .apply(buildAction)
+            .build()
+        mTimePickerDialog?.display()
     }
 
     companion object {

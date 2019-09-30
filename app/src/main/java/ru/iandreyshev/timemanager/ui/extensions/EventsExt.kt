@@ -12,7 +12,7 @@ fun List<Event>?.asViewState(): List<EventViewState> {
         EventViewState(
             id = event.id,
             title = event.description,
-            endTime = event.endTime.format(END_DATE_FORMATTER),
+            endTime = event.endDateTime.format(END_DATE_FORMATTER),
             spendTime = event.getSpendMinutes().toString()
         )
     }

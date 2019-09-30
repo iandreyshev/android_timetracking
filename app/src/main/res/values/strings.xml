@@ -4,5 +4,13 @@
     <string name="button_create_first_card">Create first card</string>
     <string name="button_create_first_event">Create first event</string>
 
+    <string name="editor_start_date_today">Today</string>
     <string name="editor_start_time_undefined">Undefined</string>
+
+    <string name="event_validation_error_description_is_empty">Description is empty</string>
+    <string name="event_validation_error_expected_start_time">Expected start time</string>
+    <string name="event_validation_error_expected_end_time">Expected end time</string>
+
+    <string name="repo_error_unknown">Unknown error</string>
+    <string name="repo_error_earlier_than_first">Event is earlier than first</string>
 </resources>

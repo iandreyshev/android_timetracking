@@ -26,8 +26,8 @@ class EventEntity(
             id = event.id.value,
             cardId = cardId.value,
             description = event.description,
-            startTime = event.startTime,
-            endTime = event.endTime
+            startTime = event.startDateTime,
+            endTime = event.endDateTime
         )
     }
 

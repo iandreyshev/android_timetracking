@@ -19,39 +19,45 @@ class Repository(
             )
             val id = cardDao.insert(entity)
 
-            Card(
-                id =  CardId(id),
+            return@withContext Card(
+                id = CardId(id),
                 title = entity.title,
                 date = ZonedDateTime.now()
             )
         }
     }
 
-    override suspend fun saveEvent(cardId: CardId, event: Event): Event? {
+    override suspend fun saveEvent(cardId: CardId, event: Event): RepoResult<Event> {
         return withContext(Dispatchers.Default) {
-            cardDao.get(cardId.value) ?: return@withContext null
+            cardDao.get(cardId.value)
+                ?: return@withContext RepoResult.Error(RepoError.Unknown)
 
             var eventToSave = event
             val previousEvent = getEvents(cardId).lastOrNull()
 
             if (previousEvent != null) {
-                eventToSave = eventToSave.copy(startTime = previousEvent.endTime)
+                eventToSave = eventToSave.copy(startDateTime = previousEvent.endDateTime)
             }
 
             val entity = EventEntity.create(cardId, eventToSave)
             entity.id = 0
             val id = eventDao.insert(entity)
 
-            eventToSave.copy(id = EventId(id))
+            return@withContext RepoResult.Success(
+                data = eventToSave.copy(id = EventId(id))
+            )
         }
     }
 
-    override suspend fun update(cardId: CardId, event: Event) {
-        withContext(Dispatchers.Default) {
-            val cardEntity = cardDao.get(cardId.value) ?: return@withContext
+    override suspend fun update(cardId: CardId, event: Event): RepoResult<Unit> {
+        return withContext(Dispatchers.Default) {
+            val cardEntity = cardDao.get(cardId.value)
+                ?: return@withContext RepoResult.Error(RepoError.Unknown)
             val updateEntity = EventEntity.create(cardEntity.id, event)
 
             eventDao.update(updateEntity)
+
+            return@withContext RepoResult.Success(Unit)
         }
     }
 
@@ -62,8 +68,8 @@ class Repository(
             Event(
                 id = EventId(entity.id),
                 description = entity.description,
-                startTime = entity.startTime,
-                endTime = entity.endTime
+                startDateTime = entity.startTime,
+                endDateTime = entity.endTime
             )
         }
     }
@@ -75,8 +81,8 @@ class Repository(
                     Event(
                         id = EventId(entity.id),
                         description = entity.description,
-                        startTime = entity.startTime,
-                        endTime = entity.endTime
+                        startDateTime = entity.startTime,
+                        endDateTime = entity.endTime
                     )
                 }
         }

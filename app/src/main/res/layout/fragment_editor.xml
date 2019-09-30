@@ -23,6 +23,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/content"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -52,7 +53,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:id="@+id/startTimeGroup"
+                android:id="@+id/startDateGroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
@@ -63,20 +64,81 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/titleView">
 
+                <ImageView
+                    android:id="@+id/startDateIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:srcCompat="@drawable/ic_date" />
+
                 <TextView
-                    android:id="@+id/startTime"
+                    android:id="@+id/startDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginStart="4dp"
                     android:maxLines="1"
                     android:textSize="16sp"
                     tools:text="16:40" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/startTimeGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center|end"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/startDateGroup">
 
                 <ImageView
                     android:id="@+id/startTimeIcon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     app:srcCompat="@drawable/ic_time" />
+
+                <TextView
+                    android:id="@+id/startTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="4dp"
+                    android:maxLines="1"
+                    android:textSize="16sp"
+                    tools:text="16:40" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/endDateGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center|end"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/startTimeGroup">
+
+                <ImageView
+                    android:id="@+id/endDateIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:srcCompat="@drawable/ic_date" />
+
+                <TextView
+                    android:id="@+id/endDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="4dp"
+                    android:maxLines="1"
+                    android:textSize="16sp"
+                    tools:text="16:40" />
 
             </LinearLayout>
 
@@ -90,22 +152,23 @@
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/startTimeGroup">
-
-                <TextView
-                    android:id="@+id/endTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:maxLines="1"
-                    android:textSize="16sp"
-                    tools:text="16:40" />
+                app:layout_constraintTop_toBottomOf="@id/endDateGroup">
 
                 <ImageView
                     android:id="@+id/endTimeIcon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     app:srcCompat="@drawable/ic_time" />
+
+                <TextView
+                    android:id="@+id/endTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="4dp"
+                    android:maxLines="1"
+                    android:textSize="16sp"
+                    tools:text="16:40" />
 
             </LinearLayout>
 

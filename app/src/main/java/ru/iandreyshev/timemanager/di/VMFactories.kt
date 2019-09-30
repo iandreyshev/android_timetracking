@@ -7,6 +7,7 @@ import ru.iandreyshev.timemanager.AppActivity
 import ru.iandreyshev.timemanager.TimeWalkerApp
 import ru.iandreyshev.timemanager.domain.CardId
 import ru.iandreyshev.timemanager.domain.EventId
+import ru.iandreyshev.timemanager.domain.validation.EventValidator
 import ru.iandreyshev.timemanager.ui.editor.EditorActivity
 import ru.iandreyshev.timemanager.ui.editor.EditorViewModel
 import ru.iandreyshev.timemanager.ui.timeline.TimelineViewModel
@@ -34,6 +35,8 @@ fun EditorActivity.getViewModel(
             return EditorViewModel(
                 cardId = cardId,
                 eventId = eventId ?: EventId.default(),
+                resources = resources,
+                validator = EventValidator(),
                 repository = TimeWalkerApp.repository,
                 dateProvider = TimeWalkerApp.dateProvider,
                 observer = TimeWalkerApp.editorObserver
