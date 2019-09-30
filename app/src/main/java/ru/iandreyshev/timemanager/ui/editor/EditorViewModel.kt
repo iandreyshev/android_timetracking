@@ -63,7 +63,7 @@ class EditorViewModel(
 
     private val mSaveButtonViewState = MutableLiveData(false)
 
-    private val mDateFormater = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    private val mDateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
     private val mTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
     private var mBackgroundJob: Job = Job()
@@ -159,7 +159,7 @@ class EditorViewModel(
             !mHasStartTime -> StartDateViewState.Hidden
             pickedStartTime == null -> StartDateViewState.Today
             else -> {
-                val formattedTime = pickedStartTime.format(mDateFormater)
+                val formattedTime = pickedStartTime.format(mDateFormatter)
                 StartDateViewState.ShowDate(formattedTime)
             }
         }
@@ -175,7 +175,7 @@ class EditorViewModel(
             dateProvider.current() sameDateWith mPickedEndTime ->
                 EndDateViewState.Today
             else ->
-                EndDateViewState.ShowDate(mPickedEndDate.format(mDateFormater))
+                EndDateViewState.ShowDate(mPickedEndDate.format(mDateFormatter))
         }
         mEndTimeViewState.value = mPickedEndTime.format(mTimeFormatter)
     }
