@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <FrameLayout
+        android:id="@+id/headerGroup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/card_top_margin"
         android:background="@android:color/transparent"
-        app:elevation="0dp">
+        app:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cardTitleGroup"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/card_top_margin">
+            android:layout_height="match_parent">
 
             <FrameLayout
                 android:id="@+id/previousButton"
@@ -43,18 +47,17 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:layout_constraintBottom_toBottomOf="@id/dateTitle"
-                app:layout_constraintEnd_toEndOf="@id/dateTitle"
-                app:layout_constraintStart_toStartOf="@id/dateTitle"
-                app:layout_constraintTop_toTopOf="@id/dateTitle" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/cardTitle"
+                app:layout_constraintStart_toStartOf="@id/cardTitle"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/dateTitle"
+                android:id="@+id/cardTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="center"
-                android:text="Hello World!"
                 android:textColor="#fff"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -62,7 +65,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/nextButton"
                 app:layout_constraintStart_toEndOf="@id/previousButton"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Hello World!" />
 
             <FrameLayout
                 android:id="@+id/nextButton"
@@ -98,18 +102,44 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </com.google.android.material.appbar.AppBarLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/timerGroup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/timerTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Hello World!" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
 
     <com.github.captain_miao.optroundcardview.OptRoundCardView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/card_top_margin"
-        app:cardCornerRadius="@dimen/card_radius"
-        app:optRoundCardCornerRadius="@dimen/card_radius"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/background"
+        app:cardCornerRadius="@dimen/card_radius"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerGroup"
+        app:optRoundCardBottomEdges="false"
+        app:optRoundCardCornerRadius="@dimen/card_radius"
         app:optRoundCardLeftBottomCorner="false"
-        app:optRoundCardRightBottomCorner="false"
-        app:optRoundCardBottomEdges="false" >
+        app:optRoundCardRightBottomCorner="false">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -149,8 +179,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/timelineLoadingView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="#fff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -167,10 +197,14 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/timelineFirstCardView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="#fff"
         app:cardCornerRadius="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="gone">
 
         <Button
@@ -182,4 +216,4 @@
 
     </androidx.cardview.widget.CardView>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

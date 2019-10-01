@@ -20,4 +20,7 @@ interface IEventDao {
     @Update
     fun update(eventEntity: EventEntity)
 
+    @Query("DELETE FROM events WHERE :cardId = `cardId`")
+    fun delete(cardId: Long)
+
 }

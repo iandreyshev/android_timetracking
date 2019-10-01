@@ -28,4 +28,7 @@ interface ICardDao {
     @Query("SELECT count(*) FROM cards")
     fun count(): Int
 
+    @Query("DELETE FROM cards WHERE :cardId = `id`")
+    fun delete(cardId: Long)
+
 }

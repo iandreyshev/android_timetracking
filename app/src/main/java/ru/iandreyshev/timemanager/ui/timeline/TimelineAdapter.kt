@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.iandreyshev.timemanager.R
 
 class TimelineAdapter(
-    private val onClickListener: (Int) -> Unit
+        private val onClickListener: (Int) -> Unit,
+        private val onLongClickListener: (Int) -> Unit
 ) : RecyclerView.Adapter<EventViewHolder>() {
 
     var events: List<EventViewState> = listOf()
@@ -17,16 +18,21 @@ class TimelineAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_event, parent, false)
+                .inflate(R.layout.item_event, parent, false)
 
-        return EventViewHolder(view) {
-            onClickListener(it.adapterPosition)
-        }
+        return EventViewHolder(
+                view = view,
+                onClickListener = { onClickListener(it.adapterPosition) },
+                onLongClickListener = {
+                    onLongClickListener(it.adapterPosition)
+                    return@EventViewHolder true
+                }
+        )
     }
 
     override fun getItemCount(): Int = events.count()
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) =
-        holder.bind(events[position])
+            holder.bind(events[position])
 
 }

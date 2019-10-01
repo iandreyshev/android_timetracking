@@ -12,4 +12,6 @@ interface IRepository {
     suspend fun getLastCard(): Card?
     suspend fun getNextCard(current: Card): Card?
     suspend fun getPreviousCard(current: Card): Card?
+
+    suspend fun deleteCard(cardId: CardId): RepoResult<Unit>
 }

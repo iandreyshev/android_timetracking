@@ -6,5 +6,6 @@ class EventViewState(
     val id: EventId,
     val title: String,
     val endTime: String,
-    var spendTime: String
+    var spendTime: String,
+    var selection: EventSelectionViewState
 )

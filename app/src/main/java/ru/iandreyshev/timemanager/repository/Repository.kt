@@ -132,4 +132,12 @@ class Repository(
         }
     }
 
+    override suspend fun deleteCard(cardId: CardId): RepoResult<Unit> {
+        return withContext(Dispatchers.Default) {
+            cardDao.delete(cardId.value)
+            eventDao.delete(cardId.value)
+            return@withContext RepoResult.Success(Unit)
+        }
+    }
+
 }

@@ -22,11 +22,17 @@ class TimelineActivity : BaseActivity() {
         subscribeToViewModel()
     }
 
+    override fun onBackPressed() {
+        if (!mViewModel.onBackPressed()) {
+            super.onBackPressed()
+        }
+    }
+
     private fun initButtons() {
         nextButton.setOnClickListener { mViewModel.onNextCard() }
         previousButton.setOnClickListener { mViewModel.onPreviousCard() }
         titleClickableArea.setOnClickListener { mViewModel.onResetToLast() }
-        titleClickableArea.setOnLongClickListener { mViewModel.onOpenDatePicker() }
+        titleClickableArea.setOnLongClickListener { mViewModel.onDeleteCard() }
         createFirstCardButton.setOnClickListener { mViewModel.onCreateFirstCard() }
         nextCardButton.setOnClickListener { mViewModel.onCreateCard() }
         createEventButton.setOnClickListener { mViewModel.onCreateEvent() }
@@ -38,7 +44,7 @@ class TimelineActivity : BaseActivity() {
     }
 
     private fun subscribeToViewModel() {
-        mViewModel.cardTitleViewState.observe(dateTitle::setText)
+        mViewModel.cardTitleViewState.observe(cardTitle::setText)
         mViewModel.hasEventsList.observe {
             timelineFirstEventView.isGone = it
             createEventButton.isVisible = it
@@ -47,17 +53,17 @@ class TimelineActivity : BaseActivity() {
         mViewModel.timelineViewState.observe { viewState ->
             when (viewState) {
                 TimelineViewState.EMPTY -> {
-                    appBarLayout.isVisible = false
+                    headerGroup.isVisible = false
                     timelineFirstCardView.isVisible = true
                     timelineLoadingView.isVisible = false
                 }
                 TimelineViewState.LOADING -> {
-                    appBarLayout.isVisible = false
+                    headerGroup.isVisible = false
                     timelineFirstCardView.isVisible = false
                     timelineLoadingView.isVisible = true
                 }
                 TimelineViewState.HAS_CARD -> {
-                    appBarLayout.isVisible = true
+                    headerGroup.isVisible = true
                     timelineFirstCardView.isVisible = false
                     timelineLoadingView.isVisible = false
                 }
@@ -73,6 +79,19 @@ class TimelineActivity : BaseActivity() {
 
             nextCardButton.isClickable = it.second == ArrowViewState.NEXT_CARD
             nextCardButton.isInvisible = it.second != ArrowViewState.NEXT_CARD
+        }
+        mViewModel.toolbarViewState.observe { viewState ->
+            when (viewState) {
+                is ToolbarViewState.CardTitle -> {
+                    timerGroup.isVisible = false
+                    cardTitleGroup.isVisible = true
+                }
+                is ToolbarViewState.Timer -> {
+                    cardTitleGroup.isVisible = false
+                    timerGroup.isVisible = true
+                    timerTitle.text = viewState.minutes.toString()
+                }
+            }
         }
     }
 
