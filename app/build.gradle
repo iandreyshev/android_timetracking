@@ -55,6 +55,8 @@ dependencies {
 
     implementation 'com.androidadvance:topsnackbar:1.1.1'
 
+    implementation 'com.github.captain-miao:optroundcardview:1.0.0'
+
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test:core:1.2.0'
     testImplementation 'androidx.test:runner:1.2.0'

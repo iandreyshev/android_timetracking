@@ -15,7 +15,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="72dp">
+            android:layout_height="@dimen/card_top_margin">
 
             <FrameLayout
                 android:id="@+id/previousButton"
@@ -55,9 +55,9 @@
                 android:layout_margin="8dp"
                 android:gravity="center"
                 android:text="Hello World!"
+                android:textColor="#fff"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#fff"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/nextButton"
@@ -100,11 +100,16 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.cardview.widget.CardView
+    <com.github.captain_miao.optroundcardview.OptRoundCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="72dp"
-        app:cardCornerRadius="24dp">
+        android:layout_marginTop="@dimen/card_top_margin"
+        app:cardCornerRadius="@dimen/card_radius"
+        app:optRoundCardCornerRadius="@dimen/card_radius"
+        android:background="@color/background"
+        app:optRoundCardLeftBottomCorner="false"
+        app:optRoundCardRightBottomCorner="false"
+        app:optRoundCardBottomEdges="false" >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -132,40 +137,41 @@
 
         </FrameLayout>
 
-    </androidx.cardview.widget.CardView>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/createEventButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="24dp"
+            app:srcCompat="@drawable/ic_create_event" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/createEventButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        android:layout_gravity="bottom|end"
-        app:srcCompat="@drawable/ic_create_event" />
+    </com.github.captain_miao.optroundcardview.OptRoundCardView>
 
-    <FrameLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/timelineLoadingView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#fff"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
 
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
-    </FrameLayout>
+    </androidx.cardview.widget.CardView>
 
-    <FrameLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/timelineFirstCardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#fff"
-        android:visibility="gone">
+        app:cardCornerRadius="0dp"
+        tools:visibility="gone">
 
         <Button
             android:id="@+id/createFirstCardButton"
@@ -174,6 +180,6 @@
             android:layout_gravity="center"
             android:text="@string/button_create_first_card" />
 
-    </FrameLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
