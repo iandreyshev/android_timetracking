@@ -1,17 +1,15 @@
-package ru.iandreyshev.timemanager
+package ru.iandreyshev.timemanager.ui.timeline
 
 import android.os.Bundle
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_timeline.*
+import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.di.getViewModel
 import ru.iandreyshev.timemanager.ui.BaseActivity
-import ru.iandreyshev.timemanager.ui.timeline.ArrowViewState
-import ru.iandreyshev.timemanager.ui.timeline.TimelineViewModel
-import ru.iandreyshev.timemanager.ui.timeline.TimelineViewState
 
-class AppActivity : BaseActivity() {
+class TimelineActivity : BaseActivity() {
 
     private val mViewModel: TimelineViewModel by lazy { getViewModel() }
 

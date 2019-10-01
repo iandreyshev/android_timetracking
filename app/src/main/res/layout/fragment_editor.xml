@@ -57,7 +57,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="center|end"
+                android:gravity="start|center"
                 android:orientation="horizontal"
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +68,7 @@
                     android:id="@+id/startDateIcon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_date" />
+                    app:srcCompat="@drawable/ic_date_picker" />
 
                 <TextView
                     android:id="@+id/startDate"
@@ -87,7 +87,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="center|end"
+                android:gravity="start|center"
                 android:orientation="horizontal"
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -98,7 +98,7 @@
                     android:id="@+id/startTimeIcon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_time" />
+                    app:srcCompat="@drawable/ic_time_picker" />
 
                 <TextView
                     android:id="@+id/startTime"
@@ -117,7 +117,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="center|end"
+                android:gravity="start|center"
                 android:orientation="horizontal"
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -128,7 +128,7 @@
                     android:id="@+id/endDateIcon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_date" />
+                    app:srcCompat="@drawable/ic_date_picker" />
 
                 <TextView
                     android:id="@+id/endDate"
@@ -147,7 +147,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:gravity="center|end"
+                android:gravity="start|center"
                 android:orientation="horizontal"
                 android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -158,7 +158,7 @@
                     android:id="@+id/endTimeIcon"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_time" />
+                    app:srcCompat="@drawable/ic_time_picker" />
 
                 <TextView
                     android:id="@+id/endTime"

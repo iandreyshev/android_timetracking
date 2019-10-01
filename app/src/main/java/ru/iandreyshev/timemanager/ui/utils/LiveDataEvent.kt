@@ -18,5 +18,9 @@ class LiveDataEvent<T>(private val value: T) {
 
 }
 
+fun <T> MutableLiveData<T>.updateIfChanged(newValue: T) {
+    if (value != newValue) value = newValue
+}
+
 fun MutableLiveData<LiveDataEvent<Unit>>.execute() = setValue(LiveDataEvent(Unit))
 fun <T> MutableLiveData<LiveDataEvent<T>>.execute(value: T) = setValue(LiveDataEvent(value))

@@ -16,6 +16,7 @@ import ru.iandreyshev.timemanager.domain.IRepository
 import ru.iandreyshev.timemanager.ui.editor.EditorAction
 import ru.iandreyshev.timemanager.ui.extensions.asViewState
 import ru.iandreyshev.timemanager.ui.extensions.getTitleViewState
+import ru.iandreyshev.timemanager.ui.utils.updateIfChanged
 
 class TimelineViewModel(
     private val dateProvider: IDateProvider,
@@ -178,7 +179,7 @@ class TimelineViewModel(
     private fun updateNavBarView() {
         val leftArrow = if (mHasPrevious) ArrowViewState.ARROW else ArrowViewState.HIDDEN
         val right = if (mHasNext) ArrowViewState.ARROW else ArrowViewState.NEXT_CARD
-        mArrowsViewState.value = leftArrow to right
+        mArrowsViewState.updateIfChanged(leftArrow to right)
     }
 
     private fun updateEventsView() {
