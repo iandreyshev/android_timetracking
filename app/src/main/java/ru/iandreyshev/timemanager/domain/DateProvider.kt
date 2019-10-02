@@ -13,6 +13,8 @@ class DateProvider : IDateProvider {
 
     override fun current(): ZonedDateTime = ZonedDateTime.now()
 
+    override fun current2(): Date = Date()
+
     override fun setNextDay(): ZonedDateTime {
         mDate = mDate.plusDays(1)
         return mDate

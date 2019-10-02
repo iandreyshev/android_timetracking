@@ -15,6 +15,7 @@ import ru.iandreyshev.timemanager.domain.CardId
 import ru.iandreyshev.timemanager.domain.EventId
 import ru.iandreyshev.timemanager.ui.BaseActivity
 import ru.iandreyshev.timemanager.utils.exhaustive
+import java.util.*
 
 class EditorActivity : BaseActivity() {
 
@@ -30,20 +31,23 @@ class EditorActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_editor)
 
-        startDateGroup.setOnClickListener { pickStartDate() }
-        startTimeGroup.setOnClickListener { pickStartTime() }
-        endDateGroup.setOnClickListener { pickEndDate() }
-        endTimeGroup.setOnClickListener { pickEndTime() }
+        startDateGroup.setOnClickListener { mViewModel.onStartDatePickerClick() }
+        startTimeGroup.setOnClickListener { mViewModel.onStartTimePickerClick() }
+        endDateGroup.setOnClickListener { mViewModel.onEndDatePickerClick() }
+        endTimeGroup.setOnClickListener { mViewModel.onEndTimePickerClick() }
 
         setSupportActionBar(toolbar)
+        supportActionBar?.title = getString(R.string.editor_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_clear)
 
-        mViewModel.startDateViewState.observe(::updateStartDate)
-        mViewModel.startTimeViewState.observe(::updateStartTime)
+        mViewModel.datePicker.observe(::updateDatePicker)
 
-        mViewModel.endDateViewState.observe(::updateEndDate)
-        mViewModel.endTimeViewState.observe(endTime::setText)
+        mViewModel.startDatePreview.observe(::updateStartDate)
+        mViewModel.startTimePreview.observe(::updateStartTime)
+
+        mViewModel.endDatePreview.observe(::updateEndDate)
+        mViewModel.endTimePreview.observe(endTime::setText)
 
         mViewModel.updateTitleEvent.consume(titleView::setText)
         mViewModel.exitEvent.consume { finish() }
@@ -80,45 +84,54 @@ class EditorActivity : BaseActivity() {
         finish()
     }
 
-    private fun pickStartDate() = displayDateTimeDialog {
-        displayMinutes(false)
-            .displayHours(false)
-            .displayDays(false)
-            .displayMonth(true)
-            .displayYears(true)
-            .displayDaysOfMonth(true)
-            .listener(mViewModel::onStartDatePicked)
+    private fun updateDatePicker(viewState: DatePickerViewState) {
+        when (viewState) {
+            is DatePickerViewState.StartDate -> updateStartDatePicker(viewState.default, viewState.listener)
+            is DatePickerViewState.StartTime -> updateStartTimePicker(viewState.default, viewState.listener)
+            is DatePickerViewState.EndDate -> updateEndDatePicker(viewState.default, viewState.listener)
+            is DatePickerViewState.EndTime -> updateEndTimePicker(viewState.default, viewState.listener)
+        }.exhaustive
     }
 
-    private fun pickStartTime() = displayDateTimeDialog {
-        displayMinutes(true)
-            .displayHours(true)
-            .displayDays(false)
-            .displayMonth(false)
-            .displayYears(false)
-            .minutesStep(1)
-            .listener(mViewModel::onStartTimePicked)
-    }
+    private fun updateStartDatePicker(default: Date, listener: (Date?) -> Unit) =
+        displayDateTimeDialog(default, listener) {
+            displayMinutes(false)
+                .displayHours(false)
+                .displayDays(false)
+                .displayMonth(true)
+                .displayYears(true)
+                .displayDaysOfMonth(true)
+        }
 
-    private fun pickEndDate() = displayDateTimeDialog {
-        displayMinutes(false)
-            .displayHours(false)
-            .displayDays(false)
-            .displayMonth(true)
-            .displayYears(true)
-            .displayDaysOfMonth(true)
-            .listener(mViewModel::onEndDatePicked)
-    }
+    private fun updateStartTimePicker(default: Date, listener: (Date?) -> Unit) =
+        displayDateTimeDialog(default, listener) {
+            displayMinutes(true)
+                .displayHours(true)
+                .displayDays(false)
+                .displayMonth(false)
+                .displayYears(false)
+                .minutesStep(1)
+        }
 
-    private fun pickEndTime() = displayDateTimeDialog {
-        displayMinutes(true)
-            .displayHours(true)
-            .displayDays(false)
-            .displayMonth(false)
-            .displayYears(false)
-            .minutesStep(1)
-            .listener(mViewModel::onEndTimePicked)
-    }
+    private fun updateEndDatePicker(default: Date, listener: (Date?) -> Unit) =
+        displayDateTimeDialog(default, listener) {
+            displayMinutes(false)
+                .displayHours(false)
+                .displayDays(false)
+                .displayMonth(true)
+                .displayYears(true)
+                .displayDaysOfMonth(true)
+        }
+
+    private fun updateEndTimePicker(default: Date, listener: (Date?) -> Unit) =
+        displayDateTimeDialog(default, listener) {
+            displayMinutes(true)
+                .displayHours(true)
+                .displayDays(false)
+                .displayMonth(false)
+                .displayYears(false)
+                .minutesStep(1)
+        }
 
     private fun updateStartDate(viewState: StartDateViewState) {
         when (viewState) {
@@ -132,7 +145,7 @@ class EditorActivity : BaseActivity() {
                 startDateGroup.isGone = false
                 startDate.text = viewState.value
             }
-        }
+        }.exhaustive
     }
 
     private fun updateStartTime(viewState: StartTimeViewState) {
@@ -165,11 +178,17 @@ class EditorActivity : BaseActivity() {
         }.exhaustive
     }
 
-    private fun displayDateTimeDialog(buildAction: SingleDateAndTimePickerDialog.Builder.() -> Unit) {
+    private fun displayDateTimeDialog(
+        default: Date,
+        listener: (Date?) -> Unit,
+        buildAction: SingleDateAndTimePickerDialog.Builder.() -> Unit
+    ) {
         mTimePickerDialog?.dismiss()
         mTimePickerDialog = SingleDateAndTimePickerDialog.Builder(this)
             .bottomSheet()
             .apply(buildAction)
+            .listener(listener)
+            .defaultDate(default)
             .build()
         mTimePickerDialog?.display()
     }
