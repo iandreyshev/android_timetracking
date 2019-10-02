@@ -11,8 +11,6 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import ru.iandreyshev.timemanager.domain.*
-import ru.iandreyshev.timemanager.domain.validation.EventValidationError
-import ru.iandreyshev.timemanager.domain.validation.IEventValidator
 import ru.iandreyshev.timemanager.ui.extensions.asText
 import ru.iandreyshev.timemanager.ui.extensions.sameDateWith
 import ru.iandreyshev.timemanager.ui.extensions.withTime
@@ -26,7 +24,6 @@ class EditorViewModel(
     private val resources: Resources,
     private val repository: IRepository,
     private val dateProvider: IDateProvider,
-    private val validator: IEventValidator,
     private val observer: Observer<EditorAction>
 ) : ViewModel() {
 
@@ -95,13 +92,12 @@ class EditorViewModel(
     fun onSaveClicked() {
         viewModelScope.launch {
             if (!mUpdateMode) {
-                val event = createEventToUpdate()
-
-                validator.validateEvent(event)?.let { error ->
+                onInputValidationError { error ->
                     updateErrorViewState(error)
                     return@launch
                 }
 
+                val event = createEventToUpdate()
                 when (val result = repository.saveEvent(cardId, event)) {
                     is RepoResult.Error ->
                         updateErrorViewState(result.error)
@@ -111,13 +107,12 @@ class EditorViewModel(
                     }
                 }
             } else {
-                val event = createEventToSave()
-
-                validator.validateEvent(event)?.let { error ->
+                onInputValidationError { error ->
                     updateErrorViewState(error)
                     return@launch
                 }
 
+                val event = createEventToSave()
                 when (val result = repository.update(cardId, event)) {
                     is RepoResult.Error ->
                         updateErrorViewState(result.error)
@@ -180,7 +175,7 @@ class EditorViewModel(
         mEndTimeViewState.value = mPickedEndTime.format(mTimeFormatter)
     }
 
-    private fun updateErrorViewState(error: EventValidationError) {
+    private fun updateErrorViewState(error: InputValidationError) {
         val errorText = error.asText(resources)
         showErrorEvent.execute(errorText)
     }
@@ -188,6 +183,16 @@ class EditorViewModel(
     private fun updateErrorViewState(error: RepoError) {
         val errorText = error.asText(resources)
         showErrorEvent.execute(errorText)
+    }
+
+    private inline fun onInputValidationError(onError: (InputValidationError) -> Unit) {
+        if (mTitle.isBlank()) {
+            onError(InputValidationError.EmptyText)
+        }
+
+        if (mHasStartTime && mPickedStartTime == null) {
+            onError(InputValidationError.ExpectedStartTime)
+        }
     }
 
     private fun createEventToUpdate(): Event {

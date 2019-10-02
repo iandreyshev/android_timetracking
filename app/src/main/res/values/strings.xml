@@ -9,7 +9,6 @@
 
     <string name="event_validation_error_description_is_empty">Description is empty</string>
     <string name="event_validation_error_expected_start_time">Expected start time</string>
-    <string name="event_validation_error_expected_end_time">Expected end time</string>
 
     <string name="repo_error_unknown">Unknown error</string>
     <string name="repo_error_earlier_than_first">Event is earlier than first</string>

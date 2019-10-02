@@ -2,11 +2,10 @@ package ru.iandreyshev.timemanager.ui.extensions
 
 import android.content.res.Resources
 import ru.iandreyshev.timemanager.R
-import ru.iandreyshev.timemanager.domain.validation.EventValidationError
+import ru.iandreyshev.timemanager.ui.editor.InputValidationError
 
-fun EventValidationError.asText(resources: Resources): String =
+fun InputValidationError.asText(resources: Resources): String =
     when (this) {
-        EventValidationError.EmptyText -> resources.getString(R.string.event_validation_error_description_is_empty)
-        EventValidationError.ExpectedEndDate -> resources.getString(R.string.event_validation_error_expected_end_time)
-        EventValidationError.ExpectedStartDate -> resources.getString(R.string.event_validation_error_expected_start_time)
+        InputValidationError.EmptyText -> resources.getString(R.string.event_validation_error_description_is_empty)
+        InputValidationError.ExpectedStartTime -> resources.getString(R.string.event_validation_error_expected_start_time)
     }

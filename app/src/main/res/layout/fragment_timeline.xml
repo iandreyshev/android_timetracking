@@ -150,7 +150,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             tools:itemCount="6"
-            tools:listitem="@layout/item_event" />
+            tools:listitem="@layout/item_timeline_event" />
 
         <FrameLayout
             android:id="@+id/timelineFirstEventView"

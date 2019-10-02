@@ -1,6 +1,5 @@
 package ru.iandreyshev.timemanager.ui.timeline.state
 
-import org.threeten.bp.Duration
 import ru.iandreyshev.timemanager.domain.Event
 import ru.iandreyshev.timemanager.ui.timeline.EventSelectionViewState
 import ru.iandreyshev.timemanager.ui.timeline.ToolbarViewState
@@ -19,7 +18,7 @@ class TimerState(
     }
 
     override fun onEventClick(position: Int) {
-        val isSelect = mSelectedPositions.contains(position)
+        val isSelect = !mSelectedPositions.contains(position)
 
         if (isSelect) {
             context.updateEventSelection(position, EventSelectionViewState.SelectedByTimer)
@@ -33,14 +32,10 @@ class TimerState(
         context.updateToolbar(ToolbarViewState.Timer(mSelectedMinutes))
     }
 
-    override fun onEventsUpdated(events: List<Event>) {
+    override fun onEventsUpdated(events: List<Event>?) {
         var position = 0
-        mEventsDuration = events.associate { event ->
-            val duration = Duration.between(event.startDateTime, event.endDateTime)
-                .toMinutes()
-                .toInt()
-
-            return@associate position++ to duration
+        mEventsDuration = events.orEmpty().associate { event ->
+            position++ to event.getDurationInMinutes()
         }
     }
 

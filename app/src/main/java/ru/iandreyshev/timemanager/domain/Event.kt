@@ -1,5 +1,6 @@
 package ru.iandreyshev.timemanager.domain
 
+import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
 
 data class Event(
@@ -9,8 +10,7 @@ data class Event(
     val endDateTime: ZonedDateTime
 ) {
 
-    fun getSpendMinutes(): Long {
-        return (endDateTime.toEpochSecond() - startDateTime.toEpochSecond()) / 60
-    }
+    fun getDurationInMinutes(): Int =
+        Duration.between(startDateTime, endDateTime).toMinutes().toInt()
 
 }

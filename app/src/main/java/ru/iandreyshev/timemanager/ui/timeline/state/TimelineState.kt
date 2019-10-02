@@ -16,7 +16,7 @@ abstract class TimelineState {
     open fun onEventClick(position: Int) = Unit
     open fun onStartTimerMode(position: Int) = Unit
     open fun onEndTimerMode() = Unit
-    open fun onEventsUpdated(events: List<Event>) = Unit
+    open fun onEventsUpdated(events: List<Event>?) = Unit
 
     protected open fun onContextUpdated() = Unit
 
