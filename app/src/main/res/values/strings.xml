@@ -4,8 +4,15 @@
     <string name="button_create_first_card">Create first card</string>
     <string name="button_create_first_event">Create first event</string>
 
+    <string name="delete_card_dialog_title">Delete card</string>
+    <string name="delete_card_message">Do you really want to delete \'%1$s\' card?</string>
+
     <string name="editor_start_group_title">Start time</string>
     <string name="editor_end_group_title">End time</string>
+
+    <string name="timer_title_format_minutes">%1$dm</string>
+    <string name="timer_title_format_hours">%1$dh</string>
+    <string name="timer_title_format_hours_and_minutes">%1$dh %2$dm</string>
 
     <string name="editor_start_date_today">Today</string>
     <string name="editor_start_time_undefined">Undefined</string>

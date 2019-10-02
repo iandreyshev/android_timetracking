@@ -21,7 +21,7 @@ fun List<Event>?.asViewState(): List<EventViewState> {
                 title = event.description,
                 startTime = startTime,
                 endTime = event.endDateTime.format(END_DATE_FORMATTER),
-                duration = event.getDurationInMinutes().toString(),
+                durationInMinutes = event.getDurationInMinutes(),
                 selection = EventSelectionViewState.Normal
         )
     }

@@ -9,6 +9,7 @@ interface ITimelineStateContext {
     fun updateToolbar(viewState: ToolbarViewState)
     fun updateEventSelection(position: Int, viewState: EventSelectionViewState)
     fun updateAllEventsSelection(viewState: EventSelectionViewState)
+    fun updateAddEventButton(isVisible: Boolean)
 
     companion object {
         fun newStub() = object : ITimelineStateContext {
@@ -17,6 +18,7 @@ interface ITimelineStateContext {
             override fun updateToolbar(viewState: ToolbarViewState) = Unit
             override fun updateEventSelection(position: Int, viewState: EventSelectionViewState) = Unit
             override fun updateAllEventsSelection(viewState: EventSelectionViewState) = Unit
+            override fun updateAddEventButton(isVisible: Boolean) = Unit
         }
     }
 

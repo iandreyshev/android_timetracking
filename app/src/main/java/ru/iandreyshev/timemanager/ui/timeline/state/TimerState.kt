@@ -15,16 +15,17 @@ class TimerState(
     override fun onContextUpdated() {
         context.updateToolbar(ToolbarViewState.Timer(mSelectedMinutes))
         onEventClick(firstSelectedItemPosition)
+        context.updateAddEventButton(false)
     }
 
     override fun onEventClick(position: Int) {
-        val isSelect = !mSelectedPositions.contains(position)
+        val isSelected = !mSelectedPositions.contains(position)
 
-        if (isSelect) {
-            context.updateEventSelection(position, EventSelectionViewState.SelectedByTimer)
+        context.updateEventSelection(position, EventSelectionViewState.TimerMode(isSelected))
+
+        if (isSelected) {
             mSelectedPositions.add(position)
         } else {
-            context.updateEventSelection(position, EventSelectionViewState.Normal)
             mSelectedPositions.remove(position)
         }
 

@@ -1,9 +1,13 @@
 package ru.iandreyshev.timemanager.ui.extensions
 
+import android.content.res.Resources
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.ZonedDateTime
+import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.domain.Card
 import java.util.*
+
+private const val MINUTES_PER_HOUR = 60
 
 fun Card.getTitleViewState(): String {
     return title
@@ -22,3 +26,14 @@ infix fun ZonedDateTime.withTime(time: ZonedDateTime) =
 
 infix fun ZonedDateTime.sameDateWith(date: ZonedDateTime) =
     year == date.year && month == date.month && dayOfMonth == date.dayOfMonth
+
+fun Int.asTimerTitleViewState(resources: Resources): String {
+    val hours = this / MINUTES_PER_HOUR
+    val minutes = this % MINUTES_PER_HOUR
+
+    return when {
+        hours == 0 -> resources.getString(R.string.timer_title_format_minutes, minutes)
+        minutes == 0 -> resources.getString(R.string.timer_title_format_hours, hours)
+        else -> resources.getString(R.string.timer_title_format_hours_and_minutes, hours, minutes)
+    }
+}

@@ -2,5 +2,5 @@ package ru.iandreyshev.timemanager.ui.timeline
 
 sealed class EventSelectionViewState {
     object Normal : EventSelectionViewState()
-    object SelectedByTimer : EventSelectionViewState()
+    class TimerMode(val isSelected: Boolean) : EventSelectionViewState()
 }

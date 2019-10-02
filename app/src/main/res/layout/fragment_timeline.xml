@@ -18,7 +18,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cardTitleGroup"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:visibility="gone">
 
             <FrameLayout
                 android:id="@+id/previousButton"
@@ -104,23 +105,64 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/timerGroup"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/timerTitle"
+            <ImageView
+                android:id="@+id/exitFromTimerButton"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="16dp"
+                android:padding="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_clear" />
+
+            <FrameLayout
+                android:id="@+id/exitFromTimerButtonClickableArea"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_height="0dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintBottom_toBottomOf="@id/exitFromTimerButton"
+                app:layout_constraintEnd_toEndOf="@id/exitFromTimerButton"
+                app:layout_constraintStart_toStartOf="@id/exitFromTimerButton"
+                app:layout_constraintTop_toTopOf="@id/exitFromTimerButton" />
+
+            <LinearLayout
+                android:id="@+id/timerGroupTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:textColor="#fff"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constrainedWidth="true"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Hello World!" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:srcCompat="@drawable/ic_timer_mode_title" />
+
+                <TextView
+                    android:id="@+id/timerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:gravity="center"
+                    android:textColor="#fff"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="2h 30m" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -140,6 +182,7 @@
         app:layout_constraintTop_toBottomOf="@id/headerGroup"
         app:optRoundCardBottomEdges="false"
         app:optRoundCardCornerRadius="@dimen/card_radius"
+        app:optRoundCardElevation="12dp"
         app:optRoundCardLeftBottomCorner="false"
         app:optRoundCardRightBottomCorner="false">
 
@@ -203,6 +246,7 @@
         android:layout_height="0dp"
         android:background="#fff"
         app:cardCornerRadius="0dp"
+        app:cardElevation="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

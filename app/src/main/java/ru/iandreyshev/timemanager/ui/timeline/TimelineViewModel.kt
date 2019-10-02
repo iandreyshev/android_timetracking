@@ -29,6 +29,7 @@ class TimelineViewModel(
     val eventsAdapter: RecyclerView.Adapter<*> by lazy { mEventsAdapter }
     val timelineViewState: LiveData<TimelineViewState> by lazy { mTimelineViewState }
     val hasEventsList: LiveData<Boolean> by lazy { mHasEvents }
+    val canAddEvents: LiveData<Boolean> by lazy { mCanAddEvent }
     val toolbarViewState: LiveData<ToolbarViewState> by lazy { mToolbarViewState }
     val arrowsViewState: LiveData<Pair<ArrowViewState, ArrowViewState>> by lazy { mArrowsViewState }
     val cardTitleViewState: LiveData<String> by lazy { mCardTitleViewState }
@@ -42,6 +43,7 @@ class TimelineViewModel(
     )
     private val mTimelineViewState = MutableLiveData(TimelineViewState.LOADING)
     private val mHasEvents = MutableLiveData(false)
+    private val mCanAddEvent = MutableLiveData(false)
     private val mToolbarViewState = MutableLiveData<ToolbarViewState>(ToolbarViewState.CardTitle)
     private val mArrowsViewState = MutableLiveData(ArrowViewState.HIDDEN to ArrowViewState.HIDDEN)
     private val mNextCardButtonViewState = MutableLiveData(false)
@@ -172,7 +174,11 @@ class TimelineViewModel(
         TimeWalkerApp.navigator.openEditor(cardId)
     }
 
-    fun onDeleteCard(): Boolean {
+    fun onExitFromTimer() {
+        timelineState.onEndTimerMode()
+    }
+
+    fun onDeleteCard() {
         viewModelScope.launch {
             val cardId = mCurrentCard?.id ?: return@launch
             val newCurrentCard = repository.getNextCard(mCurrentCard ?: return@launch)
@@ -197,8 +203,6 @@ class TimelineViewModel(
                 is RepoResult.Error -> return@launch
             }.exhaustive
         }
-
-        return true
     }
 
     fun onBackPressed(): Boolean {
@@ -229,7 +233,9 @@ class TimelineViewModel(
     }
 
     private fun updateEventsView() {
-        mHasEvents.value = mEventsAdapter.events.isNotEmpty()
+        val hasEvents = mEventsAdapter.events.isNotEmpty()
+        mHasEvents.value = hasEvents
+        mCanAddEvent.value = hasEvents && mCanAddEvent.value ?: false
     }
 
     private fun updateTimelineView() {
@@ -264,6 +270,11 @@ class TimelineViewModel(
         override fun updateAllEventsSelection(viewState: EventSelectionViewState) {
             mEventsAdapter.events.forEach { it.selection = viewState }
             mEventsAdapter.notifyDataSetChanged()
+        }
+
+        override fun updateAddEventButton(isVisible: Boolean) {
+            mCanAddEvent.value = isVisible
+            updateEventsView()
         }
     }
 

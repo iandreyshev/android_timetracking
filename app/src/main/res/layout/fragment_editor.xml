@@ -45,171 +45,206 @@
                 android:hint="What you do?"
                 android:maxLength="140"
                 android:paddingStart="16dp"
-                android:paddingTop="16dp"
+                android:paddingTop="32dp"
                 android:paddingEnd="16dp"
-                android:paddingBottom="16dp"
+                android:paddingBottom="32dp"
                 android:textSize="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <FrameLayout
-                android:id="@+id/startGroupTitle"
-                android:layout_width="0dp"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/startGroup"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/titleView">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/editor_start_group_title"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            </FrameLayout>
+                    <TextView
+                        android:id="@+id/startGroupTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/editor_start_group_title"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:id="@+id/startDateGroup"
-                android:layout_width="0dp"
+                    <LinearLayout
+                        android:id="@+id/startDateGroup"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="start|center"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/startGroupTitle">
+
+                        <ImageView
+                            android:id="@+id/startDateIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_date_picker" />
+
+                        <TextView
+                            android:id="@+id/startDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:maxLines="1"
+                            android:textSize="16sp"
+                            tools:text="16:40" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/startTimeGroup"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="start|center"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/startDateGroup">
+
+                        <ImageView
+                            android:id="@+id/startTimeIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_time_picker" />
+
+                        <TextView
+                            android:id="@+id/startTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:maxLines="1"
+                            android:textSize="16sp"
+                            tools:text="16:40" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/endGroup"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="start|center"
-                android:orientation="horizontal"
-                android:padding="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/startGroupTitle">
+                app:layout_constraintTop_toBottomOf="@id/startGroup">
 
-                <ImageView
-                    android:id="@+id/startDateIcon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_date_picker" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/startDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:maxLines="1"
-                    android:textSize="16sp"
-                    tools:text="16:40" />
+                    <TextView
+                        android:id="@+id/endGroupTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/editor_end_group_title"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constrainedWidth="true"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/endDateGroup"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="start|center"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/endGroupTitle">
 
-            <LinearLayout
-                android:id="@+id/startTimeGroup"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="start|center"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/startDateGroup">
+                        <ImageView
+                            android:id="@+id/endDateIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_date_picker" />
 
-                <ImageView
-                    android:id="@+id/startTimeIcon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_time_picker" />
+                        <TextView
+                            android:id="@+id/endDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:maxLines="1"
+                            android:textSize="16sp"
+                            tools:text="16:40" />
 
-                <TextView
-                    android:id="@+id/startTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:maxLines="1"
-                    android:textSize="16sp"
-                    tools:text="16:40" />
+                    </LinearLayout>
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/endTimeGroup"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:gravity="start|center"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/endDateGroup">
 
-            <FrameLayout
-                android:id="@+id/endGroupTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/startTimeGroup">
+                        <ImageView
+                            android:id="@+id/endTimeIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            app:srcCompat="@drawable/ic_time_picker" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/editor_end_group_title"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/endTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:maxLines="1"
+                            android:textSize="16sp"
+                            tools:text="16:40" />
 
-            </FrameLayout>
+                    </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/endDateGroup"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="start|center"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/endGroupTitle">
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageView
-                    android:id="@+id/endDateIcon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_date_picker" />
-
-                <TextView
-                    android:id="@+id/endDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:maxLines="1"
-                    android:textSize="16sp"
-                    tools:text="16:40" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/endTimeGroup"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="start|center"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/endDateGroup">
-
-                <ImageView
-                    android:id="@+id/endTimeIcon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_time_picker" />
-
-                <TextView
-                    android:id="@+id/endTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:maxLines="1"
-                    android:textSize="16sp"
-                    tools:text="16:40" />
-
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

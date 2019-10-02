@@ -7,6 +7,6 @@ class EventViewState(
     val title: String,
     val startTime: String?,
     val endTime: String,
-    var duration: String,
+    var durationInMinutes: Int,
     var selection: EventSelectionViewState
 )

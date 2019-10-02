@@ -6,16 +6,6 @@
     android:layout_height="wrap_content">
 
     <FrameLayout
-        android:id="@+id/selectedBackground"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#04BF33"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <FrameLayout
         android:id="@+id/clickableArea"
         android:layout_width="0dp"
         android:layout_height="0dp"
