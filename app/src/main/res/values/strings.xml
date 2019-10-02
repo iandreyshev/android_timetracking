@@ -4,6 +4,9 @@
     <string name="button_create_first_card">Create first card</string>
     <string name="button_create_first_event">Create first event</string>
 
+    <string name="editor_start_group_title">Start time</string>
+    <string name="editor_end_group_title">End time</string>
+
     <string name="editor_start_date_today">Today</string>
     <string name="editor_start_time_undefined">Undefined</string>
 

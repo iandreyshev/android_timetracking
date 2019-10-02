@@ -26,6 +26,15 @@ class EventViewHolder(
         itemView.startTime.text = viewState.startTime.orEmpty()
 
         itemView.endTime.text = "${viewState.endTime} (${viewState.duration})"
+
+        when (viewState.selection) {
+            EventSelectionViewState.Normal -> {
+                itemView.selectedBackground.isVisible = false
+            }
+            EventSelectionViewState.SelectedByTimer -> {
+                itemView.selectedBackground.isVisible = true
+            }
+        }
     }
 
 }
