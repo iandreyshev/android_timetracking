@@ -14,10 +14,10 @@ import ru.iandreyshev.timemanager.domain.*
 import ru.iandreyshev.timemanager.domain.validation.EventValidationError
 import ru.iandreyshev.timemanager.domain.validation.IEventValidator
 import ru.iandreyshev.timemanager.ui.extensions.asText
+import ru.iandreyshev.timemanager.ui.extensions.sameDateWith
+import ru.iandreyshev.timemanager.ui.extensions.withTime
 import ru.iandreyshev.timemanager.ui.utils.LiveDataEvent
 import ru.iandreyshev.timemanager.ui.utils.execute
-import ru.iandreyshev.timemanager.utils.sameDateWith
-import ru.iandreyshev.timemanager.utils.withTime
 import java.util.*
 
 class EditorViewModel(

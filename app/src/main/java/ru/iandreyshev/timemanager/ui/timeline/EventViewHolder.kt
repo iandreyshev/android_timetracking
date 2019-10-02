@@ -18,12 +18,7 @@ class EventViewHolder(
 
     fun bind(viewState: EventViewState) {
         itemView.title.text = viewState.title
-        when (viewState.selection) {
-            EventSelectionViewState.Normal ->
-                itemView.time.text = viewState.endTime
-            EventSelectionViewState.SelectedByTimer ->
-                itemView.time.text = "${viewState.endTime} (selected)"
-        }.exhaustive
+        itemView.time.text = viewState.endTime
     }
 
 }

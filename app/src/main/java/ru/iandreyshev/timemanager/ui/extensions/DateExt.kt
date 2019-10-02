@@ -14,3 +14,11 @@ fun Date.hour() =
 
 fun Date.minute() =
     ZonedDateTime.from(DateTimeUtils.toInstant(this)).minute
+
+infix fun ZonedDateTime.withTime(time: ZonedDateTime) =
+    withHour(time.hour)
+        .withMinute(time.minute)
+        .withSecond(time.second)
+
+infix fun ZonedDateTime.sameDateWith(date: ZonedDateTime) =
+    year == date.year && month == date.month && dayOfMonth == date.dayOfMonth
