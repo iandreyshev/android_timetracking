@@ -17,6 +17,9 @@ interface IEventDao {
     @Query("SELECT * FROM events WHERE :cardId == cardId ORDER BY endTime DESC")
     fun getAll(cardId: Long): List<EventEntity>
 
+    @Query("SELECT * FROM events WHERE (:cardId == cardId) AND (startTime == (SELECT MIN(startTime) FROM events))")
+    fun getFirst(cardId: Long): EventEntity
+
     @Update
     fun update(eventEntity: EventEntity)
 

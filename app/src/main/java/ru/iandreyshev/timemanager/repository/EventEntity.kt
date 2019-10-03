@@ -15,7 +15,8 @@ class EventEntity(
     var cardId: Long,
     var description: String,
     var startTime: ZonedDateTime,
-    var endTime: ZonedDateTime
+    var endTime: ZonedDateTime,
+    var isFirstInCard: Boolean
 ) {
 
     companion object {
@@ -27,7 +28,8 @@ class EventEntity(
             cardId = cardId.value,
             description = event.description,
             startTime = event.startDateTime,
-            endTime = event.endDateTime
+            endTime = event.endDateTime,
+            isFirstInCard = event.isFirstInCard
         )
     }
 

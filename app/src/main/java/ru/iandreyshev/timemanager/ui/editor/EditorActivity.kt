@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_editor.*
@@ -43,6 +44,7 @@ class EditorActivity : BaseActivity() {
 
         mViewModel.datePicker.observe(::updateDatePicker)
 
+        mViewModel.startDateTimeAvailable.observe(::updateStartDateTime)
         mViewModel.startDatePreview.observe(::updateStartDate)
         mViewModel.startTimePreview.observe(::updateStartTime)
 
@@ -133,10 +135,12 @@ class EditorActivity : BaseActivity() {
                 .minutesStep(1)
         }
 
+    private fun updateStartDateTime(canEditStartDateTime: Boolean) {
+        startGroup.isVisible = canEditStartDateTime
+    }
+
     private fun updateStartDate(viewState: StartDateViewState) {
         when (viewState) {
-            StartDateViewState.Hidden ->
-                startDateGroup.isGone = true
             StartDateViewState.Today -> {
                 startDateGroup.isGone = false
                 startDate.text = getString(R.string.editor_start_date_today)
@@ -150,8 +154,6 @@ class EditorActivity : BaseActivity() {
 
     private fun updateStartTime(viewState: StartTimeViewState) {
         when (viewState) {
-            StartTimeViewState.Hidden ->
-                startTimeGroup.isGone = true
             StartTimeViewState.Undefined -> {
                 startTimeGroup.isGone = false
                 startTime.text = getString(R.string.editor_start_time_undefined)

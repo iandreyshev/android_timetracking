@@ -28,6 +28,7 @@ class EditorViewModel(
 
     val datePicker: LiveData<DatePickerViewState> by lazy { mDatePickerViewState }
 
+    val startDateTimeAvailable: LiveData<Boolean> by lazy { mCanEditStartTime }
     val startDatePreview: LiveData<StartDateViewState> by lazy { mStartDateViewState }
     val startTimePreview: LiveData<StartTimeViewState> by lazy { mStartTimeViewState }
 
@@ -51,12 +52,12 @@ class EditorViewModel(
     private var mPickedEndTime = dateProvider.current()
 
     private val mUpdateMode = eventId != EventId.default()
-    private var mHasStartTime = false
+    private var mCanEditStartTime = MutableLiveData(false)
 
     private val mLoadDataViewState = MutableLiveData(true)
 
-    private val mStartDateViewState = MutableLiveData<StartDateViewState>(StartDateViewState.Hidden)
-    private val mStartTimeViewState = MutableLiveData<StartTimeViewState>(StartTimeViewState.Hidden)
+    private val mStartDateViewState = MutableLiveData<StartDateViewState>(StartDateViewState.Today)
+    private val mStartTimeViewState = MutableLiveData<StartTimeViewState>(StartTimeViewState.Undefined)
 
     private val mEndDateViewState = MutableLiveData<EndDateViewState>(EndDateViewState.Hidden)
     private val mEndTimeViewState = MutableLiveData("")
@@ -78,12 +79,16 @@ class EditorViewModel(
             mLoadDataViewState.value = true
 
             if (mUpdateMode) {
-                val eventToEdit = repository.getEvent(eventId) ?: return@launch
-                updateTitleEvent.execute(eventToEdit.description)
-                mPickedEndTime = eventToEdit.endDateTime
-                mHasStartTime = repository.getEventsCount(cardId) == 1
+                with(repository.getEvent(eventId) ?: return@launch) {
+                    updateTitleEvent.execute(description)
+                    mPickedStartDate = startDateTime
+                    mPickedStartTime = startDateTime
+                    mPickedEndDate = endDateTime
+                    mPickedEndTime = endDateTime
+                    mCanEditStartTime.value = isFirstInCard
+                }
             } else {
-                mHasStartTime = repository.getEventsCount(cardId) < 1
+                mCanEditStartTime.value = repository.getEventsCount(cardId) < 1
             }
 
             updateTimeViewState()
@@ -177,9 +182,8 @@ class EditorViewModel(
 
     private fun updateTimeViewState() {
         val pickedStartDate = mPickedStartDate
-        mStartDateViewState.value = when {
-            !mHasStartTime -> StartDateViewState.Hidden
-            pickedStartDate == null -> StartDateViewState.Today
+        mStartDateViewState.value = when (pickedStartDate) {
+            null -> StartDateViewState.Today
             else -> {
                 val formattedTime = pickedStartDate.format(mDateFormatter)
                 StartDateViewState.ShowDate(formattedTime)
@@ -187,9 +191,8 @@ class EditorViewModel(
         }
 
         val pickedStartTime = mPickedStartTime
-        mStartTimeViewState.value = when {
-            !mHasStartTime -> StartTimeViewState.Hidden
-            pickedStartTime == null -> StartTimeViewState.Undefined
+        mStartTimeViewState.value = when (pickedStartTime) {
+            null -> StartTimeViewState.Undefined
             else -> {
                 val formattedTime = pickedStartTime.format(mTimeFormatter)
                 StartTimeViewState.ShowTime(formattedTime)
@@ -221,7 +224,7 @@ class EditorViewModel(
             onError(InputValidationError.EmptyText)
         }
 
-        if (mHasStartTime && mPickedStartTime == null) {
+        if (mCanEditStartTime.value == true && mPickedStartTime == null) {
             onError(InputValidationError.ExpectedStartTime)
         }
     }
@@ -237,7 +240,8 @@ class EditorViewModel(
             id = EventId.default(),
             description = mTitle,
             startDateTime = startDateTime,
-            endDateTime = endDateTime
+            endDateTime = endDateTime,
+            isFirstInCard = false
         )
     }
 
@@ -252,7 +256,8 @@ class EditorViewModel(
             id = eventId,
             description = mTitle,
             startDateTime = startDateTime,
-            endDateTime = endDateTime
+            endDateTime = endDateTime,
+            isFirstInCard = false
         )
     }
 

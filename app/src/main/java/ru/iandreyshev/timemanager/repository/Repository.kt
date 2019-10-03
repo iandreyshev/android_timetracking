@@ -33,10 +33,12 @@ class Repository(
                 ?: return@withContext RepoResult.Error(RepoError.Unknown)
 
             var eventToSave = event
-            val previousEvent = getEvents(cardId).lastOrNull()
+            val previousEvent = getEvents(cardId).firstOrNull()
 
-            if (previousEvent != null) {
-                eventToSave = eventToSave.copy(startDateTime = previousEvent.endDateTime)
+            eventToSave = if (previousEvent != null) {
+                eventToSave.copy(startDateTime = previousEvent.endDateTime)
+            } else {
+                eventToSave.copy(isFirstInCard = true)
             }
 
             val entity = EventEntity.create(cardId, eventToSave)
@@ -69,7 +71,8 @@ class Repository(
                 id = EventId(entity.id),
                 description = entity.description,
                 startDateTime = entity.startTime,
-                endDateTime = entity.endTime
+                endDateTime = entity.endTime,
+                isFirstInCard = entity.isFirstInCard
             )
         }
     }
@@ -82,7 +85,8 @@ class Repository(
                         id = EventId(entity.id),
                         description = entity.description,
                         startDateTime = entity.startTime,
-                        endDateTime = entity.endTime
+                        endDateTime = entity.endTime,
+                        isFirstInCard = entity.isFirstInCard
                     )
                 }
         }
