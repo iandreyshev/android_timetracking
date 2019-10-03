@@ -13,7 +13,7 @@ fun List<Event>?.asViewState(): List<EventViewState> {
 
     return mapIndexed { index, event ->
         val startTime =
-                if (index == 0) null
+                if (index != lastIndex) null
                 else event.startDateTime.format(END_DATE_FORMATTER)
 
         EventViewState(

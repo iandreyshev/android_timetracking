@@ -14,6 +14,7 @@ class TimerState(
 
     override fun onContextUpdated() {
         context.updateToolbar(ToolbarViewState.Timer(mSelectedMinutes))
+        context.updateAllEventsSelection(EventSelectionViewState.TimerMode(false))
         onEventClick(firstSelectedItemPosition)
         context.updateAddEventButton(false)
     }
