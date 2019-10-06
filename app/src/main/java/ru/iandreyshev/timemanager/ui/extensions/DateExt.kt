@@ -24,8 +24,10 @@ infix fun ZonedDateTime.withTime(time: ZonedDateTime) =
         .withMinute(time.minute)
         .withSecond(time.second)
 
-infix fun ZonedDateTime.sameDateWith(date: ZonedDateTime) =
-    year == date.year && month == date.month && dayOfMonth == date.dayOfMonth
+infix fun ZonedDateTime.sameDateWith(otherDateTime: ZonedDateTime) =
+    year == otherDateTime.year
+            && month == otherDateTime.month
+            && dayOfMonth == otherDateTime.dayOfMonth
 
 fun Int.asTimerTitleViewState(resources: Resources): String {
     val hours = this / MINUTES_PER_HOUR

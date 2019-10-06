@@ -85,7 +85,7 @@ class EditorActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-        finish()
+        mViewModel.onBackPressed()
     }
 
     private fun updateDatePicker(viewState: DatePickerViewState) {
@@ -106,6 +106,10 @@ class EditorActivity : BaseActivity() {
                 viewState.default,
                 viewState.listener
             )
+            is DatePickerViewState.Hidden -> {
+                mTimePickerDialog?.dismiss()
+                mTimePickerDialog = null
+            }
         }.exhaustive
     }
 

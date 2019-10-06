@@ -10,12 +10,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.TextStyle
 import ru.iandreyshev.timemanager.domain.*
 import ru.iandreyshev.timemanager.ui.extensions.asText
 import ru.iandreyshev.timemanager.ui.extensions.sameDateWith
 import ru.iandreyshev.timemanager.ui.extensions.withTime
 import ru.iandreyshev.timemanager.ui.utils.LiveDataEvent
 import ru.iandreyshev.timemanager.ui.utils.execute
+import java.util.*
 
 class EditorViewModel(
     private val cardId: CardId,
@@ -57,14 +59,14 @@ class EditorViewModel(
     private val mLoadDataViewState = MutableLiveData(true)
 
     private val mStartDateViewState = MutableLiveData<StartDateViewState>(StartDateViewState.Today)
-    private val mStartTimeViewState = MutableLiveData<StartTimeViewState>(StartTimeViewState.Undefined)
+    private val mStartTimeViewState =
+        MutableLiveData<StartTimeViewState>(StartTimeViewState.Undefined)
 
     private val mEndDateViewState = MutableLiveData<EndDateViewState>(EndDateViewState.Hidden)
     private val mEndTimeViewState = MutableLiveData("")
 
     private val mSaveButtonViewState = MutableLiveData(false)
 
-    private val mDateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
     private val mTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
     private var mBackgroundJob: Job = Job()
@@ -136,11 +138,11 @@ class EditorViewModel(
     fun onStartDatePickerClick() {
         val default = mPickedStartDate
             ?.let(dateProvider::asEpochTime)
-            ?: dateProvider.current2()
+            ?: dateProvider.currentAsJavaDate()
 
-        mDatePickerViewState.value = DatePickerViewState.StartDate(default) { time ->
-            time ?: return@StartDate
-            mPickedStartDate = dateProvider.asZonedDateTime(time, time)
+        mDatePickerViewState.value = DatePickerViewState.StartDate(default) { pickedDate ->
+            pickedDate ?: return@StartDate
+            mPickedStartDate = dateProvider.asZonedDateTime(pickedDate, pickedDate)
             updateTimeViewState()
         }
     }
@@ -148,29 +150,31 @@ class EditorViewModel(
     fun onStartTimePickerClick() {
         val default = mPickedStartTime
             ?.let(dateProvider::asEpochTime)
-            ?: dateProvider.current2()
+            ?: dateProvider.currentAsJavaDate()
 
-        mDatePickerViewState.value = DatePickerViewState.StartTime(default) { time ->
-            time ?: return@StartTime
-            mPickedStartTime = dateProvider.asZonedDateTime(time, time)
+        mDatePickerViewState.value = DatePickerViewState.StartTime(default) { pickedTime ->
+            pickedTime ?: return@StartTime
+            mPickedStartTime = dateProvider.asZonedDateTime(pickedTime, pickedTime)
             updateTimeViewState()
         }
     }
 
     fun onEndDatePickerClick() {
         val default = mPickedEndDate.let(dateProvider::asEpochTime)
-        mDatePickerViewState.value = DatePickerViewState.EndDate(default) { time ->
-            time ?: return@EndDate
-            mPickedEndDate = dateProvider.asZonedDateTime(time, time)
+
+        mDatePickerViewState.value = DatePickerViewState.EndDate(default) { pickedDate ->
+            pickedDate ?: return@EndDate
+            mPickedEndDate = dateProvider.asZonedDateTime(pickedDate, pickedDate)
             updateTimeViewState()
         }
     }
 
     fun onEndTimePickerClick() {
         val default = mPickedEndTime.let(dateProvider::asEpochTime)
-        mDatePickerViewState.value = DatePickerViewState.EndTime(default) { time ->
-            time ?: return@EndTime
-            mPickedEndTime = dateProvider.asZonedDateTime(time, time)
+
+        mDatePickerViewState.value = DatePickerViewState.EndTime(default) { pickedTime ->
+            pickedTime ?: return@EndTime
+            mPickedEndTime = dateProvider.asZonedDateTime(pickedTime, pickedTime)
             updateTimeViewState()
         }
     }
@@ -180,12 +184,22 @@ class EditorViewModel(
         mTitle = title.toString()
     }
 
+    fun onBackPressed() {
+        if (mDatePickerViewState.value == null
+            || mDatePickerViewState.value == DatePickerViewState.Hidden
+        ) return exitEvent.execute()
+
+        mDatePickerViewState.value = DatePickerViewState.Hidden
+    }
+
     private fun updateTimeViewState() {
         val pickedStartDate = mPickedStartDate
-        mStartDateViewState.value = when (pickedStartDate) {
-            null -> StartDateViewState.Today
+        mStartDateViewState.value = when {
+            pickedStartDate == null -> StartDateViewState.Today
+            pickedStartDate sameDateWith dateProvider.current() ->
+                StartDateViewState.Today
             else -> {
-                val formattedTime = pickedStartDate.format(mDateFormatter)
+                val formattedTime = pickedStartDate.formatDate()
                 StartDateViewState.ShowDate(formattedTime)
             }
         }
@@ -200,10 +214,10 @@ class EditorViewModel(
         }
 
         mEndDateViewState.value = when {
-            dateProvider.current() sameDateWith mPickedEndTime ->
+            mPickedEndDate sameDateWith dateProvider.current() ->
                 EndDateViewState.Today
             else ->
-                EndDateViewState.ShowDate(mPickedEndDate.format(mDateFormatter))
+                EndDateViewState.ShowDate(mPickedEndDate.formatDate())
         }
 
         mEndTimeViewState.value = mPickedEndTime.format(mTimeFormatter)
@@ -260,5 +274,8 @@ class EditorViewModel(
             isFirstInCard = false
         )
     }
+
+    private fun ZonedDateTime.formatDate() =
+        "$dayOfMonth ${month.getDisplayName(TextStyle.SHORT, Locale.getDefault())} $year"
 
 }

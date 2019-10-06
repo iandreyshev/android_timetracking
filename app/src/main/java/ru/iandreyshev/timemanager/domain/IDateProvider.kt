@@ -6,7 +6,7 @@ import java.util.*
 interface IDateProvider {
     fun get(): ZonedDateTime
     fun current(): ZonedDateTime
-    fun current2(): Date
+    fun currentAsJavaDate(): Date
 
     fun setNextDay(): ZonedDateTime
     fun setPreviousDay(): ZonedDateTime

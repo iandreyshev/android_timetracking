@@ -1,8 +1,7 @@
 package ru.iandreyshev.timemanager.domain
 
-import org.threeten.bp.Instant
-import org.threeten.bp.ZoneId
-import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.*
+import org.threeten.bp.temporal.TemporalAccessor
 import java.util.*
 
 class DateProvider : IDateProvider {
@@ -13,7 +12,7 @@ class DateProvider : IDateProvider {
 
     override fun current(): ZonedDateTime = ZonedDateTime.now()
 
-    override fun current2(): Date = Date()
+    override fun currentAsJavaDate(): Date = Date()
 
     override fun setNextDay(): ZonedDateTime {
         mDate = mDate.plusDays(1)
@@ -31,10 +30,14 @@ class DateProvider : IDateProvider {
     }
 
     override fun asEpochTime(zonedDateTime: ZonedDateTime): Date {
-        return Date()
+        return Date(zonedDateTime.toInstant().toEpochMilli())
     }
 
-    override fun asZonedDateTime(date: Date, time: Date): ZonedDateTime =
-        ZonedDateTime.ofInstant(Instant.ofEpochMilli(time.time), ZoneId.systemDefault())
+    override fun asZonedDateTime(date: Date, time: Date): ZonedDateTime {
+        val zonedDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date.time), ZoneId.systemDefault())
+        val zonedTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time.time), ZoneId.systemDefault())
+
+        return ZonedDateTime.of(zonedDate.toLocalDate(), zonedTime.toLocalTime(), ZoneId.systemDefault())
+    }
 
 }
