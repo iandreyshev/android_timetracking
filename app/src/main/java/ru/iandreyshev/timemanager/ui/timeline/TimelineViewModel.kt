@@ -28,7 +28,7 @@ class TimelineViewModel(
     val eventsAdapter: RecyclerView.Adapter<*> by lazy { mEventsAdapter }
     val timelineViewState: LiveData<TimelineViewState> by lazy { mTimelineViewState }
     val hasEventsList: LiveData<Boolean> by lazy { mHasEvents }
-    val canAddEvents: LiveData<Boolean> by lazy { mCanAddEvent }
+    val canAddEvent: LiveData<Boolean> by lazy { mCanAddEventViewState }
     val toolbarViewState: LiveData<ToolbarViewState> by lazy { mToolbarViewState }
     val arrowsViewState: LiveData<Pair<ArrowViewState, ArrowViewState>> by lazy { mArrowsViewState }
     val cardTitleViewState: LiveData<CardTitleViewState> by lazy { mCardTitleViewState }
@@ -42,7 +42,7 @@ class TimelineViewModel(
     )
     private val mTimelineViewState = MutableLiveData(TimelineViewState.LOADING)
     private val mHasEvents = MutableLiveData(false)
-    private val mCanAddEvent = MutableLiveData(false)
+    private val mCanAddEventViewState = MutableLiveData(false)
     private val mToolbarViewState = MutableLiveData<ToolbarViewState>(ToolbarViewState.CardTitle)
     private val mArrowsViewState = MutableLiveData(ArrowViewState.HIDDEN to ArrowViewState.HIDDEN)
     private val mNextCardButtonViewState = MutableLiveData(false)
@@ -52,6 +52,7 @@ class TimelineViewModel(
     private var mCurrentEvents: List<Event> = listOf()
     private var mHasPrevious = false
     private var mHasNext = false
+    private var mIsAddEventButtonVisible = false
 
     private var mDisposables = CompositeDisposable()
 
@@ -234,7 +235,7 @@ class TimelineViewModel(
     private fun updateEventsView() {
         val hasEvents = mEventsAdapter.events.isNotEmpty()
         mHasEvents.value = hasEvents
-        mCanAddEvent.value = hasEvents && mCanAddEvent.value ?: false
+        mCanAddEventViewState.value = hasEvents && mIsAddEventButtonVisible
     }
 
     private fun updateTimelineView() {
@@ -272,7 +273,7 @@ class TimelineViewModel(
         }
 
         override fun updateAddEventButton(isVisible: Boolean) {
-            mCanAddEvent.value = isVisible
+            mIsAddEventButtonVisible = isVisible
             updateEventsView()
         }
     }

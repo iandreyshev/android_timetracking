@@ -63,7 +63,7 @@ class TimelineActivity : BaseActivity() {
         mViewModel.hasEventsList.observe {
             timelineFirstEventView.isGone = it
         }
-        mViewModel.canAddEvents.observe {
+        mViewModel.canAddEvent.observe {
             if (it) createEventButton.show() else createEventButton.hide()
         }
         mViewModel.nextCardButtonViewState.observe { nextCardButton.isVisible = it }
