@@ -10,6 +10,10 @@
     <string name="editor_title">New event</string>
     <string name="editor_start_group_title">Start at</string>
     <string name="editor_end_group_title">Finish at</string>
+    <string name="editor_start_date_title">Start date</string>
+    <string name="editor_start_time_title">Start time</string>
+    <string name="editor_end_date_title">End date</string>
+    <string name="editor_end_time_title">End time</string>
 
     <string name="timer_title_format_minutes">%1$dm</string>
     <string name="timer_title_format_hours">%1$dh</string>
