@@ -10,14 +10,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.format.TextStyle
 import ru.iandreyshev.timemanager.domain.*
 import ru.iandreyshev.timemanager.ui.extensions.asText
+import ru.iandreyshev.timemanager.ui.extensions.formatDate
 import ru.iandreyshev.timemanager.ui.extensions.sameDateWith
 import ru.iandreyshev.timemanager.ui.extensions.withTime
 import ru.iandreyshev.timemanager.ui.utils.LiveDataEvent
 import ru.iandreyshev.timemanager.ui.utils.execute
-import java.util.*
 
 class EditorViewModel(
     private val cardId: CardId,
@@ -274,8 +273,5 @@ class EditorViewModel(
             isFirstInCard = false
         )
     }
-
-    private fun ZonedDateTime.formatDate() =
-        "$dayOfMonth ${month.getDisplayName(TextStyle.SHORT, Locale.getDefault())} $year"
 
 }

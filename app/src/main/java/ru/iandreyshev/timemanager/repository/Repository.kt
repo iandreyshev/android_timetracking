@@ -2,8 +2,8 @@ package ru.iandreyshev.timemanager.repository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.domain.*
+import ru.iandreyshev.timemanager.ui.extensions.sameDateWith
 
 class Repository(
     private val cardDao: ICardDao,
@@ -13,16 +13,21 @@ class Repository(
     override suspend fun saveCard(card: Card): Card {
         return withContext(Dispatchers.Default) {
             val order = (cardDao.lastOrder() ?: 0) + 1
+            val indexOfDate = cardDao.getAll()
+                .filter { it.date sameDateWith card.date }
+                .maxBy { it.indexOfDate }
+                ?.let { it.indexOfDate + 1 } ?: 0
             val entity = CardEntity(
-                title = "Card #$order",
-                order = order
+                order = order,
+                date = card.date,
+                indexOfDate = indexOfDate
             )
             val id = cardDao.insert(entity)
 
             return@withContext Card(
                 id = CardId(id),
-                title = entity.title,
-                date = ZonedDateTime.now()
+                date = entity.date,
+                indexOfDate = entity.indexOfDate
             )
         }
     }
@@ -105,8 +110,8 @@ class Repository(
 
             Card(
                 id = CardId(next.id),
-                title = next.title,
-                date = ZonedDateTime.now()
+                date = next.date,
+                indexOfDate = next.indexOfDate
             )
         }
     }
@@ -118,8 +123,8 @@ class Repository(
 
             Card(
                 id = CardId(previous.id),
-                title = previous.title,
-                date = ZonedDateTime.now()
+                date = previous.date,
+                indexOfDate = previous.indexOfDate
             )
         }
     }
@@ -130,8 +135,8 @@ class Repository(
 
             Card(
                 id = CardId(entity.id),
-                title = entity.title,
-                date = ZonedDateTime.now()
+                date = entity.date,
+                indexOfDate = entity.indexOfDate
             )
         }
     }

@@ -3,21 +3,21 @@ package ru.iandreyshev.timemanager.ui.extensions
 import android.content.res.Resources
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.TextStyle
 import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.domain.Card
 import java.util.*
 
 private const val MINUTES_PER_HOUR = 60
 
-fun Card.getTitleViewState(): String {
-    return title
-}
-
 fun Date.hour() =
     ZonedDateTime.from(DateTimeUtils.toInstant(this)).hour
 
 fun Date.minute() =
     ZonedDateTime.from(DateTimeUtils.toInstant(this)).minute
+
+fun ZonedDateTime.formatDate() =
+    "$dayOfMonth ${month.getDisplayName(TextStyle.SHORT, Locale.getDefault())} $year"
 
 infix fun ZonedDateTime.withTime(time: ZonedDateTime) =
     withHour(time.hour)

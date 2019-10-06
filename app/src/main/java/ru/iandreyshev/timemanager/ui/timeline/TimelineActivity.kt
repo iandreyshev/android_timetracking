@@ -14,6 +14,7 @@ import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.di.getViewModel
 import ru.iandreyshev.timemanager.ui.BaseActivity
 import ru.iandreyshev.timemanager.ui.extensions.asTimerTitleViewState
+import ru.iandreyshev.timemanager.ui.extensions.getCardTitle
 
 class TimelineActivity : BaseActivity() {
 
@@ -58,7 +59,7 @@ class TimelineActivity : BaseActivity() {
     }
 
     private fun subscribeToViewModel() {
-        mViewModel.cardTitleViewState.observe(cardTitle::setText)
+        mViewModel.cardTitleViewState.observe(::updateTitle)
         mViewModel.hasEventsList.observe {
             timelineFirstEventView.isGone = it
         }
@@ -116,13 +117,27 @@ class TimelineActivity : BaseActivity() {
         mDeleteCardDialog?.dismiss()
         mDeleteCardDialog = alert(Appcompat) {
             titleResource = R.string.delete_card_dialog_title
-            message = getString(R.string.delete_card_message, mViewModel.cardTitleViewState.value)
+            message = getString(
+                R.string.delete_card_message,
+                mViewModel.cardTitleViewState.value?.asTitle()
+            )
             noButton { it.dismiss() }
             yesButton { mViewModel.onDeleteCard() }
         }.build()
         mDeleteCardDialog?.show()
 
         return true
+    }
+
+    private fun updateTitle(viewState: CardTitleViewState) {
+        cardTitle.text = viewState.asTitle()
+    }
+
+    private fun CardTitleViewState.asTitle(): String {
+        return resources.getCardTitle(
+            dateTime ?: return "",
+            repeatIndex ?: return ""
+        )
     }
 
 }

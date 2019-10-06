@@ -13,7 +13,6 @@ import ru.iandreyshev.timemanager.TimeWalkerApp
 import ru.iandreyshev.timemanager.domain.*
 import ru.iandreyshev.timemanager.ui.editor.EditorAction
 import ru.iandreyshev.timemanager.ui.extensions.asViewState
-import ru.iandreyshev.timemanager.ui.extensions.getTitleViewState
 import ru.iandreyshev.timemanager.ui.timeline.state.TimelineState
 import ru.iandreyshev.timemanager.ui.timeline.state.ITimelineStateContext
 import ru.iandreyshev.timemanager.ui.utils.updateIfChanged
@@ -32,7 +31,7 @@ class TimelineViewModel(
     val canAddEvents: LiveData<Boolean> by lazy { mCanAddEvent }
     val toolbarViewState: LiveData<ToolbarViewState> by lazy { mToolbarViewState }
     val arrowsViewState: LiveData<Pair<ArrowViewState, ArrowViewState>> by lazy { mArrowsViewState }
-    val cardTitleViewState: LiveData<String> by lazy { mCardTitleViewState }
+    val cardTitleViewState: LiveData<CardTitleViewState> by lazy { mCardTitleViewState }
     val nextCardButtonViewState: LiveData<Boolean> by lazy { mNextCardButtonViewState }
 
     private val mTimelineContext: ITimelineStateContext = TimelineContext()
@@ -47,7 +46,7 @@ class TimelineViewModel(
     private val mToolbarViewState = MutableLiveData<ToolbarViewState>(ToolbarViewState.CardTitle)
     private val mArrowsViewState = MutableLiveData(ArrowViewState.HIDDEN to ArrowViewState.HIDDEN)
     private val mNextCardButtonViewState = MutableLiveData(false)
-    private val mCardTitleViewState = MutableLiveData<String>()
+    private val mCardTitleViewState = MutableLiveData<CardTitleViewState>()
 
     private var mCurrentCard: Card? = null
     private var mCurrentEvents: List<Event> = listOf()
@@ -86,7 +85,7 @@ class TimelineViewModel(
     fun onCreateFirstCard() {
         viewModelScope.launch {
             val currentDate = dateProvider.current()
-            val card = Card(title = currentDate.second.toString(), date = currentDate)
+            val card = Card(date = currentDate, indexOfDate = 0)
 
             mCurrentCard = repository.saveCard(card)
 
@@ -101,7 +100,7 @@ class TimelineViewModel(
     fun onCreateCard() {
         viewModelScope.launch {
             val currentDate = dateProvider.current()
-            val cardToSave = Card(title = currentDate.second.toString(), date = currentDate)
+            val cardToSave = Card(date = currentDate, indexOfDate = 0)
 
             mCurrentCard = repository.saveCard(cardToSave)
             updateTimelineView()
@@ -239,7 +238,7 @@ class TimelineViewModel(
     }
 
     private fun updateTimelineView() {
-        mCardTitleViewState.value = mCurrentCard?.getTitleViewState()
+        mCardTitleViewState.value = CardTitleViewState(mCurrentCard?.date, mCurrentCard?.indexOfDate)
         mTimelineViewState.value =
             if (mCurrentCard == null) TimelineViewState.EMPTY
             else TimelineViewState.HAS_CARD

@@ -3,6 +3,7 @@ package ru.iandreyshev.timemanager.repository
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import ru.iandreyshev.timemanager.domain.Card
 
 @Dao
 interface ICardDao {
@@ -12,6 +13,9 @@ interface ICardDao {
 
     @Query("SELECT * FROM cards WHERE :id == id")
     fun get(id: Long): CardEntity?
+
+    @Query("SELECT * FROM cards")
+    fun getAll(): List<CardEntity>
 
     @Query("SELECT * FROM cards WHERE `order` = (SELECT MAX (`order`) FROM cards) LIMIT 1")
     fun getLast(): CardEntity?
