@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.fragment_timeline.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
@@ -56,6 +57,9 @@ class TimelineActivity : BaseActivity() {
 
     private fun initEventsList() {
         recyclerView.adapter = mViewModel.eventsAdapter
+//        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(mViewModel.eventsAdapter))
+//        itemTouchHelper.attachToRecyclerView(recyclerView)
+//        itemTouchHelper.attachToRecyclerView(null)
     }
 
     private fun subscribeToViewModel() {

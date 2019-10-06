@@ -5,16 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.iandreyshev.timemanager.R
 
-class TimelineAdapter(
-        private val onClickListener: (Int) -> Unit,
-        private val onLongClickListener: (Int) -> Unit
-) : RecyclerView.Adapter<EventViewHolder>() {
+class TimelineAdapter : RecyclerView.Adapter<EventViewHolder>() {
 
     var events: List<EventViewState> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
+
+    var onClickListener: (Int) -> Unit = {}
+
+    var onLongClickListener: (Int) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         val view = LayoutInflater.from(parent.context)

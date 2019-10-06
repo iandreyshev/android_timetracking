@@ -19,10 +19,11 @@ import ru.iandreyshev.timemanager.ui.utils.updateIfChanged
 import ru.iandreyshev.timemanager.utils.exhaustive
 
 class TimelineViewModel(
-    private val dateProvider: IDateProvider,
-    private val repository: IRepository,
-    private var timelineState: TimelineState,
-    editorObservable: Observable<EditorAction>
+        private val dateProvider: IDateProvider,
+        private val repository: IRepository,
+        private var timelineState: TimelineState,
+        eventsAdapter: TimelineAdapter,
+        editorObservable: Observable<EditorAction>
 ) : ViewModel() {
 
     val eventsAdapter: RecyclerView.Adapter<*> by lazy { mEventsAdapter }
@@ -36,10 +37,7 @@ class TimelineViewModel(
 
     private val mTimelineContext: ITimelineStateContext = TimelineContext()
 
-    private val mEventsAdapter = TimelineAdapter(
-        onClickListener = { timelineState.onEventClick(it) },
-        onLongClickListener = { timelineState.onStartTimerMode(it) }
-    )
+    private val mEventsAdapter = eventsAdapter
     private val mTimelineViewState = MutableLiveData(TimelineViewState.LOADING)
     private val mHasEvents = MutableLiveData(false)
     private val mCanAddEventViewState = MutableLiveData(false)
@@ -57,6 +55,8 @@ class TimelineViewModel(
     private var mDisposables = CompositeDisposable()
 
     init {
+        mEventsAdapter.onClickListener = { timelineState.onEventClick(it) }
+        mEventsAdapter.onLongClickListener = { timelineState.onStartTimerMode(it) }
         mTimelineContext.setState(timelineState)
         mDisposables += editorObservable.subscribe(::onEditorAction)
     }
@@ -182,7 +182,7 @@ class TimelineViewModel(
         viewModelScope.launch {
             val cardId = mCurrentCard?.id ?: return@launch
             val newCurrentCard = repository.getNextCard(mCurrentCard ?: return@launch)
-                ?: repository.getPreviousCard(mCurrentCard ?: return@launch)
+                    ?: repository.getPreviousCard(mCurrentCard ?: return@launch)
 
             when (repository.deleteCard(cardId)) {
                 is RepoResult.Success -> {
@@ -239,10 +239,11 @@ class TimelineViewModel(
     }
 
     private fun updateTimelineView() {
-        mCardTitleViewState.value = CardTitleViewState(mCurrentCard?.date, mCurrentCard?.indexOfDate)
+        mCardTitleViewState.value =
+                CardTitleViewState(mCurrentCard?.date, mCurrentCard?.indexOfDate)
         mTimelineViewState.value =
-            if (mCurrentCard == null) TimelineViewState.EMPTY
-            else TimelineViewState.HAS_CARD
+                if (mCurrentCard == null) TimelineViewState.EMPTY
+                else TimelineViewState.HAS_CARD
     }
 
     private inner class TimelineContext : ITimelineStateContext {
