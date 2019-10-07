@@ -1,4 +1,4 @@
-package ru.iandreyshev.timemanager.domain
+package ru.iandreyshev.timemanager.domain.cards
 
 inline class CardId(val value: Long) {
 

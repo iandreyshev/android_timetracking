@@ -14,8 +14,8 @@ import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePick
 import kotlinx.android.synthetic.main.fragment_editor.*
 import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.di.getViewModel
-import ru.iandreyshev.timemanager.domain.CardId
-import ru.iandreyshev.timemanager.domain.EventId
+import ru.iandreyshev.timemanager.domain.cards.CardId
+import ru.iandreyshev.timemanager.domain.cards.EventId
 import ru.iandreyshev.timemanager.ui.BaseActivity
 import ru.iandreyshev.timemanager.utils.exhaustive
 import java.util.*
@@ -25,8 +25,13 @@ class EditorActivity : BaseActivity() {
     private var mTimePickerDialog: SingleDateAndTimePickerDialog? = null
 
     private val mViewModel: EditorViewModel by lazy {
-        val cardId = CardId(intent.extras?.getLong(ARG_CARD_ID) ?: 0)
-        val eventId = intent.extras?.getLong(ARG_EVENT_ID)?.run { EventId(this) }
+        val cardId =
+            CardId(intent.extras?.getLong(ARG_CARD_ID) ?: 0)
+        val eventId = intent.extras?.getLong(ARG_EVENT_ID)?.run {
+            EventId(
+                this
+            )
+        }
         getViewModel(cardId, eventId)
     }
 

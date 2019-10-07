@@ -1,9 +1,10 @@
-package ru.iandreyshev.timemanager.repository
+package ru.iandreyshev.timemanager.repository.cards
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import org.threeten.bp.ZonedDateTime
+import ru.iandreyshev.timemanager.repository.cards.TimeTypeConverter
 
 @Entity(tableName = "cards")
 @TypeConverters(TimeTypeConverter::class)

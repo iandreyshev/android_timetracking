@@ -10,7 +10,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
-import ru.iandreyshev.timemanager.domain.*
+import ru.iandreyshev.timemanager.domain.cards.*
 import ru.iandreyshev.timemanager.ui.extensions.asText
 import ru.iandreyshev.timemanager.ui.extensions.formatDate
 import ru.iandreyshev.timemanager.ui.extensions.sameDateWith
@@ -22,7 +22,7 @@ class EditorViewModel(
     private val cardId: CardId,
     private val eventId: EventId,
     private val resources: Resources,
-    private val repository: IRepository,
+    private val repository: ICardsRepository,
     private val dateProvider: IDateProvider,
     private val observer: Observer<EditorAction>
 ) : ViewModel() {

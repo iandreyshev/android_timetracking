@@ -1,7 +1,6 @@
-package ru.iandreyshev.timemanager.domain
+package ru.iandreyshev.timemanager.domain.cards
 
 import org.threeten.bp.*
-import org.threeten.bp.temporal.TemporalAccessor
 import java.util.*
 
 class DateProvider : IDateProvider {

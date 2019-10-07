@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TimeTracker</string>
+    <string name="app_name">TimeCards</string>
 
     <string name="button_create_first_card">Создать карточку</string>
     <string name="button_create_first_event">Создать событие</string>

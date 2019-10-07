@@ -1,4 +1,4 @@
-package ru.iandreyshev.timemanager.repository
+package ru.iandreyshev.timemanager.repository.cards
 
 import androidx.room.TypeConverter
 import org.threeten.bp.ZonedDateTime

@@ -1,9 +1,8 @@
-package ru.iandreyshev.timemanager.repository
+package ru.iandreyshev.timemanager.repository.cards
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import ru.iandreyshev.timemanager.domain.Card
 
 @Dao
 interface ICardDao {

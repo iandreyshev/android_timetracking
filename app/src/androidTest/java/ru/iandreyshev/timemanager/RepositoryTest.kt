@@ -8,7 +8,9 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.ZonedDateTime
-import ru.iandreyshev.timemanager.repository.*
+import ru.iandreyshev.timemanager.repository.cards.AppDatabase
+import ru.iandreyshev.timemanager.repository.cards.ICardDao
+import ru.iandreyshev.timemanager.repository.cards.IEventDao
 
 @SmallTest
 class RepositoryTest {
@@ -79,7 +81,11 @@ class RepositoryTest {
 
     @Test
     fun return_empty_list_with_events_by_default() {
-        val card = CardEntity(id = 0, title = "Card without events", order = 0)
+        val card = CardEntity(
+            id = 0,
+            title = "Card without events",
+            order = 0
+        )
         val cardId = cardDao.insert(card)
 
         assertTrue(eventDao.getAll(cardId).isEmpty())
@@ -87,7 +93,11 @@ class RepositoryTest {
 
     @Test
     fun can_return_events_for_card() {
-        val card = CardEntity(id = 0, title = "Card with events", order = 0)
+        val card = CardEntity(
+            id = 0,
+            title = "Card with events",
+            order = 0
+        )
         val cardId = cardDao.insert(card)
         val eventsCount = 100
 
@@ -110,7 +120,11 @@ class RepositoryTest {
     @Test
     fun return_null_when_next_card_not_exists() {
         val order: Long = 2
-        val card = CardEntity(id = 0, title = "Card without next", order = order)
+        val card = CardEntity(
+            id = 0,
+            title = "Card without next",
+            order = order
+        )
 
         cardDao.insert(card)
 
@@ -122,11 +136,19 @@ class RepositoryTest {
     @Test
     fun can_return_next_card_when_has_one() {
         val order: Long = 2
-        val card = CardEntity(id = 0, title = "Card with one next", order = order)
+        val card = CardEntity(
+            id = 0,
+            title = "Card with one next",
+            order = order
+        )
         cardDao.insert(card)
 
         val nextOrder = order + 1
-        val nextCard = CardEntity(id = 0, title = "Next card", order = nextOrder)
+        val nextCard = CardEntity(
+            id = 0,
+            title = "Next card",
+            order = nextOrder
+        )
         cardDao.insert(nextCard)
 
         val next = cardDao.getNext(order)
@@ -139,11 +161,19 @@ class RepositoryTest {
         val cardsCount: Long = 100
         var orderToInsertNext: Long = 1
 
-        val firstCard = CardEntity(id = 0, title = "Card with some next", order = orderToInsertNext)
+        val firstCard = CardEntity(
+            id = 0,
+            title = "Card with some next",
+            order = orderToInsertNext
+        )
         cardDao.insert(firstCard)
 
         repeat(cardsCount.toInt()) {
-            val nextCard = CardEntity(id = 0, title = "Next card", order = ++orderToInsertNext)
+            val nextCard = CardEntity(
+                id = 0,
+                title = "Next card",
+                order = ++orderToInsertNext
+            )
             cardDao.insert(nextCard)
         }
 
@@ -158,7 +188,11 @@ class RepositoryTest {
     @Test
     fun return_null_when_previous_card_not_exists() {
         val order: Long = 2
-        val card = CardEntity(id = 0, title = "Card without next", order = order)
+        val card = CardEntity(
+            id = 0,
+            title = "Card without next",
+            order = order
+        )
 
         cardDao.insert(card)
 
@@ -170,11 +204,19 @@ class RepositoryTest {
     @Test
     fun can_return_previous_card_when_has_one() {
         val order: Long = 2
-        val card = CardEntity(id = 0, title = "Card with one next", order = order)
+        val card = CardEntity(
+            id = 0,
+            title = "Card with one next",
+            order = order
+        )
         cardDao.insert(card)
 
         val previousOrder = order - 1
-        val previousCard = CardEntity(id = 0, title = "Next card", order = previousOrder)
+        val previousCard = CardEntity(
+            id = 0,
+            title = "Next card",
+            order = previousOrder
+        )
         cardDao.insert(previousCard)
 
         val next = cardDao.getPrevious(order)
@@ -188,12 +230,20 @@ class RepositoryTest {
         var orderToInsertPrevious: Long = cardsCount
 
         val firstCard =
-            CardEntity(id = 0, title = "Card with some previous", order = orderToInsertPrevious)
+            CardEntity(
+                id = 0,
+                title = "Card with some previous",
+                order = orderToInsertPrevious
+            )
         cardDao.insert(firstCard)
 
         repeat(cardsCount.toInt()) {
             val previousCard =
-                CardEntity(id = 0, title = "Previous card", order = --orderToInsertPrevious)
+                CardEntity(
+                    id = 0,
+                    title = "Previous card",
+                    order = --orderToInsertPrevious
+                )
             cardDao.insert(previousCard)
         }
 
@@ -216,7 +266,11 @@ class RepositoryTest {
 
         repeat(cardsCount) {
             val order = it.toLong()
-            val card = CardEntity(id = 0, title = "Card #$it", order = order)
+            val card = CardEntity(
+                id = 0,
+                title = "Card #$it",
+                order = order
+            )
             cardDao.insert(card)
         }
 

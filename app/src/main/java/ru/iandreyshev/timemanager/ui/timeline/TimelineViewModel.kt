@@ -9,8 +9,8 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import kotlinx.coroutines.launch
-import ru.iandreyshev.timemanager.TimeWalkerApp
-import ru.iandreyshev.timemanager.domain.*
+import ru.iandreyshev.timemanager.TimeCardsApp
+import ru.iandreyshev.timemanager.domain.cards.*
 import ru.iandreyshev.timemanager.ui.editor.EditorAction
 import ru.iandreyshev.timemanager.ui.extensions.asViewState
 import ru.iandreyshev.timemanager.ui.timeline.state.TimelineState
@@ -19,11 +19,11 @@ import ru.iandreyshev.timemanager.ui.utils.updateIfChanged
 import ru.iandreyshev.timemanager.utils.exhaustive
 
 class TimelineViewModel(
-        private val dateProvider: IDateProvider,
-        private val repository: IRepository,
-        private var timelineState: TimelineState,
-        eventsAdapter: TimelineAdapter,
-        editorObservable: Observable<EditorAction>
+    private val dateProvider: IDateProvider,
+    private val repository: ICardsRepository,
+    private var timelineState: TimelineState,
+    eventsAdapter: TimelineAdapter,
+    editorObservable: Observable<EditorAction>
 ) : ViewModel() {
 
     val eventsAdapter: RecyclerView.Adapter<*> by lazy { mEventsAdapter }
@@ -86,7 +86,8 @@ class TimelineViewModel(
     fun onCreateFirstCard() {
         viewModelScope.launch {
             val currentDate = dateProvider.current()
-            val card = Card(date = currentDate, indexOfDate = 0)
+            val card =
+                Card(date = currentDate, indexOfDate = 0)
 
             mCurrentCard = repository.saveCard(card)
 
@@ -101,7 +102,8 @@ class TimelineViewModel(
     fun onCreateCard() {
         viewModelScope.launch {
             val currentDate = dateProvider.current()
-            val cardToSave = Card(date = currentDate, indexOfDate = 0)
+            val cardToSave =
+                Card(date = currentDate, indexOfDate = 0)
 
             mCurrentCard = repository.saveCard(cardToSave)
             updateTimelineView()
@@ -171,7 +173,7 @@ class TimelineViewModel(
 
     fun onCreateEvent() {
         val cardId = mCurrentCard?.id ?: return
-        TimeWalkerApp.navigator.openEditor(cardId)
+        TimeCardsApp.navigator.openEditor(cardId)
     }
 
     fun onExitFromTimer() {
@@ -256,7 +258,7 @@ class TimelineViewModel(
         override fun openEvent(position: Int) {
             val cardId = mCurrentCard?.id ?: return
             val eventId = mEventsAdapter.events[position].id
-            TimeWalkerApp.navigator.openEditor(cardId, eventId)
+            TimeCardsApp.navigator.openEditor(cardId, eventId)
         }
 
         override fun updateToolbar(viewState: ToolbarViewState) {

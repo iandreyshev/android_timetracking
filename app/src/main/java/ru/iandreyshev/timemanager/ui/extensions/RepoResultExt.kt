@@ -2,7 +2,7 @@ package ru.iandreyshev.timemanager.ui.extensions
 
 import android.content.res.Resources
 import ru.iandreyshev.timemanager.R
-import ru.iandreyshev.timemanager.domain.RepoError
+import ru.iandreyshev.timemanager.domain.cards.RepoError
 
 fun RepoError.asText(resources: Resources) =
     when (this) {

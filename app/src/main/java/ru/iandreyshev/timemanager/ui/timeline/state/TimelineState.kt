@@ -1,6 +1,6 @@
 package ru.iandreyshev.timemanager.ui.timeline.state
 
-import ru.iandreyshev.timemanager.domain.Event
+import ru.iandreyshev.timemanager.domain.cards.Event
 
 abstract class TimelineState {
 

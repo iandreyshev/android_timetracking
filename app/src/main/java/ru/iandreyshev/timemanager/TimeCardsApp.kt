@@ -7,21 +7,24 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.subjects.BehaviorSubject
-import ru.iandreyshev.timemanager.domain.DateProvider
-import ru.iandreyshev.timemanager.domain.IDateProvider
-import ru.iandreyshev.timemanager.domain.IRepository
+import ru.iandreyshev.timemanager.domain.cards.DateProvider
+import ru.iandreyshev.timemanager.domain.cards.IDateProvider
+import ru.iandreyshev.timemanager.domain.cards.ICardsRepository
+import ru.iandreyshev.timemanager.domain.system.AppLauncher
+import ru.iandreyshev.timemanager.domain.system.IAppRepository
 import ru.iandreyshev.timemanager.navigation.Navigator
-import ru.iandreyshev.timemanager.repository.AppDatabase
-import ru.iandreyshev.timemanager.repository.Repository
+import ru.iandreyshev.timemanager.repository.cards.AppDatabase
+import ru.iandreyshev.timemanager.repository.cards.CardsRepository
+import ru.iandreyshev.timemanager.repository.system.AppRepository
 import ru.iandreyshev.timemanager.ui.editor.EditorAction
 import timber.log.Timber
 
-class TimeWalkerApp : Application() {
+class TimeCardsApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this)
-        TimeWalkerApp.applicationContext = this
+        TimeCardsApp.applicationContext = this
         Timber.plant(Timber.DebugTree())
     }
 
@@ -31,8 +34,10 @@ class TimeWalkerApp : Application() {
 
         val dateProvider: IDateProvider by lazy { DateProvider() }
 
-        val repository: IRepository by lazy {
-            Repository(
+        val appRepository: IAppRepository by lazy { AppRepository(applicationContext) }
+
+        val cardsRepository: ICardsRepository by lazy {
+            CardsRepository(
                 cardDao = mDatabase.cardDao(),
                 eventDao = mDatabase.eventDao()
             )
@@ -42,6 +47,8 @@ class TimeWalkerApp : Application() {
 
         val editorObserver: Observer<EditorAction> by lazy { mEditorSubject }
         val editorObservable: Observable<EditorAction> by lazy { mEditorSubject }
+
+        val launcher by lazy { AppLauncher(repository = appRepository) }
 
         private val mDatabase by lazy {
             Room.databaseBuilder(

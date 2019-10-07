@@ -1,6 +1,6 @@
 package ru.iandreyshev.timemanager.ui.timeline
 
-import ru.iandreyshev.timemanager.domain.EventId
+import ru.iandreyshev.timemanager.domain.cards.EventId
 
 class EventViewState(
     val id: EventId,

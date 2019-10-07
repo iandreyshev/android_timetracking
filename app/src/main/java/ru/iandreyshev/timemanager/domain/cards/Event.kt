@@ -1,4 +1,4 @@
-package ru.iandreyshev.timemanager.domain
+package ru.iandreyshev.timemanager.domain.cards
 
 import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.utils.betweenWithSecondsRounding

@@ -1,14 +1,14 @@
-package ru.iandreyshev.timemanager.repository
+package ru.iandreyshev.timemanager.repository.cards
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.iandreyshev.timemanager.domain.*
+import ru.iandreyshev.timemanager.domain.cards.*
 import ru.iandreyshev.timemanager.ui.extensions.sameDateWith
 
-class Repository(
+class CardsRepository(
     private val cardDao: ICardDao,
     private val eventDao: IEventDao
-) : IRepository {
+) : ICardsRepository {
 
     override suspend fun saveCard(card: Card): Card {
         return withContext(Dispatchers.Default) {
@@ -46,7 +46,10 @@ class Repository(
                 eventToSave.copy(isFirstInCard = true)
             }
 
-            val entity = EventEntity.create(cardId, eventToSave)
+            val entity = EventEntity.create(
+                cardId,
+                eventToSave
+            )
             entity.id = 0
             val id = eventDao.insert(entity)
 
@@ -60,7 +63,11 @@ class Repository(
         return withContext(Dispatchers.Default) {
             val cardEntity = cardDao.get(cardId.value)
                 ?: return@withContext RepoResult.Error(RepoError.Unknown)
-            val updateEntity = EventEntity.create(cardEntity.id, event)
+            val updateEntity =
+                EventEntity.create(
+                    cardEntity.id,
+                    event
+                )
 
             eventDao.update(updateEntity)
 

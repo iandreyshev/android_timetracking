@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TimeTracker</string>
+    <string name="app_name">TimeCards</string>
 
     <string name="button_create_first_card">Create card</string>
     <string name="button_create_first_event">Create event</string>

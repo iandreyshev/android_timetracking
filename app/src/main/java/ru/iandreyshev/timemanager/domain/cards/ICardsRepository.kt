@@ -1,6 +1,6 @@
-package ru.iandreyshev.timemanager.domain
+package ru.iandreyshev.timemanager.domain.cards
 
-interface IRepository {
+interface ICardsRepository {
     suspend fun saveCard(card: Card): Card
     suspend fun saveEvent(cardId: CardId, event: Event): RepoResult<Event>
 

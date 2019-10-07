@@ -5,7 +5,6 @@ import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.TextStyle
 import ru.iandreyshev.timemanager.R
-import ru.iandreyshev.timemanager.domain.Card
 import java.util.*
 
 private const val MINUTES_PER_HOUR = 60
