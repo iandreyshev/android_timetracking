@@ -37,6 +37,9 @@ class EventViewHolder(
         val duration = viewState.durationInMinutes.asTimerTitleViewState(resources)
         endTime.text = "${viewState.endTime} ($duration)"
 
+        endTimeIconPoint.isVisible = viewState.isMiddleEndTime
+        endTimeIconFinish.isVisible = !viewState.isMiddleEndTime
+
         when (val selectionViewState = viewState.selection) {
             EventSelectionViewState.Normal ->
                 mViewsToBlurOnSelect.forEach { it.alpha = NORMAL_ALPHA }

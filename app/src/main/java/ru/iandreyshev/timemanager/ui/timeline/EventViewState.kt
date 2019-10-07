@@ -7,6 +7,7 @@ class EventViewState(
     val title: String,
     val startTime: String?,
     val endTime: String,
+    val isMiddleEndTime: Boolean,
     var durationInMinutes: Int,
     var selection: EventSelectionViewState
 )

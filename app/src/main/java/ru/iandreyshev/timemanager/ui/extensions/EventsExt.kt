@@ -13,16 +13,17 @@ fun List<Event>?.asViewState(): List<EventViewState> {
 
     return mapIndexed { index, event ->
         val startTime =
-                if (index != lastIndex) null
-                else event.startDateTime.format(END_DATE_FORMATTER)
+            if (index != lastIndex) null
+            else event.startDateTime.format(END_DATE_FORMATTER)
 
         EventViewState(
-                id = event.id,
-                title = event.description,
-                startTime = startTime,
-                endTime = event.endDateTime.format(END_DATE_FORMATTER),
-                durationInMinutes = event.getDurationInMinutes(),
-                selection = EventSelectionViewState.Normal
+            id = event.id,
+            title = event.description,
+            startTime = startTime,
+            endTime = event.endDateTime.format(END_DATE_FORMATTER),
+            isMiddleEndTime = count() != 1 && index != 0,
+            durationInMinutes = event.getDurationInMinutes(),
+            selection = EventSelectionViewState.Normal
         )
     }
 }
