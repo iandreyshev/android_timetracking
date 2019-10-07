@@ -1,6 +1,7 @@
 package ru.iandreyshev.timemanager.ui.tutorial
 
 import android.os.Bundle
+import androidx.constraintlayout.motion.widget.MotionLayout
 import kotlinx.android.synthetic.main.activity_tutorial.*
 import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.di.getViewModel
@@ -14,9 +15,22 @@ class TutorialActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutorial)
 
-        cancelButton.setOnClickListener {
-            mViewModel.onCancelTutorial()
-        }
+        motionLayout.setTransitionListener(object : MotionLayout.TransitionListener {
+
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {
+            }
+
+            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {
+            }
+
+            override fun onTransitionChange(p0: MotionLayout?, p1: Int, p2: Int, p3: Float) {
+            }
+
+            override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {
+            }
+
+        })
+
     }
 
 }

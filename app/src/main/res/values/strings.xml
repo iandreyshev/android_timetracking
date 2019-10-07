@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">TimeCards</string>
 
-    <string name="button_create_first_card">Create card</string>
-    <string name="button_create_first_event">Create event</string>
+    <string name="tutorial_button_done">Next</string>
+
+    <string name="timeline_button_create_first_card">Create card</string>
+    <string name="timeline_button_create_first_event">Create event</string>
 
     <string name="card_title">%1$s</string>
     <string name="card_title_with_suffix">%1$s (#%2$d)</string>

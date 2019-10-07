@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="tutorial_card_bottom_gradient">48dp</dimen>
     <dimen name="card_radius">24dp</dimen>
     <dimen name="card_top_margin">72dp</dimen>
 </resources>

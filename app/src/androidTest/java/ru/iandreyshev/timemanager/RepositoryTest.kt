@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.repository.cards.AppDatabase
+import ru.iandreyshev.timemanager.repository.cards.CardEntity
 import ru.iandreyshev.timemanager.repository.cards.ICardDao
 import ru.iandreyshev.timemanager.repository.cards.IEventDao
 
