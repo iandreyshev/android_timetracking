@@ -15,11 +15,13 @@ class Navigator(
 
     fun openTutorial() {
         Intent(applicationContext, TutorialActivity::class.java)
+            .newTask()
             .let(applicationContext::startActivity)
     }
 
     fun openCards() {
         Intent(applicationContext, TimelineActivity::class.java)
+            .newTask()
             .let(applicationContext::startActivity)
     }
 
