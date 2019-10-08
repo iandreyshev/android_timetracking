@@ -43,6 +43,24 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/startStateDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/tutorial_state_no_card"
+        android:textAlignment="center"
+        android:textColor="@color/background"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/createFirstCardButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
     <Button
         android:id="@+id/createFirstCardButton"
         android:layout_width="wrap_content"
@@ -51,7 +69,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/startStateDescription" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card"
@@ -61,7 +79,30 @@
         android:layout_marginEnd="24dp"
         android:background="@color/background"
         app:cardCornerRadius="12dp"
-        app:cardElevation="12dp">
+        app:cardElevation="12dp" />
+
+    <TextView
+        android:id="@+id/stateDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/background"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@id/card"
+        app:layout_constraintStart_toStartOf="@id/card"
+        app:layout_constraintTop_toBottomOf="@id/card" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/createFirstEventButtonElevationWrap"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/card"
+        app:layout_constraintEnd_toEndOf="@id/card"
+        app:layout_constraintStart_toStartOf="@id/card"
+        app:layout_constraintTop_toTopOf="@id/card">
 
         <Button
             android:id="@+id/createFirstEventButton"
@@ -137,14 +178,24 @@
 
     </androidx.cardview.widget.CardView>
 
-    <Button
-        android:id="@+id/tutorialDoneButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/tutorial_button_done"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/tutorialDoneButtonElevationWrap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card" />
+        app:layout_constraintTop_toBottomOf="@id/event1">
+
+        <Button
+            android:id="@+id/tutorialDoneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/tutorial_button_done" />
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

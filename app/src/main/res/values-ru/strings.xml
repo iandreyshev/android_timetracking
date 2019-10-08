@@ -3,12 +3,11 @@
     <string name="app_name">TimeCards</string>
 
     <string name="tutorial_button_done">Продолжить</string>
-    <string name="tutorial_state_no_card">Создайте карточку, чтобы начать трекать события</string>
-    <string name="tutorial_state_empty_card">После создания карточка будет пустой, необходимо создать первое событие</string>
-    <string name="tutorial_state_one_event">Первое событие содержит время начала и время конца. Создайте ещё события</string>
-    <string name="tutorial_state_three_events">Все последующие события будут содеражать только время окончания</string>
-    <string name="tutorial_state_wait_first_select">Чтобы посчитать затраченное время выделите событие догим нажатием</string>
-    <string name="tutorial_state_one_event_selected">Счетчик времени находится над карточкой, выделите ещё одно событие</string>
+    <string name="tutorial_state_no_card">У вас ещё нет карточки, создайте, чтобы начать записывать события</string>
+    <string name="tutorial_state_empty_card">После создания карточки она будет пустой, создайте первое событие</string>
+    <string name="tutorial_state_one_event">Первое событие содержит время начала и конца. Продолжайте создавать события</string>
+    <string name="tutorial_state_three_events">Следующие события содеражат только время окончания. Выделите событие догим нажатием</string>
+    <string name="tutorial_state_one_event_selected">Счетчик показывает время затраченное на выбранное событие, выделите ещё одно событие</string>
     <string name="tutorial_state_two_events_selected">При выделение следующих событий счетчик обновится и будет показывать общее затраченное время</string>
     <string name="tutorial_event_1_title">Утренняя пробежка по парку</string>
     <string name="tutorial_event_2_title">Прогулка с собакой</string>
