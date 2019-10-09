@@ -20,20 +20,20 @@ class TutorialActivity : BaseActivity() {
     private val mEvent1ViewHolder by lazy {
         EventViewHolder(
             event1,
-            onClickListener = {},
-            onLongClickListener = { mViewModel.onEventSelected(TutorialEvent.EVENT_1) })
+            onClickListener = { mViewModel.onSecondEventSelected(TutorialEvent.EVENT_1) },
+            onLongClickListener = { mViewModel.onFirstEventSelected(TutorialEvent.EVENT_1) })
     }
     private val mEvent2ViewHolder by lazy {
         EventViewHolder(
             event2,
-            onClickListener = {},
-            onLongClickListener = { mViewModel.onEventSelected(TutorialEvent.EVENT_2) })
+            onClickListener = { mViewModel.onSecondEventSelected(TutorialEvent.EVENT_2) },
+            onLongClickListener = { mViewModel.onFirstEventSelected(TutorialEvent.EVENT_2) })
     }
     private val mEvent3ViewHolder by lazy {
         EventViewHolder(
             event3,
-            onClickListener = {},
-            onLongClickListener = { mViewModel.onEventSelected(TutorialEvent.EVENT_3) })
+            onClickListener = { mViewModel.onSecondEventSelected(TutorialEvent.EVENT_3) },
+            onLongClickListener = { mViewModel.onFirstEventSelected(TutorialEvent.EVENT_3) })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -68,25 +68,31 @@ class TutorialViewModel(
         TimeCardsApp.navigator.openCards()
     }
 
-    fun onEventSelected(event: TutorialEvent): Boolean {
-        if (mFirstSelectedEvent == event) {
+    fun onFirstEventSelected(event: TutorialEvent): Boolean {
+        if (mFirstSelectedEvent != null) {
             return false
         }
 
-        when {
-            mFirstSelectedEvent == null -> {
-                event1ViewState.updateTimerModeSelection(false)
-                event2ViewState.updateTimerModeSelection(false)
-                event3ViewState.updateTimerModeSelection(false)
-                mFirstSelectedEvent = event
-                startTransitionEvent.execute(TutorialState.ONE_EVENT_SELECTED)
-            }
-            mSecondSelectedEvent == null -> {
-                mSecondSelectedEvent = event
-                startTransitionEvent.execute(TutorialState.TWO_EVENTS_SELECTED)
-            }
-            else -> return false
+        event1ViewState.updateTimerModeSelection(event == TutorialEvent.EVENT_1)
+        event2ViewState.updateTimerModeSelection(event == TutorialEvent.EVENT_2)
+        event3ViewState.updateTimerModeSelection(event == TutorialEvent.EVENT_3)
+
+        mFirstSelectedEvent = event
+
+        startTransitionEvent.execute(TutorialState.ONE_EVENT_SELECTED)
+
+        timerViewState.value = calculateTimerState()
+
+        return true
+    }
+
+    fun onSecondEventSelected(event: TutorialEvent) {
+        if (mFirstSelectedEvent == null || mSecondSelectedEvent != null) {
+            return
         }
+
+        mSecondSelectedEvent = event
+        startTransitionEvent.execute(TutorialState.TWO_EVENTS_SELECTED)
 
         when (event) {
             TutorialEvent.EVENT_1 -> event1ViewState.updateTimerModeSelection(true)
@@ -95,8 +101,6 @@ class TutorialViewModel(
         }.exhaustive
 
         timerViewState.value = calculateTimerState()
-
-        return true
     }
 
     private fun calculateTimerState(): String {

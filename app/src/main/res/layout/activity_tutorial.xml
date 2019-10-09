@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     app:layoutDescription="@xml/scene_tutorial"
-    app:motionDebug="SHOW_ALL">
+    app:motionDebug="NO_DEBUG">
 
     <LinearLayout
         android:id="@+id/timerGroupTitle"
