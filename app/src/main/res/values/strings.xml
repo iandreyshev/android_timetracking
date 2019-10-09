@@ -1,45 +1,49 @@
 <resources>
-    <string name="app_name">TimeCards</string>
+    <string name="app_name">яДелал</string>
+    <string name="app_name_with_hash_tag">#яДелал</string>
 
-    <string name="tutorial_button_done">Next</string>
-    <string name="tutorial_state_no_card">У вас ещё нет карточки, создайте, чтобы начать записывать события</string>
-    <string name="tutorial_state_empty_card">После создания карточки она будет пустой, создайте первое событие</string>
+    <string name="tutorial_button_done">Продолжить</string>
+    <string name="tutorial_state_no_card">Вы ещё не замеряли продуктивность. Чтобы начать, необходимо создать карточку событий</string>
+    <string name="tutorial_state_empty_card">После создания карточки она будет пустой. Создайте первое событие, чтобы начать замерять продуктивность</string>
     <string name="tutorial_state_one_event">Первое событие содержит время начала и конца. Продолжайте создавать события</string>
-    <string name="tutorial_state_three_events">Следующие события содеражат только время окончания. Выделите событие догим нажатием</string>
-    <string name="tutorial_state_one_event_selected">Счетчик показывает время затраченное на выбранное событие, выделите ещё одно событие</string>
+    <string name="tutorial_state_three_events">Следующие события содеражат только время окончания. Выделите любое событие долгим нажатием, чтобы узнать его длительность</string>
+    <string name="tutorial_state_one_event_selected">Счетчик над карточкой показывает время затраченное на выбранное событие. Коснитесь ещё одного события</string>
     <string name="tutorial_state_two_events_selected">При выделение следующих событий счетчик обновится и будет показывать общее затраченное время</string>
-    <string name="tutorial_event_1_title">Утренняя пробежка по парку</string>
-    <string name="tutorial_event_2_title">Прогулка с собакой</string>
-    <string name="tutorial_event_3_title">Подготовка рабочего места</string>
+    <string name="tutorial_event_1_title">Утренняя пробежка по парку с собакой</string>
+    <string name="tutorial_event_2_title">Душ после пробежки, приготовление и прием пищи</string>
+    <string name="tutorial_event_3_title">Путь до работы</string>
 
-    <string name="timeline_button_create_first_card">Create card</string>
-    <string name="timeline_button_create_first_event">Create event</string>
+    <string name="timeline_button_create_first_card">Новая карточка</string>
+    <string name="timeline_button_create_first_event">Новое событие</string>
+    <string name="timeline_empty_cards">Вы ещё не замеряли продуктивность. Чтобы начать, необходимо создать карточку событий</string>
+    <string name="timeline_empty_events">В карточке продуктивности ещё нет записанных событий</string>
 
     <string name="card_title">%1$s</string>
     <string name="card_title_with_suffix">%1$s (#%2$d)</string>
 
-    <string name="delete_card_dialog_title">Delete card</string>
-    <string name="delete_card_message">Do you really want to delete \'%1$s\' card?</string>
+    <string name="delete_card_dialog_title">Удалить карточку</string>
+    <string name="delete_card_message">Вы действительно хотите удалить карточку \'%1$s\'?</string>
 
-    <string name="editor_title">New event</string>
-    <string name="editor_start_group_title">Start at</string>
-    <string name="editor_end_group_title">Finish at</string>
-    <string name="editor_start_date_title">Start date</string>
-    <string name="editor_start_time_title">Start time</string>
-    <string name="editor_end_date_title">End date</string>
-    <string name="editor_end_time_title">End time</string>
-    <string name="editor_start_date_today">Today</string>
-    <string name="editor_start_time_undefined">Undefined</string>
+    <string name="editor_title">Новое событие</string>
+    <string name="editor_title_placeholder">Что вы делали?</string>
+    <string name="editor_start_group_title">Начало</string>
+    <string name="editor_end_group_title">Конец</string>
+    <string name="editor_start_date_title">Дата начала</string>
+    <string name="editor_start_time_title">Время начала</string>
+    <string name="editor_end_date_title">Дата конца</string>
+    <string name="editor_end_time_title">Время конца</string>
+    <string name="editor_start_date_today">Сегодня</string>
+    <string name="editor_start_time_undefined">Не установлено</string>
 
-    <string name="timer_title_format_minutes">%1$dm</string>
-    <string name="timer_title_format_hours">%1$dh</string>
-    <string name="timer_title_format_hours_and_minutes">%1$dh %2$dm</string>
+    <string name="timer_title_format_minutes">%1$dм</string>
+    <string name="timer_title_format_hours">%1$dч</string>
+    <string name="timer_title_format_hours_and_minutes">%1$dч %2$dм</string>
 
-    <string name="event_validation_error_description_is_empty">Description is empty</string>
-    <string name="event_validation_error_expected_start_time">Expected start time</string>
+    <string name="event_validation_error_description_is_empty">Отсутствует описание</string>
+    <string name="event_validation_error_expected_start_time">Необходимо ввести время начала</string>
 
-    <string name="repo_error_unknown">Unknown error</string>
-    <string name="repo_error_earlier_than_first">Event is earlier than first</string>
+    <string name="repo_error_unknown">Неизвестная ошибка</string>
+    <string name="repo_error_earlier_than_first">Событие не может быть раньше первого события в карточке</string>
 
     <string name="empty" translatable="false"></string>
 </resources>

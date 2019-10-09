@@ -49,6 +49,9 @@ class TutorialActivity : BaseActivity() {
         mViewModel.event3ViewState.observe(mEvent3ViewHolder::bind)
         mViewModel.timerViewState.observe(timerTitle::setText)
 
+        createFirstCardButton.setOnClickListener {
+            motionLayout.transitionToState(TutorialState.EMPTY_CARD.id)
+        }
         tutorialDoneButton.setOnClickListener {
             mViewModel.onTutorialCompleted()
         }

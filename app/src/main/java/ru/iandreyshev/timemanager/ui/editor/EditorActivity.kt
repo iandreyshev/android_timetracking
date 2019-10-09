@@ -11,7 +11,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
-import kotlinx.android.synthetic.main.fragment_editor.*
+import kotlinx.android.synthetic.main.activity_editor.*
 import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.di.getViewModel
 import ru.iandreyshev.timemanager.domain.cards.CardId
@@ -37,7 +37,7 @@ class EditorActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_editor)
+        setContentView(R.layout.activity_editor)
 
         startDateGroup.setOnClickListener { mViewModel.onStartDatePickerClick() }
         startTimeGroup.setOnClickListener { mViewModel.onStartTimePickerClick() }

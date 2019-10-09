@@ -88,18 +88,22 @@
             app:layout_constraintTop_toTopOf="@id/card" />
 
         <Constraint
-            android:id="@+id/startStateDescription"
+            android:id="@+id/createFirstCardGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="16dp"
             android:alpha="1"
-            app:layout_constraintBottom_toTopOf="@id/createFirstCardButton"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Constraint
+            android:id="@+id/appName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </ConstraintSet>
 
@@ -128,18 +132,22 @@
             app:layout_constraintTop_toTopOf="@id/card" />
 
         <Constraint
-            android:id="@+id/startStateDescription"
+            android:id="@+id/createFirstCardGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="16dp"
             android:alpha="0"
-            app:layout_constraintBottom_toTopOf="@id/createFirstCardButton"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Constraint
+            android:id="@+id/appName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </ConstraintSet>
 
@@ -363,7 +371,7 @@
         app:autoTransition="animateToEnd"
         app:constraintSetEnd="@id/awaitDone"
         app:constraintSetStart="@id/twoEventsSelected"
-        app:duration="3000" />
+        app:duration="1500" />
 
     <Transition
         app:autoTransition="animateToEnd"

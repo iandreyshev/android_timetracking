@@ -5,8 +5,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.ItemTouchHelper
-import kotlinx.android.synthetic.main.fragment_timeline.*
+import kotlinx.android.synthetic.main.activity_timeline.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.noButton
@@ -24,7 +23,7 @@ class TimelineActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_timeline)
+        setContentView(R.layout.activity_timeline)
 
         initButtons()
         initEventsList()

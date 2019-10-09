@@ -87,7 +87,10 @@ class TutorialViewModel(
     }
 
     fun onSecondEventSelected(event: TutorialEvent) {
-        if (mFirstSelectedEvent == null || mSecondSelectedEvent != null) {
+        if (mFirstSelectedEvent == null
+            || mFirstSelectedEvent == event
+            || mSecondSelectedEvent != null
+        ) {
             return
         }
 

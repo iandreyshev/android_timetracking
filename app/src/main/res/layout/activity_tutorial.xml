@@ -9,6 +9,19 @@
     app:layoutDescription="@xml/scene_tutorial"
     app:motionDebug="NO_DEBUG">
 
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:padding="24dp"
+        android:text="@string/app_name_with_hash_tag"
+        android:textColor="@color/background"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/timerGroupTitle"
         android:layout_width="wrap_content"
@@ -43,33 +56,41 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/startStateDescription"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/createFirstCardGroup"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="@string/tutorial_state_no_card"
-        android:textAlignment="center"
-        android:textColor="@color/background"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/createFirstCardButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <Button
-        android:id="@+id/createFirstCardButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/timeline_button_create_first_card"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/startStateDescription" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="132dp"
+            android:layout_marginBottom="12dp"
+            app:srcCompat="@drawable/ic_empty_cards" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/tutorial_state_no_card"
+            android:textAlignment="center"
+            android:textColor="@color/background"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/createFirstCardButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/timeline_button_create_first_card" />
+
+    </LinearLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card"

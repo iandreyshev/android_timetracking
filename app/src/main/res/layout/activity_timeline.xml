@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimaryDark">
 
     <FrameLayout
         android:id="@+id/headerGroup"
@@ -197,11 +197,30 @@
             tools:itemCount="6"
             tools:listitem="@layout/item_timeline_event" />
 
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/timelineFirstEventView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="132dp"
+                android:layout_marginBottom="12dp"
+                app:srcCompat="@drawable/ic_empty_events" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/timeline_empty_events"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/createFirstEventButton"
@@ -210,7 +229,7 @@
                 android:layout_gravity="center"
                 android:text="@string/timeline_button_create_first_event" />
 
-        </FrameLayout>
+        </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/createEventButton"
@@ -226,7 +245,7 @@
         android:id="@+id/timelineLoadingView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#fff"
+        app:cardBackgroundColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -244,21 +263,58 @@
         android:id="@+id/timelineFirstCardView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#fff"
+        app:cardBackgroundColor="@color/colorPrimaryDark"
         app:cardCornerRadius="0dp"
         app:cardElevation="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
-        <Button
-            android:id="@+id/createFirstCardButton"
+        <TextView
+            android:id="@+id/appName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_margin="24dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/app_name_with_hash_tag"
+            android:textColor="@color/background"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/timeline_button_create_first_card" />
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="132dp"
+                android:layout_marginBottom="12dp"
+                app:srcCompat="@drawable/ic_empty_cards" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/timeline_empty_cards"
+                android:textAlignment="center"
+                android:textColor="@color/background"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/createFirstCardButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/timeline_button_create_first_card" />
+
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
