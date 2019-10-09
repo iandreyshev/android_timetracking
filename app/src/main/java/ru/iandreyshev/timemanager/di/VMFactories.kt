@@ -20,6 +20,7 @@ import ru.iandreyshev.timemanager.ui.tutorial.TutorialViewModel
 
 fun TutorialActivity.getViewModel() = getViewModel {
     TutorialViewModel(
+        resources = resources,
         repository = TimeCardsApp.appRepository
     )
 }
