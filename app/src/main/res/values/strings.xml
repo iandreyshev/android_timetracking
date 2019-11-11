@@ -2,8 +2,10 @@
     <string name="app_name">яДелал</string>
     <string name="app_name_with_hash_tag">#яДелал</string>
 
+    <string name="tutorial_title">#обучение</string>
+    <string name="tutorial_button_start">Продолжить</string>
     <string name="tutorial_button_done">Продолжить</string>
-    <string name="tutorial_state_no_card">Вы ещё не замеряли продуктивность. Чтобы начать, необходимо создать карточку событий</string>
+    <string name="tutorial_state_no_card">Пройдите небольшое обучение, чтобы начать замерять продуктивность</string>
     <string name="tutorial_state_empty_card">После создания карточки она будет пустой. Создайте первое событие, чтобы начать замерять продуктивность</string>
     <string name="tutorial_state_one_event">Первое событие содержит время начала и конца. Продолжайте создавать события</string>
     <string name="tutorial_state_three_events">Следующие события содеражат только время окончания. Выделите любое событие долгим нажатием, чтобы узнать его длительность</string>
