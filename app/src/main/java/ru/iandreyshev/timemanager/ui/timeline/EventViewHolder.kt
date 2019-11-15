@@ -1,7 +1,6 @@
 package ru.iandreyshev.timemanager.ui.timeline
 
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_timeline_event.view.*
 import ru.iandreyshev.timemanager.ui.extensions.asTimerTitleViewState
@@ -21,24 +20,14 @@ class EventViewHolder(
     private val mViewsToBlurOnSelect = listOf(
         itemView.title,
         itemView.startTimeIcon,
-        itemView.startTime,
-        itemView.endTimeIcon,
-        itemView.endTime
+        itemView.time
     )
 
     fun bind(viewState: EventViewState) = with(itemView) {
         title.text = viewState.title
 
-        val hasStartTime = !viewState.startTime.isNullOrBlank()
-        startTimeIcon.isVisible = hasStartTime
-        startTime.isVisible = hasStartTime
-        startTime.text = viewState.startTime.orEmpty()
-
         val duration = viewState.durationInMinutes.asTimerTitleViewState(resources)
-        endTime.text = "${viewState.endTime} ($duration)"
-
-        endTimeIconPoint.isVisible = viewState.isMiddleEndTime
-        endTimeIconFinish.isVisible = !viewState.isMiddleEndTime
+        time.text = "${viewState.startTime} - ${viewState.endTime} ($duration)"
 
         when (val selectionViewState = viewState.selection) {
             EventSelectionViewState.Normal ->

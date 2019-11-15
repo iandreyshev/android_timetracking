@@ -31,45 +31,16 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="4dp"
-            app:srcCompat="@drawable/ic_timeline_start_time" />
+            app:srcCompat="@drawable/ic_timeline_time" />
 
         <TextView
-            android:id="@+id/startTime"
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:fontFamily="sans-serif-medium"
             android:textStyle="bold"
-            tools:text="16:40" />
-
-        <FrameLayout
-            android:id="@+id/endTimeIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/endTimeIconFinish"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="4dp"
-                app:srcCompat="@drawable/ic_timeline_end_time" />
-
-            <ImageView
-                android:id="@+id/endTimeIconPoint"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="4dp"
-                app:srcCompat="@drawable/ic_time_point" />
-
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/endTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:textStyle="bold"
-            tools:text="16:40 (30m)" />
+            tools:text="16:40 - 17:30 (50m)" />
 
     </LinearLayout>
 
