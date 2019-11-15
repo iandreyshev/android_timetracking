@@ -1,17 +1,20 @@
 package ru.iandreyshev.timemanager.ui.editor
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.DatePicker
+import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import kotlinx.android.synthetic.main.activity_editor.*
+import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.di.getViewModel
 import ru.iandreyshev.timemanager.domain.cards.CardId
@@ -22,7 +25,8 @@ import java.util.*
 
 class EditorActivity : BaseActivity() {
 
-    private var mTimePickerDialog: SingleDateAndTimePickerDialog? = null
+    private var mDatePickerDialog: DatePickerDialog? = null
+    private var mTimePickerDialog: TimePickerDialog? = null
 
     private val mViewModel: EditorViewModel by lazy {
         val cardId =
@@ -95,68 +99,81 @@ class EditorActivity : BaseActivity() {
 
     private fun updateDatePicker(viewState: DatePickerViewState) {
         when (viewState) {
-            is DatePickerViewState.StartDate -> updateStartDatePicker(
-                viewState.default,
-                viewState.listener
-            )
-            is DatePickerViewState.StartTime -> updateStartTimePicker(
-                viewState.default,
-                viewState.listener
-            )
-            is DatePickerViewState.EndDate -> updateEndDatePicker(
-                viewState.default,
-                viewState.listener
-            )
-            is DatePickerViewState.EndTime -> updateEndTimePicker(
-                viewState.default,
-                viewState.listener
-            )
-            is DatePickerViewState.Hidden -> {
-                mTimePickerDialog?.dismiss()
-                mTimePickerDialog = null
-            }
+            is DatePickerViewState.StartDate ->
+                updateStartDatePicker(viewState)
+            is DatePickerViewState.StartTime ->
+                updateStartTimePicker(viewState)
+            is DatePickerViewState.EndDate ->
+                updateEndDatePicker(viewState)
+            is DatePickerViewState.EndTime ->
+                updateEndTimePicker(viewState)
+            is DatePickerViewState.Hidden ->
+                dismissDialogs()
         }.exhaustive
     }
 
-    private fun updateStartDatePicker(default: Date, listener: (Date?) -> Unit) =
-        displayDateTimeDialog(default, R.string.editor_start_date_title, listener) {
-            displayMinutes(false)
-                .displayHours(false)
-                .displayDays(false)
-                .displayMonth(true)
-                .displayYears(true)
-                .displayDaysOfMonth(true)
+    private fun updateStartDatePicker(state: DatePickerViewState.StartDate) {
+        dismissDialogs()
+        mDatePickerDialog = DatePickerDialog(
+            this,
+            state.listener,
+            state.date.year,
+            state.date.month.value,
+            state.date.dayOfMonth
+        ).apply {
+            setTitle(R.string.editor_start_date_title)
+            show()
         }
+    }
 
-    private fun updateStartTimePicker(default: Date, listener: (Date?) -> Unit) =
-        displayDateTimeDialog(default, R.string.editor_start_time_title, listener) {
-            displayMinutes(true)
-                .displayHours(true)
-                .displayDays(false)
-                .displayMonth(false)
-                .displayYears(false)
-                .minutesStep(1)
+    private fun updateStartTimePicker(state: DatePickerViewState.StartTime) {
+        dismissDialogs()
+        mTimePickerDialog = TimePickerDialog(
+            this,
+            state.listener,
+            state.time.hour,
+            state.time.minute,
+            true
+        ).apply {
+            setTitle(R.string.editor_start_time_title)
+            show()
         }
+    }
 
-    private fun updateEndDatePicker(default: Date, listener: (Date?) -> Unit) =
-        displayDateTimeDialog(default, R.string.editor_end_date_title, listener) {
-            displayMinutes(false)
-                .displayHours(false)
-                .displayDays(false)
-                .displayMonth(true)
-                .displayYears(true)
-                .displayDaysOfMonth(true)
+    private fun updateEndDatePicker(state: DatePickerViewState.EndDate) {
+        dismissDialogs()
+        mDatePickerDialog = DatePickerDialog(
+            this,
+            state.listener,
+            state.date.year,
+            state.date.month.value,
+            state.date.dayOfMonth
+        ).apply {
+            setTitle(R.string.editor_end_date_title)
+            show()
         }
+    }
 
-    private fun updateEndTimePicker(default: Date, listener: (Date?) -> Unit) =
-        displayDateTimeDialog(default, R.string.editor_end_time_title, listener) {
-            displayMinutes(true)
-                .displayHours(true)
-                .displayDays(false)
-                .displayMonth(false)
-                .displayYears(false)
-                .minutesStep(1)
+    private fun updateEndTimePicker(state: DatePickerViewState.EndTime) {
+        dismissDialogs()
+        mTimePickerDialog = TimePickerDialog(
+            this,
+            state.listener,
+            state.time.hour,
+            state.time.minute,
+            true
+        ).apply {
+            setTitle(R.string.editor_end_time_title)
+            show()
         }
+    }
+
+    private fun dismissDialogs() {
+        mDatePickerDialog?.dismiss()
+        mDatePickerDialog = null
+        mTimePickerDialog?.dismiss()
+        mTimePickerDialog = null
+    }
 
     private fun updateStartDateTime(canEditStartDateTime: Boolean) {
         startGroup.isVisible = canEditStartDateTime
@@ -201,24 +218,6 @@ class EditorActivity : BaseActivity() {
                 endDate.text = viewState.value
             }
         }.exhaustive
-    }
-
-    private fun displayDateTimeDialog(
-        default: Date,
-        @StringRes titleRes: Int,
-        listener: (Date?) -> Unit,
-        buildAction: SingleDateAndTimePickerDialog.Builder.() -> Unit
-    ) {
-        mTimePickerDialog?.dismiss()
-        mTimePickerDialog = SingleDateAndTimePickerDialog.Builder(this)
-            .title(getString(titleRes))
-            .mainColor(ResourcesCompat.getColor(resources, R.color.colorPrimary, theme))
-            .titleTextColor(ResourcesCompat.getColor(resources, android.R.color.white, theme))
-            .apply(buildAction)
-            .listener(listener)
-            .defaultDate(default)
-            .build()
-        mTimePickerDialog?.display()
     }
 
     companion object {

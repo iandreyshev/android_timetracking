@@ -1,5 +1,7 @@
 package ru.iandreyshev.timemanager.ui.editor
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -135,47 +137,43 @@ class EditorViewModel(
     }
 
     fun onStartDatePickerClick() {
-        val default = mPickedStartDate
-            ?.let(dateProvider::asEpochTime)
-            ?: dateProvider.currentAsJavaDate()
-
-        mDatePickerViewState.value = DatePickerViewState.StartDate(default) { pickedDate ->
-            pickedDate ?: return@StartDate
-            mPickedStartDate = dateProvider.asZonedDateTime(pickedDate, pickedDate)
-            updateTimeViewState()
-        }
+        mDatePickerViewState.value = DatePickerViewState.StartDate(
+            date = mPickedStartDate ?: dateProvider.current(),
+            listener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                mPickedStartDate = dateProvider.asZonedDateTime(year, month, dayOfMonth)
+                updateTimeViewState()
+            }
+        )
     }
 
     fun onStartTimePickerClick() {
-        val default = mPickedStartTime
-            ?.let(dateProvider::asEpochTime)
-            ?: dateProvider.currentAsJavaDate()
-
-        mDatePickerViewState.value = DatePickerViewState.StartTime(default) { pickedTime ->
-            pickedTime ?: return@StartTime
-            mPickedStartTime = dateProvider.asZonedDateTime(pickedTime, pickedTime)
-            updateTimeViewState()
-        }
+        mDatePickerViewState.value = DatePickerViewState.StartTime(
+            time = mPickedStartTime ?: dateProvider.current(),
+            listener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                mPickedStartTime = dateProvider.asZonedDateTime(hourOfDay, minute)
+                updateTimeViewState()
+            }
+        )
     }
 
     fun onEndDatePickerClick() {
-        val default = mPickedEndDate.let(dateProvider::asEpochTime)
-
-        mDatePickerViewState.value = DatePickerViewState.EndDate(default) { pickedDate ->
-            pickedDate ?: return@EndDate
-            mPickedEndDate = dateProvider.asZonedDateTime(pickedDate, pickedDate)
-            updateTimeViewState()
-        }
+        mDatePickerViewState.value = DatePickerViewState.EndDate(
+            date = mPickedEndDate,
+            listener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                mPickedEndDate = dateProvider.asZonedDateTime(year, month, dayOfMonth)
+                updateTimeViewState()
+            }
+        )
     }
 
     fun onEndTimePickerClick() {
-        val default = mPickedEndTime.let(dateProvider::asEpochTime)
-
-        mDatePickerViewState.value = DatePickerViewState.EndTime(default) { pickedTime ->
-            pickedTime ?: return@EndTime
-            mPickedEndTime = dateProvider.asZonedDateTime(pickedTime, pickedTime)
-            updateTimeViewState()
-        }
+        mDatePickerViewState.value = DatePickerViewState.EndTime(
+            time = mPickedEndTime,
+            listener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                mPickedEndTime = dateProvider.asZonedDateTime(hourOfDay, minute)
+                updateTimeViewState()
+            }
+        )
     }
 
     fun onTitleChanged(title: CharSequence?) {

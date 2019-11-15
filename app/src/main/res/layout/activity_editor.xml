@@ -42,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:background="#fff"
                 android:hint="@string/editor_title_placeholder"
+                android:inputType="textCapSentences|textMultiLine"
                 android:maxLength="140"
                 android:paddingTop="32dp"
                 android:paddingBottom="32dp"

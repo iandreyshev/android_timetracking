@@ -32,11 +32,30 @@ class DateProvider : IDateProvider {
         return Date(zonedDateTime.toInstant().toEpochMilli())
     }
 
-    override fun asZonedDateTime(date: Date, time: Date): ZonedDateTime {
-        val zonedDate = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date.time), ZoneId.systemDefault())
-        val zonedTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time.time), ZoneId.systemDefault())
+    override fun asZonedDateTime(hourOfDay: Int, minute: Int): ZonedDateTime {
+        return current()
+            .withHour(hourOfDay)
+            .withMinute(minute)
+    }
 
-        return ZonedDateTime.of(zonedDate.toLocalDate(), zonedTime.toLocalTime(), ZoneId.systemDefault())
+    override fun asZonedDateTime(year: Int, month: Int, dayOfMonth: Int): ZonedDateTime {
+        return current()
+            .withYear(year)
+            .withMonth(month)
+            .withDayOfMonth(dayOfMonth)
+    }
+
+    override fun asZonedDateTime(date: Date, time: Date): ZonedDateTime {
+        val zonedDate =
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date.time), ZoneId.systemDefault())
+        val zonedTime =
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(time.time), ZoneId.systemDefault())
+
+        return ZonedDateTime.of(
+            zonedDate.toLocalDate(),
+            zonedTime.toLocalTime(),
+            ZoneId.systemDefault()
+        )
     }
 
 }
