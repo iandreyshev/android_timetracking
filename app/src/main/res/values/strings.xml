@@ -34,7 +34,7 @@
     <string name="editor_start_time_title">Время начала</string>
     <string name="editor_end_date_title">Дата конца</string>
     <string name="editor_end_time_title">Время конца</string>
-    <string name="editor_start_date_today">Сегодня</string>
+    <string name="editor_start_date_today">Сегодня (%1$s)</string>
     <string name="editor_start_time_undefined">Не установлено</string>
 
     <string name="timer_title_format_minutes">%1$dм</string>

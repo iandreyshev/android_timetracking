@@ -7,21 +7,16 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.DatePicker
-import android.widget.TimePicker
 import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_editor.*
-import org.threeten.bp.ZonedDateTime
 import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.di.getViewModel
 import ru.iandreyshev.timemanager.domain.cards.CardId
 import ru.iandreyshev.timemanager.domain.cards.EventId
 import ru.iandreyshev.timemanager.ui.BaseActivity
 import ru.iandreyshev.timemanager.utils.exhaustive
-import java.util.*
 
 class EditorActivity : BaseActivity() {
 
@@ -181,9 +176,9 @@ class EditorActivity : BaseActivity() {
 
     private fun updateStartDate(viewState: StartDateViewState) {
         when (viewState) {
-            StartDateViewState.Today -> {
+            is StartDateViewState.Today -> {
                 startDateGroup.isGone = false
-                startDate.text = getString(R.string.editor_start_date_today)
+                startDate.text = getString(R.string.editor_start_date_today, viewState.value)
             }
             is StartDateViewState.ShowDate -> {
                 startDateGroup.isGone = false
@@ -209,9 +204,9 @@ class EditorActivity : BaseActivity() {
         when (viewState) {
             EndDateViewState.Hidden ->
                 endDateGroup.isGone = true
-            EndDateViewState.Today -> {
+            is EndDateViewState.Today -> {
                 endDateGroup.isGone = false
-                endDate.text = getString(R.string.editor_start_date_today)
+                endDate.text = getString(R.string.editor_start_date_today, viewState.value)
             }
             is EndDateViewState.ShowDate -> {
                 endDateGroup.isGone = false

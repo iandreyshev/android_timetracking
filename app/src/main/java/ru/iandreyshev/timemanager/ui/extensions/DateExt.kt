@@ -18,6 +18,9 @@ fun Date.minute() =
 fun ZonedDateTime.formatDate() =
     "$dayOfMonth ${month.getDisplayName(TextStyle.SHORT, Locale.getDefault())} $year"
 
+fun ZonedDateTime.formatDate2() =
+    "${dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())}, $dayOfMonth ${month.getDisplayName(TextStyle.SHORT, Locale.getDefault())}"
+
 infix fun ZonedDateTime.withTime(time: ZonedDateTime) =
     withHour(time.hour)
         .withMinute(time.minute)

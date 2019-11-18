@@ -13,10 +13,7 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import ru.iandreyshev.timemanager.domain.cards.*
-import ru.iandreyshev.timemanager.ui.extensions.asText
-import ru.iandreyshev.timemanager.ui.extensions.formatDate
-import ru.iandreyshev.timemanager.ui.extensions.sameDateWith
-import ru.iandreyshev.timemanager.ui.extensions.withTime
+import ru.iandreyshev.timemanager.ui.extensions.*
 import ru.iandreyshev.timemanager.ui.utils.LiveDataEvent
 import ru.iandreyshev.timemanager.ui.utils.execute
 
@@ -59,7 +56,8 @@ class EditorViewModel(
 
     private val mLoadDataViewState = MutableLiveData(true)
 
-    private val mStartDateViewState = MutableLiveData<StartDateViewState>(StartDateViewState.Today)
+    private val mStartDateViewState =
+        MutableLiveData<StartDateViewState>(StartDateViewState.Today(dateProvider.current().formatDate2()))
     private val mStartTimeViewState =
         MutableLiveData<StartTimeViewState>(StartTimeViewState.Undefined)
 
@@ -192,9 +190,9 @@ class EditorViewModel(
     private fun updateTimeViewState() {
         val pickedStartDate = mPickedStartDate
         mStartDateViewState.value = when {
-            pickedStartDate == null -> StartDateViewState.Today
+            pickedStartDate == null -> StartDateViewState.Today(dateProvider.current().formatDate2())
             pickedStartDate sameDateWith dateProvider.current() ->
-                StartDateViewState.Today
+                StartDateViewState.Today(pickedStartDate.formatDate2())
             else -> {
                 val formattedTime = pickedStartDate.formatDate()
                 StartDateViewState.ShowDate(formattedTime)
@@ -212,7 +210,7 @@ class EditorViewModel(
 
         mEndDateViewState.value = when {
             mPickedEndDate sameDateWith dateProvider.current() ->
-                EndDateViewState.Today
+                EndDateViewState.Today(mPickedEndDate.formatDate2())
             else ->
                 EndDateViewState.ShowDate(mPickedEndDate.formatDate())
         }
