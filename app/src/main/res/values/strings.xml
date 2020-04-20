@@ -28,14 +28,18 @@
 
     <string name="editor_title">Новое событие</string>
     <string name="editor_title_placeholder">Что вы делали?</string>
-    <string name="editor_start_group_title">Начало</string>
-    <string name="editor_end_group_title">Конец</string>
+    <string name="editor_start_group_title">Началось</string>
+    <string name="editor_end_group_title">Закончилось</string>
     <string name="editor_start_date_title">Дата начала</string>
     <string name="editor_start_time_title">Время начала</string>
     <string name="editor_end_date_title">Дата конца</string>
     <string name="editor_end_time_title">Время конца</string>
     <string name="editor_start_date_today">Сегодня (%1$s)</string>
     <string name="editor_start_time_undefined">Не установлено</string>
+    <string name="editor_start_description_just_now">Только что</string>
+    <string name="editor_start_description_right_after">Сразу после: %1$s</string>
+    <string name="editor_datetime_description_error_start_before_previous">Событие не может начаться до окончания предыдущего: %1$s</string>
+    <string name="editor_datetime_description_error_end_before_start">"Конец события не может быть раньше его начала"</string>
 
     <string name="timer_title_format_minutes">%1$dм</string>
     <string name="timer_title_format_hours">%1$dч</string>

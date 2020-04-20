@@ -44,7 +44,7 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:2.2.0"
     kapt "android.arch.persistence.room:compiler:2.2.0"
 
-    implementation "com.google.android.material:material:1.0.0"
+    implementation "com.google.android.material:material:1.1.0"
 
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
 

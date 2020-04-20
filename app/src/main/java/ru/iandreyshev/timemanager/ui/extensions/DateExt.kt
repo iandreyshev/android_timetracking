@@ -19,17 +19,28 @@ fun ZonedDateTime.formatDate() =
     "$dayOfMonth ${month.getDisplayName(TextStyle.SHORT, Locale.getDefault())} $year"
 
 fun ZonedDateTime.formatDate2() =
-    "${dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())}, $dayOfMonth ${month.getDisplayName(TextStyle.SHORT, Locale.getDefault())}"
+    "${dayOfWeek.getDisplayName(
+        TextStyle.SHORT,
+        Locale.getDefault()
+    )}, $dayOfMonth ${month.getDisplayName(TextStyle.SHORT, Locale.getDefault())}"
 
-infix fun ZonedDateTime.withTime(time: ZonedDateTime) =
+infix fun ZonedDateTime.withTime(time: ZonedDateTime): ZonedDateTime =
     withHour(time.hour)
         .withMinute(time.minute)
         .withSecond(time.second)
 
-infix fun ZonedDateTime.sameDateWith(otherDateTime: ZonedDateTime) =
-    year == otherDateTime.year
-            && month == otherDateTime.month
-            && dayOfMonth == otherDateTime.dayOfMonth
+infix fun ZonedDateTime.sameTimeWith(other: ZonedDateTime) =
+    hour == other.hour
+            && minute == other.minute
+
+infix fun ZonedDateTime.sameDateWith(other: ZonedDateTime) =
+    year == other.year
+            && month == other.month
+            && dayOfMonth == other.dayOfMonth
+
+infix fun ZonedDateTime.sameDateTimeWith(other: ZonedDateTime) =
+    this sameDateWith other
+            && this sameTimeWith other
 
 fun Int.asTimerTitleViewState(resources: Resources): String {
     val hours = this / MINUTES_PER_HOUR

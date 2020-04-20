@@ -28,12 +28,13 @@ class EditorViewModel(
 
     val datePicker: LiveData<DatePickerViewState> by lazy { mDatePickerViewState }
 
-    val startDateTimeAvailable: LiveData<Boolean> by lazy { mCanEditStartTime }
     val startDatePreview: LiveData<StartDateViewState> by lazy { mStartDateViewState }
     val startTimePreview: LiveData<StartTimeViewState> by lazy { mStartTimeViewState }
+    val startDateTimeComment: LiveData<DatePickerCommentViewState> by lazy { mStartDateTimeComment }
 
     val endDatePreview: LiveData<EndDateViewState> by lazy { mEndDateViewState }
     val endTimePreview: LiveData<String> by lazy { mEndTimeViewState }
+    val endDateTimeComment: LiveData<DatePickerCommentViewState> by lazy { mEndDateTimeComment }
 
     val saveButtonViewState: LiveData<Boolean> by lazy { mSaveButtonViewState }
 
@@ -51,8 +52,9 @@ class EditorViewModel(
     private var mPickedEndDate = dateProvider.current()
     private var mPickedEndTime = dateProvider.current()
 
+    private var mPreviousEvent: Event? = null
+
     private val mUpdateMode = eventId != EventId.default()
-    private var mCanEditStartTime = MutableLiveData(false)
 
     private val mLoadDataViewState = MutableLiveData(true)
 
@@ -60,9 +62,14 @@ class EditorViewModel(
         MutableLiveData<StartDateViewState>(StartDateViewState.Today(dateProvider.current().formatDate2()))
     private val mStartTimeViewState =
         MutableLiveData<StartTimeViewState>(StartTimeViewState.Undefined)
+    private val mStartDateTimeComment =
+        MutableLiveData<DatePickerCommentViewState>(DatePickerCommentViewState.Hidden)
 
-    private val mEndDateViewState = MutableLiveData<EndDateViewState>(EndDateViewState.Hidden)
+    private val mEndDateViewState =
+        MutableLiveData<EndDateViewState>(EndDateViewState.Today(dateProvider.current().formatDate2()))
     private val mEndTimeViewState = MutableLiveData("")
+    private val mEndDateTimeComment =
+        MutableLiveData<DatePickerCommentViewState>(DatePickerCommentViewState.Hidden)
 
     private val mSaveButtonViewState = MutableLiveData(false)
 
@@ -70,26 +77,33 @@ class EditorViewModel(
 
     private var mBackgroundJob: Job = Job()
 
-    init {
-        updateTimeViewState()
-    }
-
     fun onLoadData() {
+        updateTimeViewState()
+
         mBackgroundJob.cancel()
         mBackgroundJob = viewModelScope.launch {
             mLoadDataViewState.value = true
 
-            if (mUpdateMode) {
-                with(repository.getEvent(eventId) ?: return@launch) {
-                    updateTitleEvent.execute(description)
-                    mPickedStartDate = startDateTime
-                    mPickedStartTime = startDateTime
-                    mPickedEndDate = endDateTime
-                    mPickedEndTime = endDateTime
-                    mCanEditStartTime.value = isFirstInCard
+            // FIXME: 4/20/2020 Вынести в App-модель
+            when (mUpdateMode) {
+                true -> {
+                    val events = repository.getEvents(cardId)
+                    val eventIndex = events.indexOfFirst { it.id == eventId }
+                    val event = events[eventIndex]
+
+                    mPreviousEvent = events.getOrNull(eventIndex + 1)
+
+                    updateTitleEvent.execute(event.description)
+                    mPickedStartDate = event.startDateTime
+                    mPickedStartTime = event.startDateTime
+                    mPickedEndDate = event.endDateTime
+                    mPickedEndTime = event.endDateTime
                 }
-            } else {
-                mCanEditStartTime.value = repository.getEventsCount(cardId) < 1
+                else -> {
+                    mPreviousEvent = repository.getEvents(cardId).firstOrNull()
+                    mPickedStartDate = mPreviousEvent?.endDateTime
+                    mPickedStartTime = mPreviousEvent?.endDateTime
+                }
             }
 
             updateTimeViewState()
@@ -101,30 +115,30 @@ class EditorViewModel(
     fun onSaveClicked() {
         viewModelScope.launch {
             if (!mUpdateMode) {
-                onInputValidationError { error ->
-                    updateErrorViewState(error)
+                validateInput { error ->
+                    showError(error)
                     return@launch
                 }
 
                 val event = createEventToUpdate()
                 when (val result = repository.saveEvent(cardId, event)) {
                     is RepoResult.Error ->
-                        updateErrorViewState(result.error)
+                        showError(result.error)
                     is RepoResult.Success -> {
                         exitEvent.execute()
                         observer.onNext(EditorAction.EditCompleted(cardId))
                     }
                 }
             } else {
-                onInputValidationError { error ->
-                    updateErrorViewState(error)
+                validateInput { error ->
+                    showError(error)
                     return@launch
                 }
 
                 val event = createEventToSave()
                 when (val result = repository.update(cardId, event)) {
                     is RepoResult.Error ->
-                        updateErrorViewState(result.error)
+                        showError(result.error)
                     is RepoResult.Success -> {
                         exitEvent.execute()
                         observer.onNext(EditorAction.EditCompleted(cardId))
@@ -188,19 +202,25 @@ class EditorViewModel(
     }
 
     private fun updateTimeViewState() {
-        val pickedStartDate = mPickedStartDate
-        mStartDateViewState.value = when {
-            pickedStartDate == null -> StartDateViewState.Today(dateProvider.current().formatDate2())
-            pickedStartDate sameDateWith dateProvider.current() ->
-                StartDateViewState.Today(pickedStartDate.formatDate2())
-            else -> {
-                val formattedTime = pickedStartDate.formatDate()
-                StartDateViewState.ShowDate(formattedTime)
+        updateStartTimeViewState()
+        updateEndTimeViewState()
+    }
+
+    // FIXME: 4/20/2020 Перенести тексты в UI
+    private fun updateStartTimeViewState() {
+        mStartDateViewState.value = when (val pickedStartDate = mPickedStartDate) {
+            null -> StartDateViewState.Today(dateProvider.current().formatDate2())
+            else -> when {
+                pickedStartDate sameDateWith dateProvider.current() ->
+                    StartDateViewState.Today(pickedStartDate.formatDate2())
+                else -> {
+                    val formattedTime = pickedStartDate.formatDate()
+                    StartDateViewState.ShowDate(formattedTime)
+                }
             }
         }
 
-        val pickedStartTime = mPickedStartTime
-        mStartTimeViewState.value = when (pickedStartTime) {
+        mStartTimeViewState.value = when (val pickedStartTime = mPickedStartTime) {
             null -> StartTimeViewState.Undefined
             else -> {
                 val formattedTime = pickedStartTime.format(mTimeFormatter)
@@ -208,32 +228,63 @@ class EditorViewModel(
             }
         }
 
+        val previousEventEnd = mPreviousEvent?.endDateTime ?: dateProvider.current()
+        val pickedStartDateTime = mPickedStartTime?.let { pickedStartTime ->
+            mPickedStartDate?.withTime(pickedStartTime)
+        }
+
+        mStartDateTimeComment.value = when {
+            mPickedStartTime?.sameTimeWith(previousEventEnd) == true
+                    && mPickedStartDate?.sameDateWith(previousEventEnd) == true ->
+                DatePickerCommentViewState.RightAfter(mPreviousEvent?.description.orEmpty())
+            pickedStartDateTime?.isBefore(previousEventEnd) == true ->
+                DatePickerCommentViewState.ErrorStartBeforePrevious(mPreviousEvent?.description.orEmpty())
+            else ->
+                DatePickerCommentViewState.Hidden
+        }
+    }
+
+    // FIXME: 4/20/2020 Перенести тексты в UI
+    private fun updateEndTimeViewState() {
+        val currentDateTime = dateProvider.current()
+
         mEndDateViewState.value = when {
-            mPickedEndDate sameDateWith dateProvider.current() ->
+            mPickedEndDate sameDateWith currentDateTime ->
                 EndDateViewState.Today(mPickedEndDate.formatDate2())
             else ->
                 EndDateViewState.ShowDate(mPickedEndDate.formatDate())
         }
 
         mEndTimeViewState.value = mPickedEndTime.format(mTimeFormatter)
+
+        val pickedDateTime = mPickedEndDate withTime mPickedEndTime
+        mEndDateTimeComment.value = when {
+            pickedDateTime sameTimeWith currentDateTime
+                    && pickedDateTime sameDateWith currentDateTime ->
+                DatePickerCommentViewState.JustNow
+            pickedDateTime.isBefore(mPickedStartDate) ->
+                DatePickerCommentViewState.ErrorEndBeforeStart
+            else ->
+                DatePickerCommentViewState.Hidden
+        }
     }
 
-    private fun updateErrorViewState(error: InputValidationError) {
+    private fun showError(error: InputValidationError) {
         val errorText = error.asText(resources)
         showErrorEvent.execute(errorText)
     }
 
-    private fun updateErrorViewState(error: RepoError) {
+    private fun showError(error: RepoError) {
         val errorText = error.asText(resources)
         showErrorEvent.execute(errorText)
     }
 
-    private inline fun onInputValidationError(onError: (InputValidationError) -> Unit) {
+    private inline fun validateInput(onError: (InputValidationError) -> Unit) {
         if (mTitle.isBlank()) {
             onError(InputValidationError.EmptyText)
         }
 
-        if (mCanEditStartTime.value == true && mPickedStartTime == null) {
+        if (mPickedStartTime == null) {
             onError(InputValidationError.ExpectedStartTime)
         }
     }
@@ -258,8 +309,7 @@ class EditorViewModel(
         val startDate = mPickedStartDate ?: dateProvider.current()
         val startDateTime = startDate withTime (mPickedStartTime ?: dateProvider.current())
 
-        val endDate = mPickedEndDate
-        val endDateTime = endDate withTime mPickedEndTime
+        val endDateTime = mPickedEndDate withTime mPickedEndTime
 
         return Event(
             id = eventId,

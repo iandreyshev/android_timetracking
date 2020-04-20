@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -24,13 +25,8 @@ class EditorActivity : BaseActivity() {
     private var mTimePickerDialog: TimePickerDialog? = null
 
     private val mViewModel: EditorViewModel by lazy {
-        val cardId =
-            CardId(intent.extras?.getLong(ARG_CARD_ID) ?: 0)
-        val eventId = intent.extras?.getLong(ARG_EVENT_ID)?.run {
-            EventId(
-                this
-            )
-        }
+        val cardId = CardId(intent.extras?.getLong(ARG_CARD_ID) ?: 0)
+        val eventId = intent.extras?.getLong(ARG_EVENT_ID)?.let { EventId(it) }
         getViewModel(cardId, eventId)
     }
 
@@ -50,12 +46,17 @@ class EditorActivity : BaseActivity() {
 
         mViewModel.datePicker.observe(::updateDatePicker)
 
-        mViewModel.startDateTimeAvailable.observe(::updateStartDateTime)
         mViewModel.startDatePreview.observe(::updateStartDate)
         mViewModel.startTimePreview.observe(::updateStartTime)
+        mViewModel.startDateTimeComment.observe {
+            updateDateTimeComment(startDateTimeComment, it)
+        }
 
         mViewModel.endDatePreview.observe(::updateEndDate)
         mViewModel.endTimePreview.observe(endTime::setText)
+        mViewModel.endDateTimeComment.observe {
+            updateDateTimeComment(endDateTimeComment, it)
+        }
 
         mViewModel.updateTitleEvent.consume(titleView::setText)
         mViewModel.exitEvent.consume { finish() }
@@ -170,10 +171,6 @@ class EditorActivity : BaseActivity() {
         mTimePickerDialog = null
     }
 
-    private fun updateStartDateTime(canEditStartDateTime: Boolean) {
-        startGroup.isVisible = canEditStartDateTime
-    }
-
     private fun updateStartDate(viewState: StartDateViewState) {
         when (viewState) {
             is StartDateViewState.Today -> {
@@ -202,8 +199,6 @@ class EditorActivity : BaseActivity() {
 
     private fun updateEndDate(viewState: EndDateViewState) {
         when (viewState) {
-            EndDateViewState.Hidden ->
-                endDateGroup.isGone = true
             is EndDateViewState.Today -> {
                 endDateGroup.isGone = false
                 endDate.text = getString(R.string.editor_start_date_today, viewState.value)
@@ -212,6 +207,30 @@ class EditorActivity : BaseActivity() {
                 endDateGroup.isGone = false
                 endDate.text = viewState.value
             }
+        }.exhaustive
+    }
+
+    private fun updateDateTimeComment(
+        commentView: TextView,
+        comment: DatePickerCommentViewState
+    ) {
+        commentView.isVisible = true
+        commentView.text = when (comment) {
+            DatePickerCommentViewState.Hidden -> {
+                commentView.isVisible = false
+                commentView.text
+            }
+            DatePickerCommentViewState.JustNow ->
+                getString(R.string.editor_start_description_just_now)
+            is DatePickerCommentViewState.RightAfter ->
+                getString(R.string.editor_start_description_right_after, comment.event)
+            is DatePickerCommentViewState.ErrorStartBeforePrevious ->
+                getString(
+                    R.string.editor_datetime_description_error_start_before_previous,
+                    comment.event
+                )
+            DatePickerCommentViewState.ErrorEndBeforeStart ->
+                getString(R.string.editor_datetime_description_error_end_before_start)
         }.exhaustive
     }
 
