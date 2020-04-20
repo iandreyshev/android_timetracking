@@ -148,10 +148,23 @@ class CardsRepository(
         }
     }
 
+    override suspend fun deleteEvent(eventId: EventId): RepoResult<List<Event>> {
+        return withContext(Dispatchers.Default) {
+            val event = eventDao.get(eventId.value)
+                ?: return@withContext RepoResult.Error(RepoError.Unknown)
+
+            eventDao.delete(eventId.value)
+
+            return@withContext RepoResult.Success(
+                getEvents(CardId(event.cardId))
+            )
+        }
+    }
+
     override suspend fun deleteCard(cardId: CardId): RepoResult<Unit> {
         return withContext(Dispatchers.Default) {
             cardDao.delete(cardId.value)
-            eventDao.delete(cardId.value)
+            eventDao.deleteAll(cardId.value)
             return@withContext RepoResult.Success(Unit)
         }
     }

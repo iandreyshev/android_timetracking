@@ -9,12 +9,14 @@ import ru.iandreyshev.timemanager.utils.exhaustive
 class EventViewHolder(
     view: View,
     onClickListener: (EventViewHolder) -> Unit,
-    onLongClickListener: (EventViewHolder) -> Boolean
+    onLongClickListener: (EventViewHolder) -> Boolean,
+    onOptionsClick: (EventViewHolder) -> Unit
 ) : RecyclerView.ViewHolder(view) {
 
     init {
         itemView.clickableArea.setOnClickListener { onClickListener(this) }
         itemView.clickableArea.setOnLongClickListener { onLongClickListener(this) }
+        itemView.optionsButton.setOnClickListener { onOptionsClick(this) }
     }
 
     private val mViewsToBlurOnSelect = listOf(

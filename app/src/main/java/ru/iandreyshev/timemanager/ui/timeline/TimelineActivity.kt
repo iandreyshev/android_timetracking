@@ -2,6 +2,7 @@ package ru.iandreyshev.timemanager.ui.timeline
 
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -15,11 +16,13 @@ import ru.iandreyshev.timemanager.di.getViewModel
 import ru.iandreyshev.timemanager.ui.BaseActivity
 import ru.iandreyshev.timemanager.ui.extensions.asTimerTitleViewState
 import ru.iandreyshev.timemanager.ui.extensions.getCardTitle
+import ru.iandreyshev.timemanager.utils.dismissOnDestroy
 
 class TimelineActivity : BaseActivity() {
 
     private val mViewModel: TimelineViewModel by lazy { getViewModel() }
     private var mDeleteCardDialog: AlertDialog? = null
+    private var mEventMenuPopup: PopupMenu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +35,8 @@ class TimelineActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mDeleteCardDialog?.setOnDismissListener(null)
-        mDeleteCardDialog?.dismiss()
+        mDeleteCardDialog.dismissOnDestroy()
+        mEventMenuPopup?.dismissOnDestroy()
     }
 
     override fun onBackPressed() {
@@ -56,6 +59,21 @@ class TimelineActivity : BaseActivity() {
 
     private fun initEventsList() {
         recyclerView.adapter = mViewModel.eventsAdapter
+        mViewModel.eventsAdapter.onOptionsClick = { view, position ->
+            mEventMenuPopup?.dismissOnDestroy()
+            mEventMenuPopup = PopupMenu(this, view)
+            mEventMenuPopup?.inflate(R.menu.menu_timeline_event)
+            mEventMenuPopup?.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_timeline_event_delete -> {
+                        mViewModel.onDeleteEventAt(position)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            mEventMenuPopup?.show()
+        }
 //        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(mViewModel.eventsAdapter))
 //        itemTouchHelper.attachToRecyclerView(recyclerView)
 //        itemTouchHelper.attachToRecyclerView(null)

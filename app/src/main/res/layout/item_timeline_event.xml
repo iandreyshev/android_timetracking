@@ -15,6 +15,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <FrameLayout
+        android:id="@+id/optionsButton"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="7dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_baseline_more_vert_24" />
+
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/timeGroup"
         android:layout_width="0dp"
@@ -50,11 +68,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/optionsButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Готовился к сертификации майкрософт, чтобы получить статус MCSD и быть востребованным на рынке труда" />

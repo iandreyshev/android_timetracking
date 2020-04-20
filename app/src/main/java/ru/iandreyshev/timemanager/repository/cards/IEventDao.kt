@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import ru.iandreyshev.timemanager.domain.cards.EventId
 
 @Dao
 interface IEventDao {
@@ -23,7 +24,10 @@ interface IEventDao {
     @Update
     fun update(eventEntity: EventEntity)
 
+    @Query("DELETE FROM events WHERE :eventId = `id`")
+    fun delete(eventId: Long)
+
     @Query("DELETE FROM events WHERE :cardId = `cardId`")
-    fun delete(cardId: Long)
+    fun deleteAll(cardId: Long)
 
 }
