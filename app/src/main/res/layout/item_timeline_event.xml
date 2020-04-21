@@ -1,89 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="@dimen/card_radius"
+    app:cardElevation="0dp">
 
-    <FrameLayout
-        android:id="@+id/clickableArea"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="?attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <FrameLayout
-        android:id="@+id/optionsButton"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="7dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <FrameLayout
+            android:id="@+id/clickableArea"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_baseline_more_vert_24" />
+        <FrameLayout
+            android:id="@+id/optionsButton"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="7dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </FrameLayout>
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_baseline_more_vert_24" />
 
-    <LinearLayout
-        android:id="@+id/timeGroup"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="start|center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/title"
-        app:layout_constraintTop_toBottomOf="@id/title">
+        </FrameLayout>
 
-        <ImageView
-            android:id="@+id/startTimeIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="4dp"
-            app:srcCompat="@drawable/ic_timeline_time" />
+        <LinearLayout
+            android:id="@+id/timeGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="start|center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/title">
+
+            <ImageView
+                android:id="@+id/startTimeIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="4dp"
+                app:srcCompat="@drawable/ic_timeline_time" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="bold"
+                tools:text="16:40 - 17:30 (50m)" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
+            android:id="@+id/title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:fontFamily="sans-serif-medium"
-            android:textStyle="bold"
-            tools:text="16:40 - 17:30 (50m)" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/optionsButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Готовился к сертификации майкрософт, чтобы получить статус MCSD и быть востребованным на рынке труда" />
 
-    </LinearLayout>
+        <View
+            android:id="@+id/bottomDivider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:background="#ddd"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/timeGroup" />
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/optionsButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Готовился к сертификации майкрософт, чтобы получить статус MCSD и быть востребованным на рынке труда" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:id="@+id/bottomDivider"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:background="#ddd"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/timeGroup" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

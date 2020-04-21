@@ -1,34 +1,33 @@
 <resources>
-    <string name="app_name">яДелал</string>
-    <string name="app_name_with_hash_tag">#яДелал</string>
+    <string name="app_name">Дневник времени</string>
+    <string name="app_name_with_hash_tag">Дневник времени</string>
 
-    <string name="tutorial_title">#обучение</string>
+    <string name="tutorial_title">Дневник времени</string>
     <string name="tutorial_button_start">Продолжить</string>
     <string name="tutorial_button_done">Продолжить</string>
-    <string name="tutorial_state_no_card">Пройдите небольшое обучение, чтобы начать замерять продуктивность</string>
-    <string name="tutorial_state_empty_card">После создания карточки она будет пустой. Создайте первое событие, чтобы начать замерять продуктивность</string>
-    <string name="tutorial_state_one_event">Первое событие содержит время начала и конца. Продолжайте создавать события</string>
-    <string name="tutorial_state_three_events">Следующие события содеражат только время окончания. Выделите любое событие долгим нажатием, чтобы узнать его длительность</string>
-    <string name="tutorial_state_one_event_selected">Счетчик над карточкой показывает время затраченное на выбранное событие. Коснитесь ещё одного события</string>
-    <string name="tutorial_state_two_events_selected">При выделение следующих событий счетчик обновится и будет показывать общее затраченное время</string>
+    <string name="tutorial_state_no_card">Пройди небольшое обучение, чтобы начать вести дневник</string>
+    <string name="tutorial_state_one_event">Каждое событие содержит время начала и конца. Нажми на «+», чтобы создать следующие события</string>
+    <string name="tutorial_state_three_events">Выдели любое событие долгим нажатием, чтобы начать считать время</string>
+    <string name="tutorial_state_one_event_selected">Счетчик сверху показывает время затраченное на выбранное событие. Коснись ещё одного события</string>
+    <string name="tutorial_state_two_events_selected">При выделении следующих событий счетчик обновится и будет показывать суммарное время</string>
     <string name="tutorial_event_1_title">Утренняя пробежка по парку с собакой</string>
     <string name="tutorial_event_2_title">Душ после пробежки, приготовление и прием пищи</string>
     <string name="tutorial_event_3_title">Путь до работы</string>
 
     <string name="timeline_button_create_first_card">Новая карточка</string>
     <string name="timeline_button_create_first_event">Новое событие</string>
-    <string name="timeline_empty_cards">Вы ещё не замеряли продуктивность. Чтобы начать, необходимо создать карточку событий</string>
-    <string name="timeline_empty_events">В карточке продуктивности ещё нет записанных событий</string>
+    <string name="timeline_empty_cards">Ты ещё не вел дневник. Чтобы начать, создай карточку событий</string>
+    <string name="timeline_empty_events">В карточке ещё нет событий</string>
     <string name="timeline_event_menu_delete">Удалить</string>
 
     <string name="card_title">%1$s</string>
     <string name="card_title_with_suffix">%1$s (#%2$d)</string>
 
     <string name="delete_card_dialog_title">Удалить карточку</string>
-    <string name="delete_card_message">Вы действительно хотите удалить карточку \'%1$s\'?</string>
+    <string name="delete_card_message">Ты действительно хочешь удалить карточку \'%1$s\'?</string>
 
     <string name="editor_title">Новое событие</string>
-    <string name="editor_title_placeholder">Что вы делали?</string>
+    <string name="editor_title_placeholder">Чем ты занимался?</string>
     <string name="editor_start_group_title">Началось</string>
     <string name="editor_end_group_title">Закончилось</string>
     <string name="editor_start_date_title">Дата начала</string>

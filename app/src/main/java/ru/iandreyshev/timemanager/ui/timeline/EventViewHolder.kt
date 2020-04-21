@@ -1,6 +1,7 @@
 package ru.iandreyshev.timemanager.ui.timeline
 
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_timeline_event.view.*
 import ru.iandreyshev.timemanager.ui.extensions.asTimerTitleViewState
@@ -10,13 +11,13 @@ class EventViewHolder(
     view: View,
     onClickListener: (EventViewHolder) -> Unit,
     onLongClickListener: (EventViewHolder) -> Boolean,
-    onOptionsClick: (EventViewHolder) -> Unit
+    private val onOptionsClick: ((EventViewHolder) -> Unit)? = null
 ) : RecyclerView.ViewHolder(view) {
 
     init {
         itemView.clickableArea.setOnClickListener { onClickListener(this) }
         itemView.clickableArea.setOnLongClickListener { onLongClickListener(this) }
-        itemView.optionsButton.setOnClickListener { onOptionsClick(this) }
+        itemView.optionsButton.setOnClickListener { onOptionsClick?.invoke(this) }
     }
 
     private val mViewsToBlurOnSelect = listOf(
@@ -42,6 +43,8 @@ class EventViewHolder(
                 }
             }
         }.exhaustive
+
+        itemView.optionsButton.isVisible = onOptionsClick != null
     }
 
     companion object {

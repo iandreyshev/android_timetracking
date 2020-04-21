@@ -6,7 +6,7 @@ import ru.iandreyshev.timemanager.R
 enum class TutorialState(@IdRes val id: Int) {
     UNDEFINED(-1),
     NO_CARD(R.id.noCard),
-    EMPTY_CARD(R.id.emptyCard),
+//    EMPTY_CARD(R.id.emptyCard),
     ONE_EVENT(R.id.oneEvent),
     TWO_EVENTS(R.id.twoEvents),
     TWO_EVENTS_PAUSE(R.id.twoEventsPause),
