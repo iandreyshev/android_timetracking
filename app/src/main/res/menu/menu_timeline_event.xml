@@ -2,6 +2,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_timeline_event_delete"
-        android:icon="@drawable/ic_baseline_delete_24"
         android:title="@string/timeline_event_menu_delete" />
 </menu>

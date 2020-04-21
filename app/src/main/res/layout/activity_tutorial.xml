@@ -5,7 +5,7 @@
     android:id="@+id/motionLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/page_background_light"
     app:layoutDescription="@xml/scene_tutorial"
     app:motionDebug="NO_DEBUG">
 
@@ -16,7 +16,7 @@
         android:fontFamily="sans-serif-medium"
         android:padding="24dp"
         android:text="@string/tutorial_title"
-        android:textColor="@color/background"
+        android:textColor="@color/page_title_1"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:gravity="center"
-            android:textColor="#fff"
+            android:textColor="@color/page_title_3"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constrainedWidth="true"
@@ -81,11 +81,12 @@
             android:fontFamily="sans-serif-medium"
             android:text="@string/tutorial_state_no_card"
             android:textAlignment="center"
-            android:textColor="@color/background"
+            android:textColor="@color/page_content"
             android:textSize="16sp" />
 
         <Button
             android:id="@+id/createFirstCardButton"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tutorial_button_start" />
@@ -98,7 +99,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:background="@color/background"
+        app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="12dp"
         app:cardElevation="12dp" />
 
@@ -108,7 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-medium"
-        android:textColor="@color/background"
+        android:textColor="@color/page_content"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/card"
         app:layout_constraintStart_toStartOf="@id/card"
@@ -127,6 +128,7 @@
 
         <Button
             android:id="@+id/createFirstEventButton"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -138,6 +140,7 @@
         android:id="@+id/createEventButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:backgroundTint="@color/button1_background"
         app:elevation="14dp"
         app:layout_constraintBottom_toBottomOf="@id/card"
         app:layout_constraintEnd_toEndOf="@id/card"
@@ -213,6 +216,7 @@
 
         <Button
             android:id="@+id/tutorialDoneButton"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

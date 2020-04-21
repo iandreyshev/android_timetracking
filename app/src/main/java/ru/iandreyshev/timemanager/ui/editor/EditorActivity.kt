@@ -42,7 +42,7 @@ class EditorActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = getString(R.string.editor_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_clear)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_editor_exit)
 
         mViewModel.datePicker.observe(::updateDatePicker)
 

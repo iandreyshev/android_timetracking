@@ -262,7 +262,7 @@ class EditorViewModel(
             pickedDateTime sameTimeWith currentDateTime
                     && pickedDateTime sameDateWith currentDateTime ->
                 DatePickerCommentViewState.JustNow
-            pickedDateTime.isBefore(mPickedStartDate) ->
+            mPickedStartDate?.isAfter(pickedDateTime) == true ->
                 DatePickerCommentViewState.ErrorEndBeforeStart
             else ->
                 DatePickerCommentViewState.Hidden

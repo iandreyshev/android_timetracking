@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#FFF</color>
-    <color name="background_dark">#F2F2F2</color>
-    <color name="colorPrimary">#8372F2</color>
-    <color name="colorPrimaryDark">#675ABF</color>
-    <color name="colorAccent">#04BF33</color>
+    <color name="page_background">@color/primary_light_gray</color>
+    <color name="page_background_light">#FFF</color>
+    <color name="page_toolbar_title">@color/primary_black</color>
+    <color name="page_toolbar_action">@color/primary_black</color>
+    <color name="page_title_1">@color/primary_black</color>
+    <color name="page_title_2">#646465</color>
+    <color name="page_title_3">@color/primary_blue</color>
+    <color name="page_content">@color/primary_black</color>
+    <color name="page_prompt">@color/primary_gray</color>
 
-    <color name="colorTextPrimary">#101010</color>
-    <color name="colorTextSecondary">#484848</color>
-    <color name="colorTextAccent">#FFF</color>
+    <color name="card_background">#FFF</color>
+    <color name="card_content">@color/primary_black</color>
+
+    <color name="button1_background">@color/primary_orange</color>
+
+    <color name="primary_orange">#FFC13A</color>
+    <color name="primary_black">#222</color>
+    <color name="primary_blue">#4D7DF9</color>
+
+    <color name="base_red">#FF5D5A</color>
+    <color name="base_electric">#0094D5</color>
+    <color name="primary_light_gray">#F7F9FA</color>
+    <color name="primary_gray">#BBC3CE</color>
 </resources>

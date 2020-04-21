@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/page_background">
 
     <FrameLayout
         android:id="@+id/headerGroup"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="center"
-                android:textColor="#fff"
+                android:textColor="@color/page_title_3"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constrainedWidth="true"
@@ -113,12 +113,12 @@
                 android:id="@+id/exitFromTimerButton"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:padding="4dp"
                 android:layout_marginEnd="16dp"
+                android:padding="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_clear" />
+                app:srcCompat="@drawable/ic_timeline_timer_exit" />
 
             <FrameLayout
                 android:id="@+id/exitFromTimerButtonClickableArea"
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:gravity="center"
-                    android:textColor="#fff"
+                    android:textColor="@color/page_title_3"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constrainedWidth="true"
@@ -173,7 +173,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
-        android:background="@color/background"
+        android:background="@color/card_background"
         app:cardCornerRadius="@dimen/card_radius"
         app:cardPreventCornerOverlap="false"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -184,7 +184,8 @@
         app:optRoundCardCornerRadius="@dimen/card_radius"
         app:optRoundCardElevation="12dp"
         app:optRoundCardLeftBottomCorner="false"
-        app:optRoundCardRightBottomCorner="false">
+        app:optRoundCardRightBottomCorner="false"
+        tools:visibility="visible">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -219,11 +220,12 @@
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/timeline_empty_events"
                 android:textAlignment="center"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/card_content"
                 android:textSize="16sp" />
 
             <Button
                 android:id="@+id/createFirstEventButton"
+                style="@style/ButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -237,7 +239,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="24dp"
-            app:srcCompat="@drawable/ic_create_event" />
+            app:backgroundTint="@color/button1_background"
+            app:srcCompat="@drawable/ic_create_event"
+            app:tint="@null" />
 
     </com.github.captain_miao.optroundcardview.OptRoundCardView>
 
@@ -245,12 +249,11 @@
         android:id="@+id/timelineLoadingView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:cardBackgroundColor="@color/colorPrimaryDark"
+        app:cardBackgroundColor="@color/page_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -263,7 +266,7 @@
         android:id="@+id/timelineFirstCardView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:cardBackgroundColor="@color/colorPrimaryDark"
+        app:cardBackgroundColor="@color/page_background"
         app:cardCornerRadius="0dp"
         app:cardElevation="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -280,7 +283,7 @@
             android:layout_margin="24dp"
             android:fontFamily="sans-serif-medium"
             android:text="@string/app_name_with_hash_tag"
-            android:textColor="@color/background"
+            android:textColor="@color/page_title_1"
             android:textSize="32sp"
             android:textStyle="bold" />
 
@@ -304,11 +307,12 @@
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/timeline_empty_cards"
                 android:textAlignment="center"
-                android:textColor="@color/background"
+                android:textColor="@color/page_content"
                 android:textSize="16sp" />
 
             <Button
                 android:id="@+id/createFirstCardButton"
+                style="@style/ButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

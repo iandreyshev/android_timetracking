@@ -14,10 +14,10 @@
     <string name="tutorial_event_2_title">Душ после пробежки, приготовление и прием пищи</string>
     <string name="tutorial_event_3_title">Путь до работы</string>
 
-    <string name="timeline_button_create_first_card">Новая карточка</string>
-    <string name="timeline_button_create_first_event">Новое событие</string>
-    <string name="timeline_empty_cards">Ты ещё не вел дневник. Чтобы начать, создай карточку событий</string>
-    <string name="timeline_empty_events">В карточке ещё нет событий</string>
+    <string name="timeline_button_create_first_card">Начать</string>
+    <string name="timeline_button_create_first_event">Записать</string>
+    <string name="timeline_empty_cards">В твоём дневнике ещё нет записей, начни вести прямо сейчас</string>
+    <string name="timeline_empty_events">События ещё не записывались</string>
     <string name="timeline_event_menu_delete">Удалить</string>
 
     <string name="card_title">%1$s</string>
