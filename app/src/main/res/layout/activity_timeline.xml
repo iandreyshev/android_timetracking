@@ -169,6 +169,7 @@
     </FrameLayout>
 
     <com.github.captain_miao.optroundcardview.OptRoundCardView
+        android:id="@+id/eventsCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="12dp"
@@ -180,6 +181,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerGroup"
+        app:optRoundCardBackgroundColor="@color/card_background"
         app:optRoundCardBottomEdges="false"
         app:optRoundCardCornerRadius="@dimen/card_radius"
         app:optRoundCardElevation="12dp"
