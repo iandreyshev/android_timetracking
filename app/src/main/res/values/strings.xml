@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Дневник времени</string>
-    <string name="app_name_with_hash_tag">Дневник времени</string>
+    <string name="app_name">Time Diary</string>
+    <string name="app_name_with_hash_tag">Time Diary</string>
 
     <string name="tutorial_title">Дневник времени</string>
     <string name="tutorial_button_start">Продолжить</string>
