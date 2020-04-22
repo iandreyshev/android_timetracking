@@ -40,10 +40,9 @@ class CardsRepository(
             var eventToSave = event
             val previousEvent = getEvents(cardId).firstOrNull()
 
-            eventToSave = if (previousEvent != null) {
-                eventToSave.copy(startDateTime = previousEvent.endDateTime)
-            } else {
-                eventToSave.copy(isFirstInCard = true)
+            eventToSave = when {
+                previousEvent != null -> eventToSave
+                else -> eventToSave.copy(isFirstInCard = true)
             }
 
             val entity = EventEntity.create(

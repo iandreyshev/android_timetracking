@@ -224,11 +224,6 @@ class EditorActivity : BaseActivity() {
                 getString(R.string.editor_start_description_just_now)
             is DatePickerCommentViewState.RightAfter ->
                 getString(R.string.editor_start_description_right_after, comment.event)
-            is DatePickerCommentViewState.ErrorStartBeforePrevious ->
-                getString(
-                    R.string.editor_datetime_description_error_start_before_previous,
-                    comment.event
-                )
             DatePickerCommentViewState.ErrorEndBeforeStart ->
                 getString(R.string.editor_datetime_description_error_end_before_start)
         }.exhaustive

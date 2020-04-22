@@ -40,7 +40,6 @@
     <string name="editor_start_time_undefined">Не установлено</string>
     <string name="editor_start_description_just_now">Только что</string>
     <string name="editor_start_description_right_after">Сразу после: %1$s</string>
-    <string name="editor_datetime_description_error_start_before_previous">Событие не может начаться до окончания предыдущего: %1$s</string>
     <string name="editor_datetime_description_error_end_before_start">"Конец события не может быть раньше его начала"</string>
 
     <string name="timer_title_format_minutes">%1$dм</string>
