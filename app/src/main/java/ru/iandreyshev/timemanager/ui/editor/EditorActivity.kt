@@ -1,16 +1,16 @@
 package ru.iandreyshev.timemanager.ui.editor
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.StringRes
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog
 import kotlinx.android.synthetic.main.activity_editor.*
 import ru.iandreyshev.timemanager.R
 import ru.iandreyshev.timemanager.di.getViewModel
@@ -18,20 +18,15 @@ import ru.iandreyshev.timemanager.domain.cards.CardId
 import ru.iandreyshev.timemanager.domain.cards.EventId
 import ru.iandreyshev.timemanager.ui.BaseActivity
 import ru.iandreyshev.timemanager.utils.exhaustive
-import java.util.*
 
 class EditorActivity : BaseActivity() {
 
-    private var mTimePickerDialog: SingleDateAndTimePickerDialog? = null
+    private var mDatePickerDialog: DatePickerDialog? = null
+    private var mTimePickerDialog: TimePickerDialog? = null
 
     private val mViewModel: EditorViewModel by lazy {
-        val cardId =
-            CardId(intent.extras?.getLong(ARG_CARD_ID) ?: 0)
-        val eventId = intent.extras?.getLong(ARG_EVENT_ID)?.run {
-            EventId(
-                this
-            )
-        }
+        val cardId = CardId(intent.extras?.getLong(ARG_CARD_ID) ?: 0)
+        val eventId = intent.extras?.getLong(ARG_EVENT_ID)?.let { EventId(it) }
         getViewModel(cardId, eventId)
     }
 
@@ -47,16 +42,21 @@ class EditorActivity : BaseActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = getString(R.string.editor_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_clear)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_editor_exit)
 
         mViewModel.datePicker.observe(::updateDatePicker)
 
-        mViewModel.startDateTimeAvailable.observe(::updateStartDateTime)
         mViewModel.startDatePreview.observe(::updateStartDate)
         mViewModel.startTimePreview.observe(::updateStartTime)
+        mViewModel.startDateTimeComment.observe {
+            updateDateTimeComment(startDateTimeComment, it)
+        }
 
         mViewModel.endDatePreview.observe(::updateEndDate)
         mViewModel.endTimePreview.observe(endTime::setText)
+        mViewModel.endDateTimeComment.observe {
+            updateDateTimeComment(endDateTimeComment, it)
+        }
 
         mViewModel.updateTitleEvent.consume(titleView::setText)
         mViewModel.exitEvent.consume { finish() }
@@ -95,78 +95,87 @@ class EditorActivity : BaseActivity() {
 
     private fun updateDatePicker(viewState: DatePickerViewState) {
         when (viewState) {
-            is DatePickerViewState.StartDate -> updateStartDatePicker(
-                viewState.default,
-                viewState.listener
-            )
-            is DatePickerViewState.StartTime -> updateStartTimePicker(
-                viewState.default,
-                viewState.listener
-            )
-            is DatePickerViewState.EndDate -> updateEndDatePicker(
-                viewState.default,
-                viewState.listener
-            )
-            is DatePickerViewState.EndTime -> updateEndTimePicker(
-                viewState.default,
-                viewState.listener
-            )
-            is DatePickerViewState.Hidden -> {
-                mTimePickerDialog?.dismiss()
-                mTimePickerDialog = null
-            }
+            is DatePickerViewState.StartDate ->
+                updateStartDatePicker(viewState)
+            is DatePickerViewState.StartTime ->
+                updateStartTimePicker(viewState)
+            is DatePickerViewState.EndDate ->
+                updateEndDatePicker(viewState)
+            is DatePickerViewState.EndTime ->
+                updateEndTimePicker(viewState)
+            is DatePickerViewState.Hidden ->
+                dismissDialogs()
         }.exhaustive
     }
 
-    private fun updateStartDatePicker(default: Date, listener: (Date?) -> Unit) =
-        displayDateTimeDialog(default, R.string.editor_start_date_title, listener) {
-            displayMinutes(false)
-                .displayHours(false)
-                .displayDays(false)
-                .displayMonth(true)
-                .displayYears(true)
-                .displayDaysOfMonth(true)
+    private fun updateStartDatePicker(state: DatePickerViewState.StartDate) {
+        dismissDialogs()
+        mDatePickerDialog = DatePickerDialog(
+            this,
+            state.listener,
+            state.date.year,
+            state.date.month.value,
+            state.date.dayOfMonth
+        ).apply {
+            setTitle(R.string.editor_start_date_title)
+            show()
         }
+    }
 
-    private fun updateStartTimePicker(default: Date, listener: (Date?) -> Unit) =
-        displayDateTimeDialog(default, R.string.editor_start_time_title, listener) {
-            displayMinutes(true)
-                .displayHours(true)
-                .displayDays(false)
-                .displayMonth(false)
-                .displayYears(false)
-                .minutesStep(1)
+    private fun updateStartTimePicker(state: DatePickerViewState.StartTime) {
+        dismissDialogs()
+        mTimePickerDialog = TimePickerDialog(
+            this,
+            state.listener,
+            state.time.hour,
+            state.time.minute,
+            true
+        ).apply {
+            setTitle(R.string.editor_start_time_title)
+            show()
         }
+    }
 
-    private fun updateEndDatePicker(default: Date, listener: (Date?) -> Unit) =
-        displayDateTimeDialog(default, R.string.editor_end_date_title, listener) {
-            displayMinutes(false)
-                .displayHours(false)
-                .displayDays(false)
-                .displayMonth(true)
-                .displayYears(true)
-                .displayDaysOfMonth(true)
+    private fun updateEndDatePicker(state: DatePickerViewState.EndDate) {
+        dismissDialogs()
+        mDatePickerDialog = DatePickerDialog(
+            this,
+            state.listener,
+            state.date.year,
+            state.date.month.value,
+            state.date.dayOfMonth
+        ).apply {
+            setTitle(R.string.editor_end_date_title)
+            show()
         }
+    }
 
-    private fun updateEndTimePicker(default: Date, listener: (Date?) -> Unit) =
-        displayDateTimeDialog(default, R.string.editor_end_time_title, listener) {
-            displayMinutes(true)
-                .displayHours(true)
-                .displayDays(false)
-                .displayMonth(false)
-                .displayYears(false)
-                .minutesStep(1)
+    private fun updateEndTimePicker(state: DatePickerViewState.EndTime) {
+        dismissDialogs()
+        mTimePickerDialog = TimePickerDialog(
+            this,
+            state.listener,
+            state.time.hour,
+            state.time.minute,
+            true
+        ).apply {
+            setTitle(R.string.editor_end_time_title)
+            show()
         }
+    }
 
-    private fun updateStartDateTime(canEditStartDateTime: Boolean) {
-        startGroup.isVisible = canEditStartDateTime
+    private fun dismissDialogs() {
+        mDatePickerDialog?.dismiss()
+        mDatePickerDialog = null
+        mTimePickerDialog?.dismiss()
+        mTimePickerDialog = null
     }
 
     private fun updateStartDate(viewState: StartDateViewState) {
         when (viewState) {
-            StartDateViewState.Today -> {
+            is StartDateViewState.Today -> {
                 startDateGroup.isGone = false
-                startDate.text = getString(R.string.editor_start_date_today)
+                startDate.text = getString(R.string.editor_start_date_today, viewState.value)
             }
             is StartDateViewState.ShowDate -> {
                 startDateGroup.isGone = false
@@ -190,11 +199,9 @@ class EditorActivity : BaseActivity() {
 
     private fun updateEndDate(viewState: EndDateViewState) {
         when (viewState) {
-            EndDateViewState.Hidden ->
-                endDateGroup.isGone = true
-            EndDateViewState.Today -> {
+            is EndDateViewState.Today -> {
                 endDateGroup.isGone = false
-                endDate.text = getString(R.string.editor_start_date_today)
+                endDate.text = getString(R.string.editor_start_date_today, viewState.value)
             }
             is EndDateViewState.ShowDate -> {
                 endDateGroup.isGone = false
@@ -203,22 +210,28 @@ class EditorActivity : BaseActivity() {
         }.exhaustive
     }
 
-    private fun displayDateTimeDialog(
-        default: Date,
-        @StringRes titleRes: Int,
-        listener: (Date?) -> Unit,
-        buildAction: SingleDateAndTimePickerDialog.Builder.() -> Unit
+    private fun updateDateTimeComment(
+        commentView: TextView,
+        comment: DatePickerCommentViewState
     ) {
-        mTimePickerDialog?.dismiss()
-        mTimePickerDialog = SingleDateAndTimePickerDialog.Builder(this)
-            .title(getString(titleRes))
-            .mainColor(ResourcesCompat.getColor(resources, R.color.colorPrimary, theme))
-            .titleTextColor(ResourcesCompat.getColor(resources, android.R.color.white, theme))
-            .apply(buildAction)
-            .listener(listener)
-            .defaultDate(default)
-            .build()
-        mTimePickerDialog?.display()
+        commentView.isVisible = true
+        commentView.text = when (comment) {
+            DatePickerCommentViewState.Hidden -> {
+                commentView.isVisible = false
+                commentView.text
+            }
+            DatePickerCommentViewState.JustNow ->
+                getString(R.string.editor_start_description_just_now)
+            is DatePickerCommentViewState.RightAfter ->
+                getString(R.string.editor_start_description_right_after, comment.event)
+            is DatePickerCommentViewState.ErrorStartBeforePrevious ->
+                getString(
+                    R.string.editor_datetime_description_error_start_before_previous,
+                    comment.event
+                )
+            DatePickerCommentViewState.ErrorEndBeforeStart ->
+                getString(R.string.editor_datetime_description_error_end_before_start)
+        }.exhaustive
     }
 
     companion object {

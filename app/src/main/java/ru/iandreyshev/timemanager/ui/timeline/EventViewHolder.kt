@@ -10,35 +10,27 @@ import ru.iandreyshev.timemanager.utils.exhaustive
 class EventViewHolder(
     view: View,
     onClickListener: (EventViewHolder) -> Unit,
-    onLongClickListener: (EventViewHolder) -> Boolean
+    onLongClickListener: (EventViewHolder) -> Boolean,
+    private val onOptionsClick: ((EventViewHolder) -> Unit)? = null
 ) : RecyclerView.ViewHolder(view) {
 
     init {
         itemView.clickableArea.setOnClickListener { onClickListener(this) }
         itemView.clickableArea.setOnLongClickListener { onLongClickListener(this) }
+        itemView.optionsButton.setOnClickListener { onOptionsClick?.invoke(this) }
     }
 
     private val mViewsToBlurOnSelect = listOf(
         itemView.title,
         itemView.startTimeIcon,
-        itemView.startTime,
-        itemView.endTimeIcon,
-        itemView.endTime
+        itemView.time
     )
 
     fun bind(viewState: EventViewState) = with(itemView) {
         title.text = viewState.title
 
-        val hasStartTime = !viewState.startTime.isNullOrBlank()
-        startTimeIcon.isVisible = hasStartTime
-        startTime.isVisible = hasStartTime
-        startTime.text = viewState.startTime.orEmpty()
-
         val duration = viewState.durationInMinutes.asTimerTitleViewState(resources)
-        endTime.text = "${viewState.endTime} ($duration)"
-
-        endTimeIconPoint.isVisible = viewState.isMiddleEndTime
-        endTimeIconFinish.isVisible = !viewState.isMiddleEndTime
+        time.text = "${viewState.startTime} - ${viewState.endTime} ($duration)"
 
         when (val selectionViewState = viewState.selection) {
             EventSelectionViewState.Normal ->
@@ -51,6 +43,8 @@ class EventViewHolder(
                 }
             }
         }.exhaustive
+
+        itemView.optionsButton.isVisible = onOptionsClick != null
     }
 
     companion object {

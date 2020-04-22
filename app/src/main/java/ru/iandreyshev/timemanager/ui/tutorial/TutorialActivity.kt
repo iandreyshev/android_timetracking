@@ -19,21 +19,24 @@ class TutorialActivity : BaseActivity() {
 
     private val mEvent1ViewHolder by lazy {
         EventViewHolder(
-            event1,
+            view = event1,
             onClickListener = { mViewModel.onSecondEventSelected(TutorialEvent.EVENT_1) },
-            onLongClickListener = { mViewModel.onFirstEventSelected(TutorialEvent.EVENT_1) })
+            onLongClickListener = { mViewModel.onFirstEventSelected(TutorialEvent.EVENT_1) }
+        )
     }
     private val mEvent2ViewHolder by lazy {
         EventViewHolder(
-            event2,
+            view = event2,
             onClickListener = { mViewModel.onSecondEventSelected(TutorialEvent.EVENT_2) },
-            onLongClickListener = { mViewModel.onFirstEventSelected(TutorialEvent.EVENT_2) })
+            onLongClickListener = { mViewModel.onFirstEventSelected(TutorialEvent.EVENT_2) }
+        )
     }
     private val mEvent3ViewHolder by lazy {
         EventViewHolder(
-            event3,
+            view = event3,
             onClickListener = { mViewModel.onSecondEventSelected(TutorialEvent.EVENT_3) },
-            onLongClickListener = { mViewModel.onFirstEventSelected(TutorialEvent.EVENT_3) })
+            onLongClickListener = { mViewModel.onFirstEventSelected(TutorialEvent.EVENT_3) }
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,9 +52,6 @@ class TutorialActivity : BaseActivity() {
         mViewModel.event3ViewState.observe(mEvent3ViewHolder::bind)
         mViewModel.timerViewState.observe(timerTitle::setText)
 
-        createFirstCardButton.setOnClickListener {
-            motionLayout.transitionToState(TutorialState.EMPTY_CARD.id)
-        }
         tutorialDoneButton.setOnClickListener {
             mViewModel.onTutorialCompleted()
         }
@@ -116,7 +116,6 @@ class TutorialActivity : BaseActivity() {
         TutorialState.AWAIT_DONE,
         TutorialState.DONE -> R.string.empty
         TutorialState.NO_CARD -> R.string.tutorial_state_no_card
-        TutorialState.EMPTY_CARD -> R.string.tutorial_state_empty_card
         TutorialState.ONE_EVENT -> R.string.tutorial_state_one_event
         TutorialState.THREE_EVENTS -> R.string.tutorial_state_three_events
         TutorialState.ONE_EVENT_SELECTED -> R.string.tutorial_state_one_event_selected

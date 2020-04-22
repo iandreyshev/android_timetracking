@@ -13,5 +13,6 @@ interface ICardsRepository {
     suspend fun getNextCard(current: Card): Card?
     suspend fun getPreviousCard(current: Card): Card?
 
+    suspend fun deleteEvent(eventId: EventId): RepoResult<List<Event>>
     suspend fun deleteCard(cardId: CardId): RepoResult<Unit>
 }

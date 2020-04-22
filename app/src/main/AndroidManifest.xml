@@ -25,7 +25,9 @@
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.timeline.TimelineActivity" />
-        <activity android:name=".ui.editor.EditorActivity" />
+        <activity
+            android:name=".ui.editor.EditorActivity"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
     </application>
 
 </manifest>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff">
+    android:background="@color/page_background_light">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -18,8 +18,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimaryDark"
-            app:titleTextColor="@color/background" />
+            android:background="@color/page_background_light"
+            app:titleTextColor="@color/page_title_1"
+            tools:title="Title" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -40,11 +41,14 @@
                 android:id="@+id/titleView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="#fff"
+                android:background="@color/page_background_light"
                 android:hint="@string/editor_title_placeholder"
+                android:inputType="textCapSentences|textMultiLine"
                 android:maxLength="140"
                 android:paddingTop="32dp"
                 android:paddingBottom="32dp"
+                android:textColor="@color/page_title_2"
+                android:textColorHint="@color/page_prompt"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -64,53 +68,79 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_end="16dp" />
 
-            <androidx.cardview.widget.CardView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/startGroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp"
+                android:layout_marginBottom="24dp"
                 app:layout_constraintBottom_toTopOf="@+id/endGroup"
-                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/titleView">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/startGroupTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/editor_start_group_title"
+                    android:textAlignment="center"
+                    android:textColor="@color/page_title_2"
+                    android:textSize="18sp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/startGroupTitle"
-                        android:layout_width="0dp"
+                <FrameLayout
+                    android:id="@+id/refreshStartButton"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/startGroupTitle">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/editor_start_group_title"
-                        android:textAlignment="center"
-                        android:textColor="@color/colorTextSecondary"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:layout_constrainedWidth="true"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_baseline_refresh_24" />
+
+                </FrameLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/startDateGroupCard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="4dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toStartOf="@id/startTimeGroupCard"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/startDateTimeComment"
+                    app:layout_constraintWidth_default="wrap">
 
                     <LinearLayout
                         android:id="@+id/startDateGroup"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
                         android:gravity="start|center"
                         android:orientation="horizontal"
-                        android:padding="16dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/startGroupTitle">
+                        android:padding="6dp">
 
                         <ImageView
                             android:id="@+id/startDateIcon"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:adjustViewBounds="true"
+                            android:padding="0dp"
+                            android:scaleType="fitStart"
                             app:srcCompat="@drawable/ic_date_picker" />
 
                         <TextView
@@ -118,29 +148,42 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:layout_marginEnd="8dp"
-                            android:maxLines="1"
+                            android:ellipsize="marquee"
+                            android:fontFamily="sans-serif-medium"
+                            android:singleLine="true"
+                            android:textColor="@color/page_title_2"
                             android:textSize="16sp"
-                            tools:text="16:40" />
+                            tools:text="21 Apr, Mon" />
 
                     </LinearLayout>
 
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/startTimeGroupCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/startDateGroupCard"
+                    app:layout_constraintTop_toTopOf="@id/startDateGroupCard">
+
                     <LinearLayout
                         android:id="@+id/startTimeGroup"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
                         android:gravity="start|center"
                         android:orientation="horizontal"
-                        android:padding="16dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/startDateGroup">
+                        android:padding="6dp">
 
                         <ImageView
                             android:id="@+id/startTimeIcon"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             app:srcCompat="@drawable/ic_time_picker" />
 
                         <TextView
@@ -148,64 +191,103 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:layout_marginEnd="8dp"
-                            android:maxLines="1"
+                            android:ellipsize="marquee"
+                            android:fontFamily="sans-serif-medium"
+                            android:singleLine="true"
+                            android:textColor="@color/page_title_2"
                             android:textSize="16sp"
                             tools:text="16:40" />
 
                     </LinearLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
 
-            </androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/startDateTimeComment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="2"
+                    android:textColor="@color/page_prompt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="@+id/startGroupTitle"
+                    app:layout_constraintTop_toBottomOf="@id/startGroupTitle"
+                    tools:text="Сразу после “Прогулка с собакой”" />
 
-            <androidx.cardview.widget.CardView
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/endGroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/startGroup">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <FrameLayout
+                    android:id="@+id/refreshEndButton"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/endGroupTitle">
 
-                    <TextView
-                        android:id="@+id/endGroupTitle"
-                        android:layout_width="0dp"
+                    <ImageView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/editor_end_group_title"
-                        android:textAlignment="center"
-                        android:textColor="@color/colorTextSecondary"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:layout_constrainedWidth="true"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/ic_baseline_refresh_24" />
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/endGroupTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/editor_end_group_title"
+                    android:textAlignment="center"
+                    android:textColor="@color/page_title_2"
+                    android:textSize="18sp"
+                    app:layout_constrainedWidth="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/endDateGroupCard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="4dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toStartOf="@id/endTimeGroupCard"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/endDateTimeComment"
+                    app:layout_constraintWidth_default="wrap">
 
                     <LinearLayout
                         android:id="@+id/endDateGroup"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
                         android:gravity="start|center"
                         android:orientation="horizontal"
-                        android:padding="16dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/endGroupTitle">
+                        android:padding="6dp">
 
                         <ImageView
                             android:id="@+id/endDateIcon"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             app:srcCompat="@drawable/ic_date_picker" />
 
                         <TextView
@@ -213,29 +295,45 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:layout_marginEnd="8dp"
+                            android:fontFamily="sans-serif-medium"
                             android:maxLines="1"
+                            android:textColor="@color/page_title_2"
                             android:textSize="16sp"
-                            tools:text="16:40" />
+                            tools:text="21 Apr, Mon" />
 
                     </LinearLayout>
 
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/endTimeGroupCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/endDateGroupCard"
+                    app:layout_constraintTop_toTopOf="@id/endDateGroupCard">
+
                     <LinearLayout
                         android:id="@+id/endTimeGroup"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackground"
                         android:gravity="start|center"
                         android:orientation="horizontal"
-                        android:padding="16dp"
+                        android:padding="6dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/endDateGroup">
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toEndOf="@+id/endDateGroupCard"
+                        app:layout_constraintTop_toTopOf="@id/endDateGroupCard">
 
                         <ImageView
                             android:id="@+id/endTimeIcon"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             app:srcCompat="@drawable/ic_time_picker" />
 
                         <TextView
@@ -244,15 +342,29 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
                             android:layout_marginEnd="8dp"
+                            android:fontFamily="sans-serif-medium"
                             android:maxLines="1"
+                            android:textColor="@color/page_title_2"
                             android:textSize="16sp"
                             tools:text="16:40" />
 
                     </LinearLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
 
-            </androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/endDateTimeComment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@color/page_prompt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/endGroupTitle"
+                    app:layout_constraintTop_toBottomOf="@+id/endGroupTitle"
+                    tools:text="Только что" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

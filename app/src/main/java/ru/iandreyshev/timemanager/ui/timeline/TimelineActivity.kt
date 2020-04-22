@@ -2,10 +2,13 @@ package ru.iandreyshev.timemanager.ui.timeline
 
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_timeline.*
+import kotlinx.android.synthetic.main.menu_bottom_dialog.view.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.appcompat.v7.Appcompat
 import org.jetbrains.anko.noButton
@@ -15,11 +18,14 @@ import ru.iandreyshev.timemanager.di.getViewModel
 import ru.iandreyshev.timemanager.ui.BaseActivity
 import ru.iandreyshev.timemanager.ui.extensions.asTimerTitleViewState
 import ru.iandreyshev.timemanager.ui.extensions.getCardTitle
+import ru.iandreyshev.timemanager.utils.dismissOnDestroy
 
 class TimelineActivity : BaseActivity() {
 
     private val mViewModel: TimelineViewModel by lazy { getViewModel() }
     private var mDeleteCardDialog: AlertDialog? = null
+    private var mEventMenuPopup: PopupMenu? = null
+    private var mBottomSheetDialog: BottomSheetDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +38,9 @@ class TimelineActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mDeleteCardDialog?.setOnDismissListener(null)
-        mDeleteCardDialog?.dismiss()
+        mDeleteCardDialog.dismissOnDestroy()
+        mEventMenuPopup?.dismissOnDestroy()
+        mBottomSheetDialog?.dismissOnDestroy()
     }
 
     override fun onBackPressed() {
@@ -45,8 +52,7 @@ class TimelineActivity : BaseActivity() {
     private fun initButtons() {
         nextButton.setOnClickListener { mViewModel.onNextCard() }
         previousButton.setOnClickListener { mViewModel.onPreviousCard() }
-        titleClickableArea.setOnClickListener { mViewModel.onResetToLast() }
-        titleClickableArea.setOnLongClickListener { showDeleteCardDialog() }
+        titleClickableArea.setOnClickListener { openBottomMenu() }
         createFirstCardButton.setOnClickListener { mViewModel.onCreateFirstCard() }
         nextCardButton.setOnClickListener { mViewModel.onCreateCard() }
         createEventButton.setOnClickListener { mViewModel.onCreateEvent() }
@@ -56,9 +62,21 @@ class TimelineActivity : BaseActivity() {
 
     private fun initEventsList() {
         recyclerView.adapter = mViewModel.eventsAdapter
-//        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(mViewModel.eventsAdapter))
-//        itemTouchHelper.attachToRecyclerView(recyclerView)
-//        itemTouchHelper.attachToRecyclerView(null)
+        mViewModel.eventsAdapter.onOptionsClick = { view, position ->
+            mEventMenuPopup?.dismissOnDestroy()
+            mEventMenuPopup = PopupMenu(this, view)
+            mEventMenuPopup?.inflate(R.menu.menu_timeline_event)
+            mEventMenuPopup?.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_timeline_event_delete -> {
+                        mViewModel.onDeleteEventAt(position)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            mEventMenuPopup?.show()
+        }
     }
 
     private fun subscribeToViewModel() {
@@ -112,6 +130,25 @@ class TimelineActivity : BaseActivity() {
                     timerTitle.text = viewState.minutes.asTimerTitleViewState(resources)
                 }
             }
+        }
+    }
+
+    private fun openBottomMenu() {
+        mBottomSheetDialog.dismissOnDestroy()
+        mBottomSheetDialog = BottomSheetDialog(this).apply {
+            val view = layoutInflater.inflate(R.layout.menu_bottom_dialog, null).apply {
+                bottomMenuGotoLastClickableArea?.setOnClickListener {
+                    mBottomSheetDialog.dismissOnDestroy()
+                    mViewModel.onResetToLast()
+                }
+                bottomMenuDeleteClickableArea?.setOnClickListener {
+                    mBottomSheetDialog.dismissOnDestroy()
+                    showDeleteCardDialog()
+                }
+            }
+
+            setContentView(view)
+            show()
         }
     }
 

@@ -46,7 +46,7 @@ class TutorialViewModel(
         event2ViewState.value = EventViewState(
             id = EventId(0),
             title = resources.getString(R.string.tutorial_event_2_title),
-            startTime = null,
+            startTime = EVENT_2_START.format(START_DATE_FORMATTER),
             endTime = EVENT_2_END.format(END_DATE_FORMATTER),
             isMiddleEndTime = true,
             durationInMinutes = betweenWithSecondsRounding(EVENT_1_END, EVENT_2_END),
@@ -55,7 +55,7 @@ class TutorialViewModel(
         event3ViewState.value = EventViewState(
             id = EventId(0),
             title = resources.getString(R.string.tutorial_event_3_title),
-            startTime = null,
+            startTime = EVENT_3_START.format(START_DATE_FORMATTER),
             endTime = EVENT_3_END.format(END_DATE_FORMATTER),
             isMiddleEndTime = false,
             durationInMinutes = betweenWithSecondsRounding(EVENT_2_END, EVENT_3_END),
@@ -131,7 +131,11 @@ class TutorialViewModel(
             ZonedDateTime.of(2015, 12, 10, 8, 0, 0, 0, ZoneId.systemDefault())
         private val EVENT_1_END =
             ZonedDateTime.of(2015, 12, 10, 8, 30, 0, 0, ZoneId.systemDefault())
+        private val EVENT_2_START =
+            ZonedDateTime.of(2015, 12, 10, 8, 30, 0, 0, ZoneId.systemDefault())
         private val EVENT_2_END =
+            ZonedDateTime.of(2015, 12, 10, 9, 15, 0, 0, ZoneId.systemDefault())
+        private val EVENT_3_START =
             ZonedDateTime.of(2015, 12, 10, 9, 15, 0, 0, ZoneId.systemDefault())
         private val EVENT_3_END =
             ZonedDateTime.of(2015, 12, 10, 10, 0, 0, 0, ZoneId.systemDefault())
