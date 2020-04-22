@@ -31,14 +31,16 @@ android {
 
     signingConfigs {
         release {
-            def signingConfigPathProperty = "signing.config"
-            if (project.hasProperty(signingConfigPathProperty)) {
-                def projectPropsFile = file(project.property(signingConfigPathProperty) + "/timewalker.properties")
-                if (projectPropsFile.exists()) {
-                    Properties props = new Properties()
-                    props.load(new FileInputStream(projectPropsFile))
+            def signingConfigDirProperty = "signing.config.dir"
+            if (project.hasProperty(signingConfigDirProperty)) {
+                def signingPropsFileName = project.property("signing.config.properties")
+                def propsFile = file(project.property(signingConfigDirProperty) + "/" + signingPropsFileName)
 
-                    storeFile file(file(project.property(signingConfigPathProperty) + props['RELEASE_STORE_FILE']))
+                if (propsFile.exists()) {
+                    Properties props = new Properties()
+                    props.load(new FileInputStream(propsFile))
+
+                    storeFile file(file(project.property(signingConfigDirProperty) + props['RELEASE_STORE_FILE']))
                     storePassword props['RELEASE_STORE_PASS']
                     keyAlias props['RELEASE_ALIAS']
                     keyPassword props['RELEASE_KEY_PASS']
