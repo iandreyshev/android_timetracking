@@ -229,16 +229,11 @@ class EditorViewModel(
         }
 
         val previousEventEnd = mPreviousEvent?.endDateTime ?: dateProvider.current()
-        val pickedStartDateTime = mPickedStartTime?.let { pickedStartTime ->
-            mPickedStartDate?.withTime(pickedStartTime)
-        }
 
         mStartDateTimeComment.value = when {
             mPickedStartTime?.sameTimeWith(previousEventEnd) == true
                     && mPickedStartDate?.sameDateWith(previousEventEnd) == true ->
                 DatePickerCommentViewState.RightAfter(mPreviousEvent?.description.orEmpty())
-            pickedStartDateTime?.isBefore(previousEventEnd) == true ->
-                DatePickerCommentViewState.ErrorStartBeforePrevious(mPreviousEvent?.description.orEmpty())
             else ->
                 DatePickerCommentViewState.Hidden
         }
@@ -286,6 +281,11 @@ class EditorViewModel(
 
         if (mPickedStartTime == null) {
             onError(InputValidationError.ExpectedStartTime)
+        }
+
+        val pickedEndDateTime = mPickedEndDate withTime mPickedEndTime
+        if (mPickedStartDate?.isAfter(pickedEndDateTime) == true) {
+            onError(InputValidationError.EndBeforeStart)
         }
     }
 

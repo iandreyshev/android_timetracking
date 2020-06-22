@@ -1,6 +1,7 @@
 package ru.iandreyshev.timemanager.ui.timeline
 
 import android.view.View
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_timeline_event.view.*
@@ -44,7 +45,7 @@ class EventViewHolder(
             }
         }.exhaustive
 
-        itemView.optionsButton.isVisible = onOptionsClick != null
+        itemView.optionsButton.isInvisible = onOptionsClick == null
     }
 
     companion object {
